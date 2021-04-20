@@ -8,9 +8,16 @@ import org.bukkit.command.CommandSender;
 
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 
 public class ManhuntCommandHandler extends ManHuntInventory implements CommandExecutor{
     Main plugin;
+
+     List<String> Speedrunner = new ArrayList<String>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -30,6 +37,8 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                 if(args.length > 0){
                     if(Bukkit.getServer().getPlayer(args[1].toString()).getName() != null){
                         sender.sendMessage("Added " + Bukkit.getPlayer(args[1]).getName() + "to the list of speedrunners!");
+                        Speedrunner.add(args[1].toString());
+                        return true;
                     }
                     sender.sendMessage("That player is not online!");
                     return false;
