@@ -12,6 +12,8 @@ import java.util.List;
 
 public class ManHuntInventory {
 
+    //Inventory Manager
+
     public ItemStack getLauncher()
     {
         List<String> lore = new ArrayList<String>();

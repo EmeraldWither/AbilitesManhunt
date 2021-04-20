@@ -7,6 +7,8 @@ import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
 
+    //No touch touch
+
     @Override
     public void onEnable() {
         getCommand("manhunt").setExecutor(new ManhuntCommandHandler());

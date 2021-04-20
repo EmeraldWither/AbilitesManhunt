@@ -8,6 +8,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class LaunchAbility implements Listener {
 
+    //WIP
+
+
     @EventHandler
     public void PlayerInteract (PlayerInteractEvent e){
         if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){

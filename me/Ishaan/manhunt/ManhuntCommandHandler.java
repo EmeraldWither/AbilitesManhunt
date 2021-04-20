@@ -24,6 +24,8 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                     return false;
                 }
             }
+
+            //Add Speedrunner
             else if (args[0].equalsIgnoreCase("speedrunner")) {
                 if(args.length > 0){
                     if(Bukkit.getServer().getPlayer(args[1].toString()).getName() != null){
