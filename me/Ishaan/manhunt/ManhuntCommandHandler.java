@@ -1,6 +1,7 @@
 package me.Ishaan.manhunt;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,14 +37,14 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
             else if (args[0].equalsIgnoreCase("speedrunner")) {
                 if(args.length > 0){
                     if(Bukkit.getServer().getPlayer(args[1].toString()).getName() != null){
-                        sender.sendMessage("Added " + Bukkit.getPlayer(args[1]).getName() + "to the list of speedrunners!");
+                        sender.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GREEN + Bukkit.getPlayer(args[1]).getName() + ChatColor.GREEN + "to the list of speedrunners!");
                         Speedrunner.add(args[1].toString());
                         return true;
                     }
-                    sender.sendMessage("That player is not online!");
+                    sender.sendMessage(ChatColor.RED + "That player is not online!");
                     return false;
                 }
-                sender.sendMessage("Please input a player name!");
+                sender.sendMessage(ChatColor.RED + "Please input a name!");
                 return false;
             }
 

@@ -20,7 +20,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().log(Level.INFO, "Thank you for using Emeralds ManHunt Plugin, SHUTTING OFF NOW");
+        getLogger().log(Level.INFO, "Thank you for using Emeralds ManHunt Plugin, we are now shutting down");
     }
 
 }
