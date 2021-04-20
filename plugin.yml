@@ -1,0 +1,6 @@
+main: me.Ishaan.manhunt.Main
+name: ManhuntAbilites
+version: 1
+api-version: 1.16
+commands:
+  manhunt:
