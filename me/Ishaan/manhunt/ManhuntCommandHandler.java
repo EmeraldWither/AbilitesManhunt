@@ -25,7 +25,7 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
         if (label.equalsIgnoreCase("manhunt")) {
             if (args[0].equalsIgnoreCase("start")) {
                 if (sender instanceof Player) {
-                    sender.sendMessage("The manhunt is starting!");
+                    Bukkit.broadcastMessage(ChatColor.DARK_GREEN + "The manhunt is starting!");
                     ((Player) sender).getInventory().clear();
                     ((Player) sender).getInventory().setItem(0, getLauncher());
                     ((Player) sender).getInventory().setItem(1, getLightning());
