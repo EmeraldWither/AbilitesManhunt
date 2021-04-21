@@ -4,6 +4,7 @@ import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,13 +35,16 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
         if (label.equalsIgnoreCase("manhunt")) {
             if (args[0].equalsIgnoreCase("start")) {
-                if (sender instanceof Player) {
-                    sender.sendMessage("The manhunt is starting!");
-                    ((Player) sender).getInventory().clear();
-                    ((Player) sender).getInventory().setItem(0, getLauncher());
-                    ((Player) sender).getInventory().setItem(1, getLightning());
-                    return false;
-                }
+                    Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
+
+               for (Player player: Bukkit.getServer().getOnlinePlayers()){
+                   if(hunter.contains(player.getName())){
+                       player.getInventory().clear();
+                       player.getInventory().setItem(0,getLauncher());
+                       player.getInventory().setItem(1,getLightning());
+                   }
+               }
+
             }
 
             //Add Speedrunner
