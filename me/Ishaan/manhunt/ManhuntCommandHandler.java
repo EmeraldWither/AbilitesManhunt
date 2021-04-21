@@ -45,15 +45,20 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
             //Add Speedrunner
             else if (args[0].equalsIgnoreCase("speedrunner")) {
-                if (args.length > 1) {
-                    if (Bukkit.getPlayer(args[1].toString()).isOnline()) {
+                Integer cmdlenght = args.length;
+                if (cmdlenght > 1) {
+                    if (Bukkit.getPlayer(args[1].toString()) != null) {
+                        if(Bukkit.getPlayer(args[1].toString()).isOnline()) {
 
-                        speedrunner.add(args[1].toString());
-                        sender.sendMessage(speedrunner.toString());
+                            speedrunner.add(args[1].toString());
 
+                            if (hunter.contains(args[1])) {
+                                hunter.remove(args[1]);
+                            }
 
-                        sender.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GREEN + Bukkit.getPlayer(args[1]).getName() + ChatColor.GREEN + " to the list of speedrunners!");
-                        return true;
+                            sender.sendMessage(ChatColor.GREEN + "Added " + ChatColor.BOLD + Bukkit.getPlayer(args[1]).getName() + ChatColor.GREEN + " to the list of speedrunners!");
+                            return true;
+                        }
                     }
                     sender.sendMessage(ChatColor.RED + "That player is not online!");
                     return false;
@@ -68,10 +73,12 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                     if (Bukkit.getPlayer(args[1].toString()).isOnline()) {
 
                         hunter.add(args[1].toString());
-                        sender.sendMessage(hunter.toString());
 
+                        if(speedrunner.contains(args[1])){
+                            speedrunner.remove(args[1]);
+                        }
 
-                        sender.sendMessage(ChatColor.GREEN + "Added " + ChatColor.GREEN + Bukkit.getPlayer(args[1]).getName() + ChatColor.GREEN + " to the list of hunters!");
+                        sender.sendMessage(ChatColor.GREEN + "Added " + ChatColor.BOLD + Bukkit.getPlayer(args[1]).getName() + ChatColor.GREEN + " to the list of hunters!");
                         return true;
                     }
                     sender.sendMessage(ChatColor.RED + "That player is not online!");
@@ -82,12 +89,18 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
             }
 
             else if (args[0].equalsIgnoreCase("listgroups")){
-                sender.sendMessage(speedrunner.toString());
-                sender.sendMessage(hunter.toString());
+                if (!(speedrunner.size() == 0)) {
+                    sender.sendMessage(ChatColor.GREEN + "Speedrunners: " + speedrunner.toString().replaceAll("]", "").replaceAll("\\[", ""));
+                } else {
+                    sender.sendMessage(ChatColor.GREEN + "Spedrunners: "+ ChatColor.BOLD + ChatColor.DARK_GREEN + "There is no one in this group!");
+                }
+                if (!(hunter.size() == 0)) {
+                    sender.sendMessage(ChatColor.RED + "Hunters: " + hunter.toString().replaceAll("]", "").replaceAll("\\[", ""));
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Hunters: " + ChatColor.BOLD + "" + ChatColor.DARK_RED + "There is no one in this group!");
+                }
+                return true;
             }
-
-
-
 
         }
         return false;
