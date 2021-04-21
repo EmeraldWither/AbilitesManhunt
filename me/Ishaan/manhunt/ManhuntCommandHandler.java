@@ -43,6 +43,11 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                        player.getInventory().clear();
                        player.getInventory().setItem(0,getLauncher());
                        player.getInventory().setItem(1,getLightning());
+                       player.setHealth(20);
+                       player.setFoodLevel(20);
+                       player.setAllowFlight(true);
+                       player.setFlying(true);
+                       player.setGameMode(GameMode.CREATIVE);
                    }
                }
 
