@@ -39,6 +39,7 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
                for (Player player: Bukkit.getServer().getOnlinePlayers()){
                    if(hunter.contains(player.getName())){
+                       player.sendMessage(ChatColor.GREEN + "You have received your items!");
                        player.getInventory().clear();
                        player.getInventory().setItem(0,getLauncher());
                        player.getInventory().setItem(1,getLightning());
