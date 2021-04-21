@@ -5,12 +5,15 @@ import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+
+import static org.bukkit.Effect.Type.SOUND;
 
 
 public class ManhuntCommandHandler extends ManHuntInventory implements CommandExecutor{
@@ -36,6 +39,18 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
         if (label.equalsIgnoreCase("manhunt")) {
             if (args[0].equalsIgnoreCase("start")) {
                     Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
+                for (Player player: Bukkit.getServer().getOnlinePlayers()){
+                    if(speedrunner.contains(player.getName()))
+                    player.getInventory().clear();
+                    player.setHealth(20);
+                    player.setFoodLevel(20);
+                    player.setGameMode(GameMode.SURVIVAL);
+                    player.setAllowFlight(false);
+                    player.setFlying(false);
+
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+
+                }
 
                for (Player player: Bukkit.getServer().getOnlinePlayers()){
                    if(hunter.contains(player.getName())){
@@ -48,6 +63,8 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                        player.setAllowFlight(true);
                        player.setFlying(true);
                        player.setGameMode(GameMode.CREATIVE);
+                       player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+
                    }
                }
 
