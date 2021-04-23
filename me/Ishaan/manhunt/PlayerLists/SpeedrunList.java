@@ -1,18 +1,20 @@
 package me.Ishaan.manhunt.PlayerLists;
 
-import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpeedrunList {
-        public static List<String> speedrunners;
+    public static List<String> speedrunners = new ArrayList<String>();
 
-        public SpeedrunList() {
-            speedrunners = new ArrayList<String>();
-        }
+    public SpeedrunList() {
+        speedrunners = new ArrayList<String>();
+    }
 
-        public List<String> getList() {
-            return speedrunners;
-        }
+    public static List<String> getSpeedruners() {
+        return speedrunners;
+    }
+
+    public void addSpeedrunner(String speedrunner) {
+        speedrunners.add(speedrunner);
+    }
 }

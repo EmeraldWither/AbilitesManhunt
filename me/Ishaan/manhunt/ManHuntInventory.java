@@ -1,6 +1,7 @@
 package me.Ishaan.manhunt;
 
 import net.minecraft.server.v1_16_R3.Item;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -21,7 +22,7 @@ public class ManHuntInventory {
         ItemMeta meta = launcher.getItemMeta();
 
         lore.add("");
-        lore.add( ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!");
+        lore.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!");
         lore.add("");
         meta.setDisplayName(ChatColor.RED + "Launch Speedrunner");
         meta.setLore(lore);
@@ -38,7 +39,7 @@ public class ManHuntInventory {
 
         meta.setDisplayName(ChatColor.RED + "Strike Lightning");
         lore.add("");
-        lore.add( ChatColor.DARK_GRAY  + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.");
+        lore.add(ChatColor.DARK_GRAY  + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.");
         lore.add("");
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -46,6 +47,22 @@ public class ManHuntInventory {
         lightning.setItemMeta(meta);
 
         return lightning;
+    }
+    public ItemStack getGravity() {
+        List<String> lore = new ArrayList<String>();
+        ItemStack gravity = new ItemStack(Material.ANVIL, 1);
+        ItemMeta meta = gravity.getItemMeta();
+
+        meta.setDisplayName(ChatColor.RED + "Apply Gravity");
+        lore.add("");
+        lore.add(ChatColor.DARK_AQUA  + "" + ChatColor.BOLD + "Apply gravity to nearby blocks.");
+        lore.add("");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        gravity.setItemMeta(meta);
+
+        return gravity;
     }
 
 

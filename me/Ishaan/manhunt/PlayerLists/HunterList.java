@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HunterList {
-    public static List<String> hunters;
+    public static List<String> hunters = new ArrayList<String>();
 
     public HunterList() {
         hunters = new ArrayList<String>();
     }
 
-    public List<String> getHunters() {
+    public static List<String> getHunters() {
         return hunters;
     }
 
