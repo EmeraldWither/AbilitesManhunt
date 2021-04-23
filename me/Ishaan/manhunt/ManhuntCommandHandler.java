@@ -21,16 +21,12 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
 
     //Speedrunners
-
-    private SpeedrunList speedrunList;
-    SpeedrunList Speedrunners = new SpeedrunList();
-    List<String> speedrunner = Speedrunners.getList();
+    List<String> speedrunner = SpeedrunList.speedrunners;
 
     //Hunters
 
-    private HunterList hunterlist;
-    HunterList hunters = new HunterList();
-    List<String> hunter = hunters.getList();
+    List<String> hunter = HunterList.hunters;
+
 
 
     @Override
@@ -39,17 +35,18 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
         if (label.equalsIgnoreCase("manhunt")) {
             if (args[0].equalsIgnoreCase("start")) {
                     Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
-                for (Player player: Bukkit.getServer().getOnlinePlayers()){
-                    if(speedrunner.contains(player.getName()))
-                    player.getInventory().clear();
-                    player.setHealth(20);
-                    player.setFoodLevel(20);
-                    player.setGameMode(GameMode.SURVIVAL);
-                    player.setAllowFlight(false);
-                    player.setFlying(false);
+                for (Player player: Bukkit.getServer().getOnlinePlayers()) {
+                    if (speedrunner.contains(player.getName())) {
+                        player.getInventory().clear();
+                        player.setHealth(20);
+                        player.setFoodLevel(20);
+                        player.setGameMode(GameMode.SURVIVAL);
+                        player.setAllowFlight(false);
+                        player.setFlying(false);
 
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
 
+                    }
                 }
 
                for (Player player: Bukkit.getServer().getOnlinePlayers()){

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpeedrunList {
-        private List<String> speedrunners;
+        public static List<String> speedrunners;
 
         public SpeedrunList() {
             speedrunners = new ArrayList<String>();

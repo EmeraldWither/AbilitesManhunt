@@ -15,9 +15,7 @@ public class LaunchAbility implements Listener {
 
     //WIP
 
-    private HunterList hunterlist;
-    HunterList hunters = new HunterList();
-    List<String> hunter = hunters.getList();
+    List<String> hunter = HunterList.hunters;
 
     private SpeedrunList speedrunList;
     SpeedrunList Speedrunners = new SpeedrunList();
@@ -25,16 +23,13 @@ public class LaunchAbility implements Listener {
 
     @EventHandler
     public void playerinteract(PlayerInteractEvent event) {
-        if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || equals(Action.RIGHT_CLICK_BLOCK)){
-            if(hunter.contains(event.getPlayer().getName())){
-                if(event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.STICK)){
-                    if(event.getPlayer().getInventory().getItemInMainHand().getLore().contains("Strike lightning down onto the speedrunner.")){
-                        Bukkit.getServer().getWorld(Bukkit.getPlayer(speedrunner.toString()).getWorld().getName()).strikeLightning(Bukkit.getPlayer(speedrunner.toString()).getLocation());
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (hunter.contains(event.getPlayer().getName())) {
 
-                    }
-                }
+                event.getPlayer().sendMessage("Got hunter!");
+
             }
         }
     }
-
 }
+
