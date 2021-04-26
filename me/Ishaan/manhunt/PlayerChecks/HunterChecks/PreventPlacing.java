@@ -1,11 +1,7 @@
-package me.Ishaan.manhunt.HunterChecks;
+package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
-import net.minecraft.server.v1_16_R3.SoundEffectType;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;

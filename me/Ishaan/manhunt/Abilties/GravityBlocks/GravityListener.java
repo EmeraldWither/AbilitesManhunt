@@ -1,5 +1,6 @@
 package me.Ishaan.manhunt.Abilties.GravityBlocks;
 
+import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -31,34 +33,19 @@ public class GravityListener implements Listener {
                 if(hunter.contains(event.getPlayer().getName())) {
                     if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                         if (speedrunner.toString() != null) {
-                            Player player = Bukkit.getPlayer(speedrunner.toString().replaceAll("]","").replaceAll("\\[",""));
-                            Byte blockData = 0x0;
 
-                            for (Block block : getBlocks(player.getLocation().getBlock(), 7)){
+                            Player player  = event.getPlayer();
 
-                                BlockData blockdata = block.getBlockData();
-                                block.setType(Material.AIR);
-                                player.getWorld().spawnFallingBlock(block.getLocation(),blockdata);
-                            }
+                            SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                            inv.createInventory();
+                            Inventory getInventory = inv.getInv();
+
+                            player.openInventory(getInventory);
+
                         }
                     }
                 }
             }
         }
     }
-    public ArrayList<Block> getBlocks(Block start, int radius){
-        ArrayList<Block> blocks = new ArrayList<Block>();
-        for(double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++){
-            for(double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++){
-                for(double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++){
-                    Location loc = new Location(start.getWorld(), x, y, z);
-                    blocks.add(loc.getBlock());
-                }
-            }
-        }
-        return blocks;
-    }
-
-
-
 }

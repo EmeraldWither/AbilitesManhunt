@@ -1,5 +1,6 @@
 package me.Ishaan.manhunt.Abilties.LauncherListener;
 
+import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -28,8 +30,13 @@ public class LaunchAbility implements Listener {
             if(hunter.contains(event.getPlayer().getName())) {
                 if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                     if (speedrunner.toString() != null) {
-                        Player player = Bukkit.getPlayer(speedrunner.toString().replaceAll("]","").replaceAll("\\[",""));
-                        player.setVelocity(new Vector(0, 10, 0));
+                        Player player  = event.getPlayer();
+
+                        SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                        inv.createInventory();
+                        Inventory getInventory = inv.getInv();
+
+                        player.openInventory(getInventory);
                     }
                 }
             }
