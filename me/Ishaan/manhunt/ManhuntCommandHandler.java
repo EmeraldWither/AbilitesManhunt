@@ -1,5 +1,6 @@
 package me.Ishaan.manhunt;
 
+import me.Ishaan.manhunt.Enums.Ability;
 import me.Ishaan.manhunt.Enums.ManhuntTeam;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
@@ -72,6 +73,8 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
             if(!(hunter.isEmpty())) {
                 if(!(speedrunner.isEmpty())) {
 
+                    ManHuntInventory manHuntInventory = new ManHuntInventory();
+
                     Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
                     for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                         if (speedrunner.contains(player.getName())) {
@@ -94,10 +97,10 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                         if (hunter.contains(player.getName())) {
                             player.sendMessage(ChatColor.GREEN + "You have received your items!");
                             player.getInventory().clear();
-                            player.getInventory().setItem(0, getLauncher());
-                            player.getInventory().setItem(1, getLightning());
-                            player.getInventory().setItem(2, getGravity());
-                            player.getInventory().setItem(3, getScrambler());
+                            manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName());
+                            manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName());
+                            manHuntInventory.giveAbility(Ability.GRAVITY, player.getName());
+                            manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName());
                             player.setHealth(20);
                             player.setFoodLevel(20);
                             player.setGameMode(GameMode.SURVIVAL);

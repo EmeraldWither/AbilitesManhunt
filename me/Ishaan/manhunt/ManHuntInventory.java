@@ -99,6 +99,9 @@ public class ManHuntInventory {
         else if(ability.equals(Ability.GRAVITY)){
             hunter.getInventory().addItem(getGravity());
         }
+        else if(ability.equals(Ability.SCRAMBLE)){
+            hunter.getInventory().addItem(getScrambler());
+        }
         return;
 
     }

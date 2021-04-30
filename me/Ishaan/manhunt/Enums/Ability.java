@@ -4,5 +4,6 @@ public enum Ability {
 
     LAUNCHER,
     LIGHTNING,
-    GRAVITY
+    GRAVITY,
+    SCRAMBLE
 }
