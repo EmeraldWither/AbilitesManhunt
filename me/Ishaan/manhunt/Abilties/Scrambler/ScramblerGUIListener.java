@@ -1,5 +1,6 @@
-package me.Ishaan.manhunt.Abilties.LauncherListener;
+package me.Ishaan.manhunt.Abilties.Scrambler;
 
+import com.sun.istack.internal.NotNull;
 import me.Ishaan.manhunt.Enums.ManhuntTeam;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
@@ -14,15 +15,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class LauncherGUIListener implements Listener {
+public class ScramblerGUIListener implements Listener {
 
-    List<String> speedrunner = SpeedrunList.speedrunners;
     List<String> hunter = HunterList.hunters;
 
     @EventHandler
@@ -32,16 +35,18 @@ public class LauncherGUIListener implements Listener {
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
+            String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
             if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
                 Player player = (Player) event.getView().getPlayer();
-                if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!")) {
+                if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Scramble the selected players inventory!")) {
+                    SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
+                    Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
 
-                    SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
-                    Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
-
-                    selectedPlayer.setVelocity(new Vector(0,5,0));
-                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                    assert selectedPlayer != null;
+                    ItemStack[] oldInv = selectedPlayer.getInventory().getStorageContents();
+                    Collections.shuffle(Arrays.asList(oldInv));
+                    selectedPlayer.getInventory().setStorageContents(oldInv);
+                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                 }
             }

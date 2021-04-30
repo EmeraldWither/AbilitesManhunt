@@ -1,7 +1,9 @@
 package me.Ishaan.manhunt.Abilties.StrikeLightning;
 
+import me.Ishaan.manhunt.Enums.ManhuntTeam;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -28,7 +30,8 @@ public class LightningGuiListener implements Listener {
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            if(hunter.contains(event.getView().getPlayer().getName())) {
+            String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
+            if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
                 Player player = (Player) event.getView().getPlayer();
                 if (player.getInventory().getItemInMainHand().getItemMeta().getLore().contains(ChatColor.DARK_GRAY  + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.")) {
 

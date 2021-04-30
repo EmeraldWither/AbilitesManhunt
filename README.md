@@ -1,3 +1,3 @@
 # Manhunt but the Hunter has Special Abilites
 
-Still in alpha, not even finished developement. 
+This is a plugin which takes a new take on Manhunt. With 7 planned abilites, it will elevate the manhunt genre. 

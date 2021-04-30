@@ -1,6 +1,8 @@
 package me.Ishaan.manhunt.Abilties.GravityBlocks;
 
+import me.Ishaan.manhunt.Enums.ManhuntTeam;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -21,18 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GravityListener implements Listener {
-    List<String> speedrunner = SpeedrunList.speedrunners;
-
-    //Hunters
-    List<String> hunter = HunterList.hunters;
 
     @EventHandler
     public void SetGravity(PlayerInteractEvent event){
         if(event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ANVIL)){
             if(event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.DARK_AQUA  + "" + ChatColor.BOLD + "Apply gravity to nearby blocks."))){
-                if(hunter.contains(event.getPlayer().getName())) {
+                String name = event.getPlayer().getName();
+                if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
                     if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                        if (speedrunner.toString() != null) {
 
                             Player player  = event.getPlayer();
 
@@ -42,7 +40,6 @@ public class GravityListener implements Listener {
 
                             player.openInventory(getInventory);
 
-                        }
                     }
                 }
             }

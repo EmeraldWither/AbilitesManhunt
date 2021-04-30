@@ -1,6 +1,6 @@
 package me.Ishaan.manhunt;
 
-import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Enums.ManhuntTeam;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.*;
@@ -8,18 +8,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.bukkit.Effect.Type.SOUND;
 
 
 public class ManhuntCommandHandler extends ManHuntInventory implements CommandExecutor {
-    Main plugin;
 
 
     //Speedrunners
@@ -39,7 +33,7 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
             Integer commandLength = args.length;
 
-            if (commandLength == 0) {
+            if(commandLength == 0){
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&4---------------------------------\n" +
                                 "&cMinecraft Manhunt, but it's with Special Abilities\n" +
@@ -70,81 +64,85 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
         }
 
 
+
         //
         // Starts the manhunt, will only have 1 speedrunner for now.
         //
-        if (args[0].equalsIgnoreCase("start")) {
+        if(args[0].equalsIgnoreCase("start")){
+            if(!(hunter.isEmpty())) {
+                if(!(speedrunner.isEmpty())) {
 
-            Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                if (speedrunner.contains(player.getName())) {
-                    player.getInventory().clear();
-                    player.setHealth(20);
-                    player.setFoodLevel(20);
-                    player.setGameMode(GameMode.SURVIVAL);
-                    player.setAllowFlight(false);
-                    player.setFlying(false);
-                    player.setGlowing(true);
-                    player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+                    Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
+                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                        if (speedrunner.contains(player.getName())) {
+                            player.getInventory().clear();
+                            player.setHealth(20);
+                            player.setFoodLevel(20);
+                            player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
+                            player.setGameMode(GameMode.SURVIVAL);
+                            player.setAllowFlight(false);
+                            player.setFlying(false);
+                            player.setGlowing(true);
 
+
+                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+
+                        }
+                    }
+
+                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                        if (hunter.contains(player.getName())) {
+                            player.sendMessage(ChatColor.GREEN + "You have received your items!");
+                            player.getInventory().clear();
+                            player.getInventory().setItem(0, getLauncher());
+                            player.getInventory().setItem(1, getLightning());
+                            player.getInventory().setItem(2, getGravity());
+                            player.getInventory().setItem(3, getScrambler());
+                            player.setHealth(20);
+                            player.setFoodLevel(20);
+                            player.setGameMode(GameMode.SURVIVAL);
+                            player.setInvulnerable(true);
+                            player.setAllowFlight(true);
+                            player.setFlying(true);
+                            player.setGameMode(GameMode.CREATIVE);
+                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+                            return true;
+
+                        }
+                    }
                 }
+                sender.sendMessage(ChatColor.RED + "There are no players in the speedrunners group!");
+                return false;
             }
 
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                if (hunter.contains(player.getName())) {
-                    player.sendMessage(ChatColor.GREEN + "You have received your items!");
-                    player.getInventory().clear();
-                    player.getInventory().setItem(0, getLauncher());
-                    player.getInventory().setItem(1, getLightning());
-                    player.getInventory().setItem(2, getGravity());
-                    player.setHealth(20);
-                    player.setFoodLevel(20);
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                    player.setGameMode(GameMode.CREATIVE);
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-
-                }
-            }
-
-            SpeedrunnerGUI inv = new SpeedrunnerGUI();
-
-            inv.createInventory();
-
-
+            sender.sendMessage(ChatColor.RED + "There are no players in the hunters group!");
+            return false;
 
         }
 
-        if (args[0].equalsIgnoreCase("speedrunner")) {
+        if(args[0].equalsIgnoreCase("speedrunner")){
 
             Integer argsLength = args.length;
 
-            if (argsLength > 1) {
-                if (Bukkit.getPlayer(args[1]) != null) {
-                    if (Bukkit.getPlayer(args[1]).isOnline()) {
+            if(argsLength > 1){
+                if(Bukkit.getPlayer(args[1]) != null){
+                    if(Bukkit.getPlayer(args[1]).isOnline()){
 
                         String arg = args[1];
                         String name = Bukkit.getPlayer(arg).getName();
 
-                        speedrunner.add(name);
+                        addTeam(ManhuntTeam.SPEEDRUNNER, name);
 
-                        if (hunter.contains(name)) {
-                            hunter.remove(name);
-                        }
-
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
                         return true;
 
-                    }
-                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                    } sender.sendMessage( prefix + ChatColor.DARK_RED +"That player is not online!");
                     return false;
 
-                }
-                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                }  sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                 return false;
             }
-            sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
+            sender.sendMessage( prefix + ChatColor.DARK_RED +"Please input a player name!");
             return false;
 
         }
@@ -165,31 +163,26 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                         String arg = args[1];
                         String name = Bukkit.getPlayer(arg).getName();
 
-                        hunter.add(name);
-
-                        if (speedrunner.contains(name)) {
-                            speedrunner.remove(name);
-                        }
+                        addTeam(ManhuntTeam.HUNTER, name);
 
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the hunters group! "));
                         return true;
 
-                    }
-                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                    } sender.sendMessage( prefix + ChatColor.DARK_RED +"That player is not online!");
                     return false;
 
-                }
-                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                }  sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                 return false;
             }
-            sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
+            sender.sendMessage( prefix + ChatColor.DARK_RED +"Please input a player name!");
             return false;
         }
 
 
+
         //List Groups Command
 
-        if (args[0].equalsIgnoreCase("listgroups")) {
+        if(args[0].equalsIgnoreCase("listgroups")) {
 
             Player player = (Player) sender;
             String speedrunnersList = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
@@ -224,8 +217,37 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
             }
 
             return true;
-
         }
         return false;
     }
+
+    public void addTeam(ManhuntTeam team, String name){
+        Player player = Bukkit.getPlayer(name);
+        if(team.equals(ManhuntTeam.HUNTER)){
+            hunter.add(name);
+            if(speedrunner.contains(name)){
+                speedrunner.remove(name);
+            }
+        }
+        if(team.equals(ManhuntTeam.SPEEDRUNNER)){
+            speedrunner.add(name);
+            if(hunter.contains(name)){
+                hunter.remove(name);
+            }
+        }
+        return;
+    }
+    public ManhuntTeam getTeam(String playerName){
+        String name = Bukkit.getPlayer(playerName).getName();
+
+        if(hunter.contains(name)){
+            return ManhuntTeam.HUNTER;
+        }
+        if(speedrunner.contains(name)) {
+            return ManhuntTeam.SPEEDRUNNER;
+        }
+        return null;
+    }
+
+
 }

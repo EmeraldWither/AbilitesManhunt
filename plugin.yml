@@ -1,7 +1,9 @@
 main: me.Ishaan.manhunt.Main
 name: ManhuntAbilites
-description: Play Minecraft Manhunt, but the Hunter has Special Abilites.
-version: 0.8
+description: Play Minecraft Manhunt, but the Hunter has Special ManhuntTeam.
+version: 1
 api-version: 1.16
 commands:
   manhunt:
+
+
