@@ -4,13 +4,15 @@ import me.Ishaan.manhunt.Abilties.GravityBlocks.GravityGUIListener;
 import me.Ishaan.manhunt.Abilties.GravityBlocks.GravityListener;
 import me.Ishaan.manhunt.Abilties.LauncherListener.LaunchAbility;
 import me.Ishaan.manhunt.Abilties.LauncherListener.LauncherGUIListener;
+import me.Ishaan.manhunt.Abilties.RandomTP.RandomTPGUIListener;
+import me.Ishaan.manhunt.Abilties.RandomTP.RandomTPListener;
 import me.Ishaan.manhunt.Abilties.Scrambler.ScramblerGUIListener;
 import me.Ishaan.manhunt.Abilties.Scrambler.ScramblerListener;
 import me.Ishaan.manhunt.Abilties.StrikeLightning.LightningGuiListener;
 import me.Ishaan.manhunt.Abilties.StrikeLightning.LightningListener;
 import me.Ishaan.manhunt.PlayerChecks.HunterChecks.*;
 import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
-import org.bukkit.Bukkit;
+import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +21,7 @@ import java.util.logging.Level;
 public class Main extends JavaPlugin {
 
     Plugin plugin = this;
+    JavaPlugin javaPlugin = (JavaPlugin) this.plugin;
 
     @Override
     public void onEnable() {
@@ -36,12 +39,18 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PreventDroppingItems(),this);
         getServer().getPluginManager().registerEvents(new ScramblerGUIListener(),this);
         getServer().getPluginManager().registerEvents(new ScramblerListener(),this);
+        getServer().getPluginManager().registerEvents(new EnderDragonCheck(),this);
+        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(),this);
+        getServer().getPluginManager().registerEvents(new RandomTPListener(),this);
+        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(),this);
+
+
 
 
 
 
         getCommand("manhunt").setExecutor(new ManhuntCommandHandler());
-        getLogger().log(Level.INFO, "Thank you for using Emeralds ManHunt Plugin");
+        getLogger().log(Level.INFO, "[Abilies Manhunt] Starting it up now!");
 
 
 
@@ -49,7 +58,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().log(Level.INFO, "Thank you for using Emeralds ManHunt Plugin, we are now shutting down");
+        getLogger().log(Level.INFO, "[Abilies Manhunt] Shutting down now!");
     }
 
     private Plugin getPlugin(){

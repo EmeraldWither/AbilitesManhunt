@@ -2,6 +2,7 @@ package me.Ishaan.manhunt;
 
 import me.Ishaan.manhunt.Enums.Ability;
 import me.Ishaan.manhunt.Enums.ManhuntTeam;
+import me.Ishaan.manhunt.Mana.ManaCounter;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.*;
@@ -10,11 +11,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 
-public class ManhuntCommandHandler extends ManHuntInventory implements CommandExecutor {
+public class ManhuntCommandHandler implements CommandExecutor {
 
 
     //Speedrunners
@@ -29,6 +31,10 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         String prefix = ChatColor.DARK_GREEN + "[Manhunt Abilities] ";
+
+        //
+        // Help Commands
+        //
 
         if (label.equalsIgnoreCase("manhunt")) {
 
@@ -67,8 +73,9 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
 
         //
-        // Starts the manhunt, will only have 1 speedrunner for now.
+        // Starts the manhunt.
         //
+
         if(args[0].equalsIgnoreCase("start")){
             if(!(hunter.isEmpty())) {
                 if(!(speedrunner.isEmpty())) {
@@ -101,6 +108,7 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
                             manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName());
                             manHuntInventory.giveAbility(Ability.GRAVITY, player.getName());
                             manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName());
+                            manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName());
                             player.setHealth(20);
                             player.setFoodLevel(20);
                             player.setGameMode(GameMode.SURVIVAL);
@@ -122,6 +130,9 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
             return false;
 
         }
+        //
+        // Add Speedrunners
+        //
 
         if(args[0].equalsIgnoreCase("speedrunner")){
 
@@ -151,7 +162,7 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
         }
 
         //
-        // Hunters
+        // Add Hunters
         //
 
 
@@ -221,7 +232,16 @@ public class ManhuntCommandHandler extends ManHuntInventory implements CommandEx
 
             return true;
         }
+        //Bukkit Runnable
+        // Test only right now
+        if (args[0].equalsIgnoreCase("runnable")){
+            sender.sendMessage("Started Countdown");
+            JavaPlugin plugin = Main.getProvidingPlugin(Main.class);
+            new ManaCounter().ExampleTask(plugin);
+            sender.sendMessage("Finished Countdown");
+        }
         return false;
+
     }
 
     public void addTeam(ManhuntTeam team, String name){

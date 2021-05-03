@@ -1,8 +1,6 @@
 package me.Ishaan.manhunt;
 
 import me.Ishaan.manhunt.Enums.Ability;
-import net.minecraft.server.v1_16_R3.Item;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -86,6 +84,23 @@ public class ManHuntInventory {
 
         return scrambler;
     }
+    public ItemStack getrandomTP() {
+        List<String> lore = new ArrayList<String>();
+        ItemStack randomTP = new ItemStack(Material.ENDER_PEARL, 1);
+        ItemMeta meta = randomTP.getItemMeta();
+
+        lore.add("");
+        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!");
+        lore.add("");
+        meta.setDisplayName(ChatColor.RED + "Randomly Teleport Speedrunner");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        randomTP.setItemMeta(meta);
+
+
+        return randomTP;
+
+    }
 
     public void giveAbility(Ability ability, String name){
         Player hunter = Bukkit.getPlayer(name);
@@ -102,9 +117,8 @@ public class ManHuntInventory {
         else if(ability.equals(Ability.SCRAMBLE)){
             hunter.getInventory().addItem(getScrambler());
         }
-        return;
-
+        else if(ability.equals(Ability.RANDOMTP)){
+            hunter.getInventory().addItem(getrandomTP());
+        }
     }
-
-
 }

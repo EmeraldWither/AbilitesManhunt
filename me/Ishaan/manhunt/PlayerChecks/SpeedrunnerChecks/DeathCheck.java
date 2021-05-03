@@ -53,6 +53,9 @@ public class DeathCheck implements Listener {
                 }
 
             }
+            else {
+                event.getEntity().sendTitle(ChatColor.DARK_RED + "YOU DIED!", ChatColor.RED + "BETTER LUCK NEXT TIME",20 , 100,20 );
+            }
         }
     }
 
