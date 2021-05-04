@@ -23,7 +23,7 @@ public class SpeedrunnerGUI {
     public Inventory createInventory() {
 
         Inventory inv;
-        inv = Bukkit.createInventory(new GUIInventoryHolder(), 9, "Select speedrunner!");
+        inv = Bukkit.createInventory(new GUIInventoryHolder(), 9, ChatColor.translateAlternateColorCodes('&',"&9&lSelect Speedrunner"));
 
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if (speedrunner.contains(player.getName())) {

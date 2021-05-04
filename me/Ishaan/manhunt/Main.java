@@ -16,6 +16,7 @@ import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
@@ -43,14 +44,9 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RandomTPGUIListener(),this);
         getServer().getPluginManager().registerEvents(new RandomTPListener(),this);
         getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(),this);
+        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler());
 
-
-
-
-
-
-        getCommand("manhunt").setExecutor(new ManhuntCommandHandler());
-        getLogger().log(Level.INFO, "[Abilies Manhunt] Starting it up now!");
+        getLogger().log(Level.INFO, "[Abilies Manhunt] Plugin is now enabling!");
 
 
 
@@ -58,7 +54,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().log(Level.INFO, "[Abilies Manhunt] Shutting down now!");
+        getLogger().log(Level.WARNING, "[Abilies Manhunt] Plugin is now disabling!");
     }
 
     private Plugin getPlugin(){
