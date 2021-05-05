@@ -2,6 +2,7 @@ package me.Ishaan.manhunt.Abilties.GravityBlocks;
 
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -17,7 +18,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +33,26 @@ public class GravityGUIListener implements Listener {
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            if(hunter.contains(event.getView().getPlayer().getName())) {
-                Player player = (Player) event.getView().getPlayer();
-                if (player.getInventory().getItemInMainHand().getItemMeta().getLore().contains(ChatColor.DARK_AQUA  + "" + ChatColor.BOLD + "Apply gravity to nearby blocks.")) {
+            if(event.getCurrentItem() != null) {
+                if (new ManhuntCommandHandler().hasGameStarted()) {
+                    if (hunter.contains(event.getView().getPlayer().getName())) {
+                        Player player = (Player) event.getView().getPlayer();
+                        if (player.getInventory().getItemInMainHand().getItemMeta().getLore().contains(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Apply gravity to nearby blocks.")) {
 
-                    SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
-                    Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
-                    Byte blockData = 0x0;
+                            SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
+                            Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                            Byte blockData = 0x0;
 
-                    for (Block block : getBlocks(selectedPlayer.getLocation().getBlock(), 5)){
+                            for (Block block : getBlocks(selectedPlayer.getLocation().getBlock(), 5)) {
 
-                        BlockData blockdata = block.getBlockData();
-                        block.setType(Material.AIR);
-                        player.getWorld().spawnFallingBlock(block.getLocation(),blockdata);
+                                BlockData blockdata = block.getBlockData();
+                                block.setType(Material.AIR);
+                                player.getWorld().spawnFallingBlock(block.getLocation(), blockdata);
+                            }
+                            player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+
+                        }
                     }
-                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-
                 }
             }
         }

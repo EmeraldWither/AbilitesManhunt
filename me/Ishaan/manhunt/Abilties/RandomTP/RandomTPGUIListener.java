@@ -30,24 +30,35 @@ public class RandomTPGUIListener implements Listener {
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
-            if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
-                Player player = (Player) event.getView().getPlayer();
-                if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!")) {
-                    SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
-                    Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
+            if(new ManhuntCommandHandler().hasGameStarted()) {
+                if (event.getCurrentItem() != null) {
+                    String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
+                    if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                        Player player = (Player) event.getView().getPlayer();
+                        if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!")) {
+                            SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
+                            Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
+                            assert selectedPlayer != null;
+                            randomTP(selectedPlayer.getName(), player.getName(), 30);
+                            player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
-
-                    double x = ThreadLocalRandom.current().nextInt(-50, 50 + 1);
-                    double z = ThreadLocalRandom.current().nextInt(-50, 50 + 1);
-                    Location loc = player.getLocation().set(player.getLocation().getX() + x, player.getLocation().getY(), player.getLocation().getZ() + z);
-
-                    selectedPlayer.teleport(loc);
-                    player.teleport(selectedPlayer.getLocation().add(0, 10, 0));
-                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-
+                        }
+                    }
                 }
             }
         }
+    }
+
+    public void randomTP(String speedrunner, String hunter, int radius){
+        Player selectedPlayer = Bukkit.getPlayer(speedrunner);
+        Player player = Bukkit.getPlayer(hunter);
+
+
+        double x = ThreadLocalRandom.current().nextInt(radius * -1, radius + 1);
+        double z = ThreadLocalRandom.current().nextInt(radius * -1, radius + 1);
+        Location loc = selectedPlayer.getLocation().set(selectedPlayer.getLocation().getX() + x, selectedPlayer.getLocation().getY(), selectedPlayer.getLocation().getZ() + z);
+
+        selectedPlayer.teleport(loc);
+        player.teleport(selectedPlayer.getLocation().add(0, 5, 0));
     }
 }

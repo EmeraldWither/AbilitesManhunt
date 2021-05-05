@@ -32,19 +32,23 @@ public class ScramblerGUIListener implements Listener {
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
-            if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
-                Player player = (Player) event.getView().getPlayer();
-                if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Scramble the selected players inventory!")) {
-                    SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
-                    Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
+            if(event.getCurrentItem() != null) {
+                if(new ManhuntCommandHandler().hasGameStarted()) {
+                    String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
+                    if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                        Player player = (Player) event.getView().getPlayer();
+                        if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Scramble the selected players inventory!")) {
+                            SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
+                            Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
 
-                    assert selectedPlayer != null;
-                    ItemStack[] oldInv = selectedPlayer.getInventory().getStorageContents();
-                    Collections.shuffle(Arrays.asList(oldInv));
-                    selectedPlayer.getInventory().setStorageContents(oldInv);
-                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
+                            assert selectedPlayer != null;
+                            ItemStack[] oldInv = selectedPlayer.getInventory().getStorageContents();
+                            Collections.shuffle(Arrays.asList(oldInv));
+                            selectedPlayer.getInventory().setStorageContents(oldInv);
+                            player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
+                        }
+                    }
                 }
             }
         }

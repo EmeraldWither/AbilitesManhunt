@@ -5,7 +5,6 @@ import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,18 +28,22 @@ public class LightningGuiListener implements Listener {
         SpeedrunnerGUI inv = new SpeedrunnerGUI();
         Inventory getInventory = inv.getInv();
 
-        if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
-            if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
-                Player player = (Player) event.getView().getPlayer();
-                if (player.getInventory().getItemInMainHand().getItemMeta().getLore().contains(ChatColor.DARK_GRAY  + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.")) {
+        if(event.getInventory().getHolder() instanceof GUIInventoryHolder) {
+            if (event.getCurrentItem() != null) {
+                if(new ManhuntCommandHandler().hasGameStarted()) {
+                    String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
+                    if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                        Player player = (Player) event.getView().getPlayer();
+                        if (player.getInventory().getItemInMainHand().getItemMeta().getLore().contains(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.")) {
 
-                    SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
-                    Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                            SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
+                            Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
 
-                    selectedPlayer.getWorld().strikeLightning(selectedPlayer.getLocation());
-                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                            selectedPlayer.getWorld().strikeLightning(selectedPlayer.getLocation());
+                            player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
+                        }
+                    }
                 }
             }
         }

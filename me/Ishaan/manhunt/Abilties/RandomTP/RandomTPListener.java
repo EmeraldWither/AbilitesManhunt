@@ -12,23 +12,27 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 
-public class RandomTPListener implements Listener {
+public class  RandomTPListener implements Listener {
+
+
 
     @EventHandler
     public void getClickedItem(PlayerInteractEvent event) {
-        if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) {
-            if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!"))) {
-                String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
-                    if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if(new ManhuntCommandHandler().hasGameStarted()) {
+            if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) {
+                if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!"))) {
+                    String name = event.getPlayer().getName();
+                    if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
-                        Player player = event.getPlayer();
+                            Player player = event.getPlayer();
 
-                        SpeedrunnerGUI inv = new SpeedrunnerGUI();
-                        inv.createInventory();
-                        Inventory getInventory = inv.getInv();
+                            SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                            inv.createInventory();
+                            Inventory getInventory = inv.getInv();
 
-                        player.openInventory(getInventory);
+                            player.openInventory(getInventory);
+                        }
                     }
                 }
             }

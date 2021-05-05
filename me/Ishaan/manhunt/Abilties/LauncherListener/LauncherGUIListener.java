@@ -32,17 +32,21 @@ public class LauncherGUIListener implements Listener {
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
-            if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
-                Player player = (Player) event.getView().getPlayer();
-                if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!")) {
+            if(event.getCurrentItem() != null) {
+                if(new ManhuntCommandHandler().hasGameStarted()) {
+                    String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
+                    if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                        Player player = (Player) event.getView().getPlayer();
+                        if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!")) {
 
-                    SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
-                    Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                            SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
+                            Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
 
-                    selectedPlayer.setVelocity(new Vector(0,5,0));
-                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                            selectedPlayer.setVelocity(new Vector(0, 2.5, 0));
+                            player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
+                        }
+                    }
                 }
             }
         }

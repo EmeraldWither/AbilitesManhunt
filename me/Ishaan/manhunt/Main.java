@@ -49,7 +49,6 @@ public class Main extends JavaPlugin {
         getLogger().log(Level.INFO, "[Abilies Manhunt] Plugin is now enabling!");
 
 
-
     }
 
     @Override

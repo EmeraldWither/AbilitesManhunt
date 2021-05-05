@@ -21,10 +21,10 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
     //Speedrunners
     List<String> speedrunner = SpeedrunList.getSpeedruners();
-
     //Hunters
-
     List<String> hunter = HunterList.getHunters();
+
+    private static boolean HasGameStarted = false;
 
 
     @Override
@@ -81,6 +81,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 if(!(speedrunner.isEmpty())) {
 
                     ManHuntInventory manHuntInventory = new ManHuntInventory();
+                    HasGameStarted = true;
 
                     Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
                     for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -115,7 +116,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
                             player.setInvulnerable(true);
                             player.setAllowFlight(true);
                             player.setFlying(true);
-                            player.setGameMode(GameMode.CREATIVE);
                             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
                             return true;
 
@@ -236,8 +236,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
         // Test only right now
         if (args[0].equalsIgnoreCase("runnable")){
             sender.sendMessage("Started Countdown");
-            JavaPlugin plugin = Main.getProvidingPlugin(Main.class);
-            new ManaCounter().ExampleTask(plugin);
+            JavaPlugin javaPlugin = new Main().javaPlugin;
+            ManaCounter manaCounter = new ManaCounter();
+            manaCounter.run();
             sender.sendMessage("Finished Countdown");
         }
         return false;
@@ -270,6 +271,12 @@ public class ManhuntCommandHandler implements CommandExecutor {
             return ManhuntTeam.SPEEDRUNNER;
         }
         return null;
+    }
+    public boolean hasGameStarted(){
+        return HasGameStarted;
+    }
+    public void setGameStarted(boolean b){
+        HasGameStarted = b;
     }
 
 
