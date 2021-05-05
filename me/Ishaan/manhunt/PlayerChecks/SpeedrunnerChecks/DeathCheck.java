@@ -29,6 +29,7 @@ public class DeathCheck implements Listener {
                 if (speedrunner.size() > 0) {
                     event.getEntity().setGameMode(GameMode.SPECTATOR);
                     event.getEntity().setGlowing(false);
+                    event.getEntity().setInvulnerable(false);
                     return;
                 }
 

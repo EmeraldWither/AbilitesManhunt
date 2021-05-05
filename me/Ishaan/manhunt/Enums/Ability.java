@@ -6,5 +6,7 @@ public enum Ability {
     LIGHTNING,
     GRAVITY,
     SCRAMBLE,
-    RANDOMTP
+    RANDOMTP,
+    DAMAGEITEM,
+    PLAYERTP
 }

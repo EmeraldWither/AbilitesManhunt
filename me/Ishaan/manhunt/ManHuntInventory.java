@@ -4,6 +4,7 @@ import me.Ishaan.manhunt.Enums.Ability;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -101,6 +102,45 @@ public class ManHuntInventory {
         return randomTP;
 
     }
+    public ItemStack getDamageItem() {
+        List<String> lore = new ArrayList<String>();
+        ItemStack damageItem = new ItemStack(Material.GOLDEN_PICKAXE, 1);
+        ItemMeta meta = damageItem.getItemMeta();
+
+        meta.setDisplayName(ChatColor.RED + "Damage Item");
+        lore.add("");
+        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Sets the durability of the item that");
+        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "the speedruner is holding to half");
+        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "of what it was at!");
+        lore.add("");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        damageItem.setDurability((short) (damageItem.getDurability() / 2));
+
+        damageItem.setItemMeta(meta);
+        return damageItem;
+
+    }
+
+    public ItemStack getPlayerTP() {
+        List<String> lore = new ArrayList<String>();
+        ItemStack playerTP = new ItemStack(Material.ENDER_PEARL, 1);
+        ItemMeta meta = playerTP.getItemMeta();
+
+        lore.add("");
+        lore.add(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Teleport to a speedrunner!");
+        lore.add("");
+        meta.setDisplayName(ChatColor.AQUA + "Teleport To Speedrunner");
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.MENDING, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        playerTP.setItemMeta(meta);
+
+
+        return playerTP;
+
+    }
 
     public void giveAbility(Ability ability, String name){
         Player hunter = Bukkit.getPlayer(name);
@@ -119,6 +159,37 @@ public class ManHuntInventory {
         }
         else if(ability.equals(Ability.RANDOMTP)){
             hunter.getInventory().addItem(getrandomTP());
+        }
+        else if(ability.equals(Ability.DAMAGEITEM)){
+            hunter.getInventory().addItem(getDamageItem());
+        }
+        else if(ability.equals(Ability.PLAYERTP)){
+            hunter.getInventory().addItem(getPlayerTP());
+        }
+    }
+    public void giveAbility(Ability ability, String name, Integer slot){
+        Player hunter = Bukkit.getPlayer(name);
+
+        if(ability.equals(Ability.LAUNCHER)){
+            hunter.getInventory().setItem(slot, getLauncher());
+        }
+        else if(ability.equals(Ability.LIGHTNING)){
+            hunter.getInventory().setItem(slot,getLightning());
+        }
+        else if(ability.equals(Ability.GRAVITY)){
+            hunter.getInventory().setItem(slot,getGravity());
+        }
+        else if(ability.equals(Ability.SCRAMBLE)){
+            hunter.getInventory().setItem(slot,getScrambler());
+        }
+        else if(ability.equals(Ability.RANDOMTP)){
+            hunter.getInventory().setItem(slot,getrandomTP());
+        }
+        else if(ability.equals(Ability.DAMAGEITEM)){
+            hunter.getInventory().setItem(slot,getDamageItem());
+        }
+        else if(ability.equals(Ability.PLAYERTP)){
+            hunter.getInventory().setItem(slot,getPlayerTP());
         }
     }
 }

@@ -94,6 +94,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                             player.setAllowFlight(false);
                             player.setFlying(false);
                             player.setGlowing(true);
+                            player.setInvulnerable(false);
 
 
                             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
@@ -110,12 +111,15 @@ public class ManhuntCommandHandler implements CommandExecutor {
                             manHuntInventory.giveAbility(Ability.GRAVITY, player.getName());
                             manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName());
                             manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName());
+                            manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName());
+                            manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
                             player.setHealth(20);
                             player.setFoodLevel(20);
                             player.setGameMode(GameMode.SURVIVAL);
                             player.setInvulnerable(true);
                             player.setAllowFlight(true);
                             player.setFlying(true);
+                            player.setGlowing(true);
                             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
                             return true;
 
@@ -198,7 +202,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
         if(args[0].equalsIgnoreCase("listgroups")) {
 
-            Player player = (Player) sender;
+            CommandSender player = sender;
             String speedrunnersList = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
             String huntersList = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
 
