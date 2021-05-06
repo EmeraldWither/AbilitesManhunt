@@ -36,8 +36,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
         // Help Commands
         //
 
-        //Test
-
         if (label.equalsIgnoreCase("manhunt")) {
 
             Integer commandLength = args.length;
