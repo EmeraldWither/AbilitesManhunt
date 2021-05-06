@@ -14,12 +14,21 @@ import me.Ishaan.manhunt.Abilties.Scrambler.ScramblerGUIListener;
 import me.Ishaan.manhunt.Abilties.Scrambler.ScramblerListener;
 import me.Ishaan.manhunt.Abilties.StrikeLightning.LightningGuiListener;
 import me.Ishaan.manhunt.Abilties.StrikeLightning.LightningListener;
+import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.PlayerChecks.HunterChecks.*;
 import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
+import me.Ishaan.manhunt.PlayerLists.HunterList;
+import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -27,6 +36,8 @@ public class Main extends JavaPlugin {
 
     Plugin plugin = this;
     JavaPlugin javaPlugin = (JavaPlugin) this.plugin;
+    List<String> speedrunner = SpeedrunList.speedrunners;
+    List<String> hunter = HunterList.hunters;
 
     @Override
     public void onEnable() {
@@ -86,6 +97,60 @@ public class Main extends JavaPlugin {
                 "|             NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,\n" +
                 "|           AS SUCH, IT WILL HAVE BUGS. PROCEED WITH CAUTION. \n" +
                 "--------------------------------------------------------------");
+
+
+        for(Player player : Bukkit.getOnlinePlayers()){
+            if(player.getOpenInventory() != null) {
+                if (player.getOpenInventory().getTopInventory().getHolder() instanceof GUIInventoryHolder) {
+                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                }
+            }
+            for(ItemStack item : player.getInventory().getStorageContents()){
+                ManHuntInventory inv = new ManHuntInventory();
+                if(item != null) {
+                    if (item.isSimilar(inv.getDamageItem())) {
+                        player.getInventory().remove(item);
+                    }
+                    if (item.isSimilar(inv.getGravity())) {
+                        player.getInventory().remove(item);
+                    }
+                    if (item.isSimilar(inv.getLauncher())) {
+                        player.getInventory().remove(item);
+                    }
+                    if (item.isSimilar(inv.getLightning())) {
+                        player.getInventory().remove(item);
+                    }
+                    if (item.isSimilar(inv.getrandomTP())) {
+                        player.getInventory().remove(item);
+                    }
+                    if (item.isSimilar(inv.getPlayerTP())) {
+                        player.getInventory().remove(item);
+                    }
+                    if (item.isSimilar(inv.getScrambler())) {
+                        player.getInventory().remove(item);
+                    }
+                }
+            }
+            if(hunter.contains(player.getName())){
+                player.setGlowing(false);
+                player.getInventory().clear();
+                player.setGameMode(GameMode.SURVIVAL);
+                player.setInvulnerable(false);
+                player.closeInventory();
+                player.setFlying(false);
+                player.setAllowFlight(false);
+            }
+            if(speedrunner.contains(player.getName())){
+                player.setGlowing(false);
+                player.getInventory().clear();
+                player.setGameMode(GameMode.SURVIVAL);
+                player.setInvulnerable(false);
+                player.closeInventory();
+                player.setFlying(false);
+                player.setAllowFlight(false);
+            }
+        }
+
     }
 
     private Plugin getPlugin(){

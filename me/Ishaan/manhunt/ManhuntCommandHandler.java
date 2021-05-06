@@ -24,7 +24,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
     //Hunters
     List<String> hunter = HunterList.getHunters();
 
-    private static boolean HasGameStarted = false;
+    public static boolean HasGameStarted = false;
 
 
     @Override

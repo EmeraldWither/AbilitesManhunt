@@ -1,5 +1,6 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,8 +16,10 @@ public class PreventProjectileThrowing implements Listener {
     @EventHandler
     public void ProjectileToss(ProjectileLaunchEvent event){
         if(event.getEntity().getShooter() instanceof Player){
-            if(hunter.contains(((Player) event.getEntity().getShooter()).getName())){
-                event.setCancelled(true);
+            if(new ManhuntCommandHandler().hasGameStarted()) {
+                if (hunter.contains(((Player) event.getEntity().getShooter()).getName())) {
+                    event.setCancelled(true);
+                }
             }
         }
     }

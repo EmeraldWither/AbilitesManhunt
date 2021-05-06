@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -115,7 +116,9 @@ public class ManHuntInventory {
         lore.add("");
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        damageItem.setDurability((short) (damageItem.getDurability() / 2));
+        if(damageItem.getItemMeta() instanceof Damageable){
+            ((Damageable) damageItem.getItemMeta()).setDamage(damageItem.getType().getMaxDurability() / 2);
+        }
 
         damageItem.setItemMeta(meta);
         return damageItem;

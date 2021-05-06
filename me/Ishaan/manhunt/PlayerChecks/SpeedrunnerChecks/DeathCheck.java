@@ -26,13 +26,8 @@ public class DeathCheck implements Listener {
         if (new ManhuntCommandHandler().hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getName())) {
                 speedrunner.remove(event.getEntity().getName());
-                if (speedrunner.size() > 0) {
-                    event.getEntity().setGameMode(GameMode.SPECTATOR);
-                    event.getEntity().setGlowing(false);
-                    event.getEntity().setInvulnerable(false);
-                    return;
-                }
-
+                event.getEntity().setAllowFlight(true);
+                event.getEntity().setFlying(true);
                 event.getEntity().setGlowing(false);
                 if (speedrunner.size() == 0) {
                     Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6---------------------------------------------------------\n" +
@@ -57,12 +52,11 @@ public class DeathCheck implements Listener {
                         players.setInvulnerable(false);
                         players.closeInventory();
                         players.setFlying(false);
+                        players.setAllowFlight(false);
                         new ManhuntCommandHandler().setGameStarted(false);
                         return;
                     }
 
-                } else {
-                    event.getEntity().sendTitle(ChatColor.DARK_RED + "YOU DIED!", ChatColor.RED + "BETTER LUCK NEXT TIME", 20, 100, 20);
                 }
             }
         }

@@ -1,12 +1,10 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 
 import java.util.List;
@@ -17,9 +15,11 @@ public class PreventPickingUp implements Listener {
 
     @EventHandler
     public void ItemPickupEvent(PlayerAttemptPickupItemEvent event){
-        if(hunter.contains(event.getPlayer().getName())){
-            event.setCancelled(true);
+        if(new ManhuntCommandHandler().hasGameStarted()) {
+            if (hunter.contains(event.getPlayer().getName())) {
+                event.setCancelled(true);
 
+            }
         }
     }
 }

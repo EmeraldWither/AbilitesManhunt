@@ -1,6 +1,7 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.entity.Player;
@@ -24,36 +25,42 @@ public class CheckChest implements Listener{
     @EventHandler
     public void ChestClick(InventoryClickEvent event) {
         if(hunter.contains(event.getView().getPlayer().getName())) {
+            if(new ManhuntCommandHandler().hasGameStarted()) {
 
-            SpeedrunnerGUI inv = new SpeedrunnerGUI();
-            Inventory getInventory = inv.getInv();
+                SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                Inventory getInventory = inv.getInv();
 
-            if (event.getInventory() != getInventory) {
-                event.setCancelled(true);
+                if (event.getInventory() != getInventory) {
+                    event.setCancelled(true);
+                }
             }
         }
 
     }
     @EventHandler
     public void ChestDragEvent(InventoryDragEvent event){
-        if(hunter.contains(event.getView().getPlayer().getName())) {
-            SpeedrunnerGUI inv = new SpeedrunnerGUI();
-            Inventory getInventory = inv.getInv();
+        if(new ManhuntCommandHandler().hasGameStarted()) {
+            if (hunter.contains(event.getView().getPlayer().getName())) {
+                SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                Inventory getInventory = inv.getInv();
 
-            if (event.getInventory() != getInventory) {
-                event.setCancelled(true);
+                if (event.getInventory() != getInventory) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
     @EventHandler
     public void ChestMoveEvent(InventoryMoveItemEvent event){
-        if(event.getSource().getHolder() instanceof Player){
-            if(hunter.contains(((Player) event.getSource().getHolder()).getName())) {
-                SpeedrunnerGUI inv = new SpeedrunnerGUI();
-                Inventory getInventory = inv.getInv();
+        if(new ManhuntCommandHandler().hasGameStarted()) {
+            if (event.getSource().getHolder() instanceof Player) {
+                if (hunter.contains(((Player) event.getSource().getHolder()).getName())) {
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                    Inventory getInventory = inv.getInv();
 
-                if (event.getSource() != getInventory) {
-                    event.setCancelled(true);
+                    if (event.getSource() != getInventory) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

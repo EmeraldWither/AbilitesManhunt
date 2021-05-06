@@ -1,5 +1,6 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
+import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.event.EventHandler;
@@ -19,24 +20,24 @@ public class PreventPlacing implements Listener {
 
     @EventHandler
     public void PlayerPlace (BlockPlaceEvent event){
-        if(hunter.contains(event.getPlayer().getName())){
+        if(new ManhuntCommandHandler().hasGameStarted()) {
+            if (hunter.contains(event.getPlayer().getName())) {
+                event.setBuild(false);
+                event.setCancelled(true);
 
-            event.setBuild(false);
-            event.setCancelled(true);
-
+            }
         }
     }
 
     @EventHandler
     public void PlayerBreak (BlockBreakEvent event){
-        if(hunter.contains(event.getPlayer().getName())){
-            event.setCancelled(true);
-            event.setDropItems(false);
-            event.setExpToDrop(0);
+            if (new ManhuntCommandHandler().hasGameStarted()) {
+                if (hunter.contains(event.getPlayer().getName())) {
+                    event.setCancelled(true);
+                    event.setDropItems(false);
+                    event.setExpToDrop(0);
 
+                }
+            }
         }
     }
-
-
-
-}
