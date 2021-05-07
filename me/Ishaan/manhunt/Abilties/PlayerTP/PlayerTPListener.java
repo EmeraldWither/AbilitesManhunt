@@ -1,8 +1,8 @@
 package me.Ishaan.manhunt.Abilties.PlayerTP;
 
-import me.Ishaan.manhunt.Enums.ManhuntTeam;
+import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
-import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.ChatColor;
@@ -29,7 +29,7 @@ public class PlayerTPListener implements Listener {
         if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) {
             if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Teleport to a speedrunner!"))) {
                 String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
                     if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                         if (speedrunner.toString() != null) {
                             Player player = event.getPlayer();

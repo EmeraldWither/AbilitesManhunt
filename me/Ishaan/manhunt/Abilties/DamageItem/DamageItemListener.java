@@ -1,8 +1,8 @@
 package me.Ishaan.manhunt.Abilties.DamageItem;
 
-import me.Ishaan.manhunt.Enums.ManhuntTeam;
+import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
-import me.Ishaan.manhunt.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.ChatColor;
@@ -29,7 +29,7 @@ public class DamageItemListener implements Listener {
     public void DetectLauncher(PlayerInteractEvent event) {
         if ((new ManhuntCommandHandler()).hasGameStarted() && event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.GOLDEN_PICKAXE) && event.getPlayer().getInventory().getItemInMainHand().getLore().contains(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Sets the durability of the item that")) {
             String name = event.getPlayer().getName();
-            if ((new ManhuntCommandHandler()).getTeam(name).equals(ManhuntTeam.HUNTER) && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && this.speedrunner.toString() != null) {
+            if ((new ManhuntCommandHandler()).getTeam(name).equals(Team.HUNTER) && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && this.speedrunner.toString() != null) {
                 Player player = event.getPlayer();
                 SpeedrunnerGUI inv = new SpeedrunnerGUI();
                 inv.createInventory();

@@ -2,26 +2,27 @@ package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
-import org.bukkit.entity.Player;
+import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import java.util.List;
 
-public class PreventAttacking implements Listener {
+public class PreventHunger implements Listener {
 
+    List<String> speedrunner = SpeedrunList.speedrunners;
     List<String> hunter = HunterList.hunters;
 
     @EventHandler
-    public void PlayerAttack(EntityDamageByEntityEvent event){
+    public void ItemPickupEvent(FoodLevelChangeEvent event){
         if(new ManhuntCommandHandler().hasGameStarted()) {
+            String name = event.getEntity().getName();
+            if (hunter.contains(name)) {
+                event.setCancelled(true);
 
-            if (event.getDamager() instanceof Player) {
-                if (hunter.contains(((Player) event.getDamager()).getPlayer().getName())) {
-                    event.setCancelled(true);
-                }
             }
         }
     }
+
 }

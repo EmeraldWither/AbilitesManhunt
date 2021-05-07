@@ -1,5 +1,8 @@
 package me.Ishaan.manhunt;
 
+//
+//LMAO THE IMPORT LIST
+//
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemGUIListener;
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemListener;
 import me.Ishaan.manhunt.Abilties.GravityBlocks.GravityGUIListener;
@@ -14,6 +17,8 @@ import me.Ishaan.manhunt.Abilties.Scrambler.ScramblerGUIListener;
 import me.Ishaan.manhunt.Abilties.Scrambler.ScramblerListener;
 import me.Ishaan.manhunt.Abilties.StrikeLightning.LightningGuiListener;
 import me.Ishaan.manhunt.Abilties.StrikeLightning.LightningListener;
+import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.CommandHandlers.ManhuntTabCompleter;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.PlayerChecks.HunterChecks.*;
 import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
@@ -63,9 +68,12 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DamageItemListener(),this);
         getServer().getPluginManager().registerEvents(new PlayerTPListener(),this);
         getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(),this);
+        getServer().getPluginManager().registerEvents(new PreventHunger(),this);
+
 
 
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler());
+        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter());
 
         getLogger().log(Level.INFO, "\n" +
                 "--------------------------------------------------------------\n" +
@@ -141,6 +149,15 @@ public class Main extends JavaPlugin {
                 player.setAllowFlight(false);
             }
             if(speedrunner.contains(player.getName())){
+                player.setGlowing(false);
+                player.getInventory().clear();
+                player.setGameMode(GameMode.SURVIVAL);
+                player.setInvulnerable(false);
+                player.closeInventory();
+                player.setFlying(false);
+                player.setAllowFlight(false);
+            }
+            if(new DeathCheck().getDeadSpeedrunner(player.getName())){
                 player.setGlowing(false);
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);

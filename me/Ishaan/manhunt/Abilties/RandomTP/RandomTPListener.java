@@ -1,8 +1,8 @@
 package me.Ishaan.manhunt.Abilties.RandomTP;
 
-import me.Ishaan.manhunt.Enums.ManhuntTeam;
+import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
-import me.Ishaan.manhunt.ManhuntCommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ public class  RandomTPListener implements Listener {
             if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) {
                 if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!"))) {
                     String name = event.getPlayer().getName();
-                    if (new ManhuntCommandHandler().getTeam(name).equals(ManhuntTeam.HUNTER)) {
+                    if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
                         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
                             Player player = event.getPlayer();

@@ -1,6 +1,6 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
-import me.Ishaan.manhunt.ManhuntCommandHandler;
+import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

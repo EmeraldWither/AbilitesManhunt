@@ -1,8 +1,8 @@
-package me.Ishaan.manhunt;
+package me.Ishaan.manhunt.CommandHandlers;
 
 import me.Ishaan.manhunt.Enums.Ability;
-import me.Ishaan.manhunt.Enums.ManhuntTeam;
-import me.Ishaan.manhunt.Mana.ManaCounter;
+import me.Ishaan.manhunt.Enums.Team;
+import me.Ishaan.manhunt.ManHuntInventory;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.*;
@@ -11,7 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
@@ -120,11 +119,28 @@ public class ManhuntCommandHandler implements CommandExecutor {
                             player.setAllowFlight(true);
                             player.setFlying(true);
                             player.setGlowing(true);
+                            player.setSaturation(10000);
                             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-                            return true;
 
                         }
                     }
+                    if(sender instanceof Player) {
+                        if (((Player) sender).getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
+                            return true;
+                        }
+                    }
+                    if(!(sender instanceof Player)) {
+                        if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
+                            return true;
+                        }
+                    }
+                    return true;
                 }
                 sender.sendMessage(ChatColor.RED + "There are no players in the speedrunners group!");
                 return false;
@@ -138,30 +154,33 @@ public class ManhuntCommandHandler implements CommandExecutor {
         // Add Speedrunners
         //
 
-        if(args[0].equalsIgnoreCase("speedrunner")){
+        if(args[0].equalsIgnoreCase("speedrunner")) {
 
             Integer argsLength = args.length;
 
-            if(argsLength > 1){
-                if(Bukkit.getPlayer(args[1]) != null){
-                    if(Bukkit.getPlayer(args[1]).isOnline()){
-
+            if (argsLength > 1) {
+                if (Bukkit.getPlayer(args[1]) != null) {
+                    if (Bukkit.getPlayer(args[1]).isOnline()) {
                         String arg = args[1];
                         String name = Bukkit.getPlayer(arg).getName();
 
-                        addTeam(ManhuntTeam.SPEEDRUNNER, name);
+                        if (!(speedrunner.contains(name))) {
 
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
-                        return true;
+                            addTeam(Team.SPEEDRUNNER, name);
 
-                    } sender.sendMessage( prefix + ChatColor.DARK_RED +"That player is not online!");
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
+                            return true;
+                        } sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a speedrunner!");
+                        return false;
+                    }
+                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                     return false;
-
-                }  sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                }
+                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                 return false;
             }
-            sender.sendMessage( prefix + ChatColor.DARK_RED +"Please input a player name!");
-            return false;
+                sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
+                return false;
 
         }
 
@@ -181,10 +200,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         String arg = args[1];
                         String name = Bukkit.getPlayer(arg).getName();
 
-                        addTeam(ManhuntTeam.HUNTER, name);
+                        if (!(hunter.contains(name))) {
+
+                        addTeam(Team.HUNTER, name);
 
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the hunters group! "));
                         return true;
+                    } sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a hunter!");
+                    return false;
 
                     } sender.sendMessage( prefix + ChatColor.DARK_RED +"That player is not online!");
                     return false;
@@ -238,26 +261,26 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
         //Bukkit Runnable
         // Test only right now
-        if (args[0].equalsIgnoreCase("runnable")){
+       /* if (args[0].equalsIgnoreCase("runnable")){
             sender.sendMessage("Started Countdown");
             JavaPlugin javaPlugin = new Main().javaPlugin;
             ManaCounter manaCounter = new ManaCounter();
             manaCounter.run();
             sender.sendMessage("Finished Countdown");
-        }
+        }*/
         return false;
 
     }
 
-    public void addTeam(ManhuntTeam team, String name){
+    public void addTeam(Team team, String name){
         Player player = Bukkit.getPlayer(name);
-        if(team.equals(ManhuntTeam.HUNTER)){
+        if(team.equals(Team.HUNTER)){
             hunter.add(name);
             if(speedrunner.contains(name)){
                 speedrunner.remove(name);
             }
         }
-        if(team.equals(ManhuntTeam.SPEEDRUNNER)){
+        if(team.equals(Team.SPEEDRUNNER)){
             speedrunner.add(name);
             if(hunter.contains(name)){
                 hunter.remove(name);
@@ -265,14 +288,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
         return;
     }
-    public ManhuntTeam getTeam(String playerName){
+    public Team getTeam(String playerName){
         String name = Bukkit.getPlayer(playerName).getName();
 
         if(hunter.contains(name)){
-            return ManhuntTeam.HUNTER;
+            return Team.HUNTER;
         }
         if(speedrunner.contains(name)) {
-            return ManhuntTeam.SPEEDRUNNER;
+            return Team.SPEEDRUNNER;
         }
         return null;
     }
@@ -282,6 +305,4 @@ public class ManhuntCommandHandler implements CommandExecutor {
     public void setGameStarted(boolean b){
         HasGameStarted = b;
     }
-
-
 }
