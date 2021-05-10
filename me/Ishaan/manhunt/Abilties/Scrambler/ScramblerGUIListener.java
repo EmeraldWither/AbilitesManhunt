@@ -4,7 +4,7 @@ import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
+import me.Ishaan.manhunt.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,12 +18,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public class ScramblerGUIListener implements Listener {
 
-    List<String> hunter = HunterList.hunters;
+    private final Main main;
+    public ScramblerGUIListener(Main main){
+        this.main = main;
+    }
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -33,9 +35,9 @@ public class ScramblerGUIListener implements Listener {
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
             if(event.getCurrentItem() != null) {
-                if(new ManhuntCommandHandler().hasGameStarted()) {
+                if(new ManhuntCommandHandler(main).hasGameStarted()) {
                     String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
-                    if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
+                    if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Scramble the selected players inventory!")) {
                             SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();

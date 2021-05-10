@@ -3,6 +3,7 @@ package me.Ishaan.manhunt.Abilties.GravityBlocks;
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,13 +15,18 @@ import org.bukkit.inventory.Inventory;
 
 public class GravityListener implements Listener {
 
+    private final Main main;
+    public GravityListener(Main main){
+        this.main = main;
+    }
+
     @EventHandler
     public void SetGravity(PlayerInteractEvent event){
-        if (new ManhuntCommandHandler().hasGameStarted()) {
+        if (new ManhuntCommandHandler(main).hasGameStarted()) {
             if(event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ANVIL)) {
                 if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Apply gravity to nearby blocks."))) {
                     String name = event.getPlayer().getName();
-                    if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
+                    if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
                             Player player = event.getPlayer();

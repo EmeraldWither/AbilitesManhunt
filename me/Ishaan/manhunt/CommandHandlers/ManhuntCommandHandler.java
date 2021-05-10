@@ -2,6 +2,7 @@ package me.Ishaan.manhunt.CommandHandlers;
 
 import me.Ishaan.manhunt.Enums.Ability;
 import me.Ishaan.manhunt.Enums.Team;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
@@ -22,14 +23,18 @@ public class ManhuntCommandHandler implements CommandExecutor {
     List<String> speedrunner = SpeedrunList.getSpeedruners();
     //Hunters
     List<String> hunter = HunterList.getHunters();
-
     public static boolean HasGameStarted = false;
+
+    private final Main main;
+    public ManhuntCommandHandler(Main main){
+        this.main = main;
+    }
 
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        String prefix = ChatColor.DARK_GREEN + "[Manhunt Abilities] ";
+        String prefix = ChatColor.translateAlternateColorCodes('&',main.getConfig().getString("plugin-prefix"));
 
         //
         // Help Commands
@@ -49,7 +54,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 "&e/manhunt start : Starts the manhunt\n" +
                                 "&e/manhunt hunter <player> : Adds a player to the hunter group.\n" +
                                 "&e/manhunt speedrunner <player>: Adds a player to the speedrunner group. \n" +
-                                "&e/manhunt listgroups: Shows which players are in which groups\n" +
+                                "&e/manhunt listgroups: Shows which players are in which groups.\n" +
+                                "&e/manhunt help: Shows this help page.\n" +
                                 "&4--------------------------------"));
                 return false;
             }
@@ -63,7 +69,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 "&e/manhunt start : Starts the manhunt\n" +
                                 "&e/manhunt hunter <player> : Adds a player to the hunter group.\n" +
                                 "&e/manhunt speedrunner <player>: Adds a player to the speedrunner group. \n" +
-                                "&e/manhunt listgroups: Shows which players are in which groups\n" +
+                                "&e/manhunt listgroups: Shows which players are in which groups.\n" +
+                                "&e/manhunt help: Shows this help page.\n" +
                                 "&4--------------------------------"));
                 return true;
             }
@@ -82,7 +89,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
                     ManHuntInventory manHuntInventory = new ManHuntInventory();
                     HasGameStarted = true;
 
-                    Bukkit.broadcastMessage(ChatColor.RED + "The manhunt is starting!");
+                    for(String msg : main.getConfig().getStringList("messages.start-msg")) {
+                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                    }
                     for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                         if (speedrunner.contains(player.getName())) {
                             player.getInventory().clear();
@@ -259,6 +268,15 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
             return true;
         }
+
+
+        if(args[0].equalsIgnoreCase("reload")){
+            main.reloadConfig();
+            prefix = main.getConfig().getString("plugin-prefix");
+            String msg = main.getConfig().getString("config-reload-msg");
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
+        }
+
         //Bukkit Runnable
         // Test only right now
        /* if (args[0].equalsIgnoreCase("runnable")){

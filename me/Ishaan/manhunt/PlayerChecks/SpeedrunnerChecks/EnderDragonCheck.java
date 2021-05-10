@@ -1,6 +1,7 @@
 package me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks;
 
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -23,23 +24,32 @@ public class EnderDragonCheck implements Listener {
 
     List<String> hunter = HunterList.getHunters();
 
+    private final Main main;
+
+    public EnderDragonCheck(Main main) {
+        this.main = main;
+    }
+
     @EventHandler
     public void DragonDeath(EnderDragonChangePhaseEvent event) {
         if (event.getCurrentPhase().equals(EnderDragon.Phase.DYING)) {
-            if (new ManhuntCommandHandler().hasGameStarted()) {
+            if (new ManhuntCommandHandler(main).hasGameStarted()) {
                 if (speedrunner.size() >= 1) {
-                    Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6---------------------------------------------\n" +
-                            "&6| &aThe speedrunners have killed the Ender Dragon! &6|\n" +
-                            "&6---------------------------------------------"));
                     for (Player players : Bukkit.getOnlinePlayers()) {
                         String speedrunners = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
 
                         if (hunter.contains(players.getName())) {
                             players.sendTitle(ChatColor.GREEN + "DEFEATED", ChatColor.DARK_RED + "Congrats to " + speedrunners + "!", 20, 100, 20);
+                            for (String msg : main.getConfig().getStringList("messages.speedrunner-win-msg.hunters")) {
+                                players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            }
                         }
                         if(!(hunter.contains(players.getName()))){
                             players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_RED + "Congrats to " + speedrunners + "!", 20, 100, 20);
                             players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
+                            for (String msg : main.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
+                                players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            }
                         }
                         speedrunner.clear();
                         hunter.clear();
@@ -49,9 +59,8 @@ public class EnderDragonCheck implements Listener {
                         players.setInvulnerable(false);
                         players.closeInventory();
                         players.setFlying(false);
-                        new ManhuntCommandHandler().setGameStarted(false);
-                        return;
                     }
+                    new ManhuntCommandHandler(main).setGameStarted(false);
                 }
             }
         }

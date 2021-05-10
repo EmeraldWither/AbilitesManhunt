@@ -4,10 +4,12 @@ import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,23 +25,33 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomTPGUIListener implements Listener {
     List<String> hunter = HunterList.hunters;
 
+    private final Main main;
+    public RandomTPGUIListener(Main main){
+        this.main = main;
+    }
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
+
 
         SpeedrunnerGUI inv = new SpeedrunnerGUI();
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
-            if(new ManhuntCommandHandler().hasGameStarted()) {
+            if(new ManhuntCommandHandler(main).hasGameStarted()) {
                 if (event.getCurrentItem() != null) {
                     String name = Objects.requireNonNull(Bukkit.getPlayer(event.getWhoClicked().getName())).getName();
-                    if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
+                    if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore()).contains(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!")) {
                             SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
                             Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
                             assert selectedPlayer != null;
-                            randomTP(selectedPlayer.getName(), player.getName(), 30);
+
+                            Integer radius = main.getConfig().getInt("abilities.randomtp.tp-radius");
+
+                            randomTP(selectedPlayer.getName(), player.getName(), radius);
+                            selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }

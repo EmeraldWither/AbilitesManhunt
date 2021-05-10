@@ -1,6 +1,7 @@
 package me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks;
 
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -24,29 +25,41 @@ public class DeathCheck implements Listener {
 
     private final List<String> deadSpeedrunners = new ArrayList<String>();
 
+    private final Main main;
+
+    public DeathCheck(Main main) {
+        this.main = main;
+    }
+
     @EventHandler
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
-        if (new ManhuntCommandHandler().hasGameStarted()) {
+        if (new ManhuntCommandHandler(main).hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getName())) {
                 speedrunner.remove(event.getEntity().getName());
                 deadSpeedrunners.add(event.getEntity().getName());
                 event.getEntity().setAllowFlight(true);
                 event.getEntity().setFlying(true);
                 event.getEntity().setGlowing(false);
+                event.setShouldDropExperience(false);
+
                 if (speedrunner.size() == 0) {
-                    Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6---------------------------------------------------------\n" +
-                            "&6| &cThe speedrunners have died. As such the hunters win the game! &6|\n" +
-                            "&6---------------------------------------------------------"));
                     for (Player players : Bukkit.getOnlinePlayers()) {
+
                         String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
                         if (hunter.contains(players.getName())) {
                             players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_RED + "Congrats to " + hunters + "!", 20, 100, 20);
                             players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
                             hunter.remove(players.getName());
+                            for (String msg : main.getConfig().getStringList("messages.hunter-win-msg.hunters")) {
+                                players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            }
                         }
-                        if(deadSpeedrunners.contains(players.getName())){
+                        if (deadSpeedrunners.contains(players.getName())) {
                             players.sendTitle(ChatColor.GREEN + "DEFEATED", ChatColor.DARK_RED + "Congrats to " + hunters + "!", 20, 100, 20);
                             deadSpeedrunners.remove(players.getName());
+                            for (String msg : main.getConfig().getStringList("messages.hunter-win-msg.speedrunners")) {
+                                players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            }
                         }
                         players.setGlowing(false);
                         players.getInventory().clear();
@@ -56,18 +69,17 @@ public class DeathCheck implements Listener {
                         players.setFlying(false);
                         players.setAllowFlight(false);
                     }
-                    new ManhuntCommandHandler().setGameStarted(false);
-
+                    new ManhuntCommandHandler(main).setGameStarted(false);
                 }
             }
         }
     }
 
-    public Boolean getDeadSpeedrunner(String name){
-        if(deadSpeedrunners.contains(name)){
+    public Boolean getDeadSpeedrunner(String name) {
+        if (deadSpeedrunners.contains(name)) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
-
 }

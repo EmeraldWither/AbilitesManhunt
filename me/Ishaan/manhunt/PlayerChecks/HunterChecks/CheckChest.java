@@ -2,6 +2,7 @@ package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.entity.Player;
@@ -22,10 +23,15 @@ public class CheckChest implements Listener{
     //Hunters
     List<String> hunter = HunterList.hunters;
 
+    private final Main main;
+    public CheckChest(Main main){
+        this.main = main;
+    }
+
     @EventHandler
     public void ChestClick(InventoryClickEvent event) {
         if(hunter.contains(event.getView().getPlayer().getName())) {
-            if(new ManhuntCommandHandler().hasGameStarted()) {
+            if(new ManhuntCommandHandler(main).hasGameStarted()) {
 
                 SpeedrunnerGUI inv = new SpeedrunnerGUI();
                 Inventory getInventory = inv.getInv();
@@ -39,7 +45,7 @@ public class CheckChest implements Listener{
     }
     @EventHandler
     public void ChestDragEvent(InventoryDragEvent event){
-        if(new ManhuntCommandHandler().hasGameStarted()) {
+        if(new ManhuntCommandHandler(main).hasGameStarted()) {
             if (hunter.contains(event.getView().getPlayer().getName())) {
                 SpeedrunnerGUI inv = new SpeedrunnerGUI();
                 Inventory getInventory = inv.getInv();
@@ -52,7 +58,7 @@ public class CheckChest implements Listener{
     }
     @EventHandler
     public void ChestMoveEvent(InventoryMoveItemEvent event){
-        if(new ManhuntCommandHandler().hasGameStarted()) {
+        if(new ManhuntCommandHandler(main).hasGameStarted()) {
             if (event.getSource().getHolder() instanceof Player) {
                 if (hunter.contains(((Player) event.getSource().getHolder()).getName())) {
                     SpeedrunnerGUI inv = new SpeedrunnerGUI();

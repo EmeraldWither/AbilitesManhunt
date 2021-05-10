@@ -3,6 +3,7 @@ package me.Ishaan.manhunt.Abilties.GravityBlocks;
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
@@ -26,6 +27,11 @@ public class GravityGUIListener implements Listener {
     List<String> speedrunner = SpeedrunList.speedrunners;
     List<String> hunter = HunterList.hunters;
 
+    private final Main main;
+    public GravityGUIListener(Main main){
+        this.main = main;
+    }
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
 
@@ -34,7 +40,7 @@ public class GravityGUIListener implements Listener {
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
             if(event.getCurrentItem() != null) {
-                if (new ManhuntCommandHandler().hasGameStarted()) {
+                if (new ManhuntCommandHandler(main).hasGameStarted()) {
                     if (hunter.contains(event.getView().getPlayer().getName())) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().getItemMeta().getLore().contains(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Apply gravity to nearby blocks.")) {
@@ -43,7 +49,9 @@ public class GravityGUIListener implements Listener {
                             Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
                             Byte blockData = 0x0;
 
-                            for (Block block : getBlocks(selectedPlayer.getLocation().getBlock(), 5)) {
+                            Integer radius = main.getConfig().getInt("abilities.gravity.radius");
+
+                            for (Block block : getBlocks(selectedPlayer.getLocation().getBlock(), radius)) {
 
                                 BlockData blockdata = block.getBlockData();
                                 block.setType(Material.AIR);

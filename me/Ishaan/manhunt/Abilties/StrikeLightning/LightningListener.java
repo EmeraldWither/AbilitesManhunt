@@ -3,6 +3,7 @@ package me.Ishaan.manhunt.Abilties.StrikeLightning;
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.ChatColor;
@@ -25,12 +26,17 @@ public class LightningListener implements Listener {
     //Hunters
     List<String> hunter = HunterList.hunters;
 
+    private final Main main;
+    public LightningListener(Main main){
+        this.main = main;
+    }
+
     @EventHandler
     public void StrikeLightning(PlayerInteractEvent event) {
         if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-            if (new ManhuntCommandHandler().hasGameStarted()) {
+            if (new ManhuntCommandHandler(main).hasGameStarted()) {
                 String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
+                if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                     if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.STICK)) {
                         if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.")) {
                             Player player = event.getPlayer();

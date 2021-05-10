@@ -3,6 +3,7 @@ package me.Ishaan.manhunt.Abilties.LauncherListener;
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.PlayerLists.HunterList;
 import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.ChatColor;
@@ -23,13 +24,18 @@ public class LaunchAbility implements Listener {
     //Hunters
     List<String> hunter = HunterList.hunters;
 
+    private final Main main;
+    public LaunchAbility(Main main){
+        this.main = main;
+    }
+
 @EventHandler
     public void DetectLauncher(PlayerInteractEvent event){
-    if (new ManhuntCommandHandler().hasGameStarted()) {
+    if (new ManhuntCommandHandler(main).hasGameStarted()) {
         if (event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.FEATHER)) {
             if (event.getPlayer().getInventory().getItemInMainHand().getLore().contains((ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!"))) {
                 String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler().getTeam(name).equals(Team.HUNTER)) {
+                if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                     if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                         if (speedrunner.toString() != null) {
                             Player player = event.getPlayer();

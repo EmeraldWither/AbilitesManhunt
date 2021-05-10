@@ -4,6 +4,7 @@ import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
+import me.Ishaan.manhunt.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -24,13 +25,18 @@ public class DamageItemGUIListener implements Listener {
     List<String> speedrunner;
     List<String> hunter;
 
+    private final Main main;
+    public DamageItemGUIListener(Main main){
+        this.main = main;
+    }
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
         SpeedrunnerGUI inv = new SpeedrunnerGUI();
         Inventory getInventory = inv.getInv();
-        if (event.getInventory().getHolder() instanceof GUIInventoryHolder && event.getCurrentItem() != null && (new ManhuntCommandHandler()).hasGameStarted()) {
+        if (event.getInventory().getHolder() instanceof GUIInventoryHolder && event.getCurrentItem() != null && (new ManhuntCommandHandler(main)).hasGameStarted()) {
             String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
-            if ((new ManhuntCommandHandler()).getTeam(name).equals(Team.HUNTER)) {
+            if ((new ManhuntCommandHandler(main)).getTeam(name).equals(Team.HUNTER)) {
                 Player player = (Player)event.getView().getPlayer();
                 if (((List)Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta().getLore())).contains(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Sets the durability of the item that")) {
                     SkullMeta skull = (SkullMeta)event.getCurrentItem().getItemMeta();

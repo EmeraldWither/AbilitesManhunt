@@ -3,6 +3,7 @@ package me.Ishaan.manhunt;
 //
 //LMAO THE IMPORT LIST
 //
+
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemGUIListener;
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemListener;
 import me.Ishaan.manhunt.Abilties.GravityBlocks.GravityGUIListener;
@@ -40,39 +41,39 @@ import java.util.logging.Level;
 public class Main extends JavaPlugin {
 
     Plugin plugin = this;
-    JavaPlugin javaPlugin = (JavaPlugin) this.plugin;
     List<String> speedrunner = SpeedrunList.speedrunners;
     List<String> hunter = HunterList.hunters;
 
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(new LaunchAbility(), this);
-        getServer().getPluginManager().registerEvents(new LightningListener() ,this);
-        getServer().getPluginManager().registerEvents(new GravityListener() ,this);
-        getServer().getPluginManager().registerEvents(new PreventPlacing() ,this);
-        getServer().getPluginManager().registerEvents(new CheckChest() ,this);
-        getServer().getPluginManager().registerEvents(new DeathCheck() ,this);
-        getServer().getPluginManager().registerEvents(new LightningGuiListener() ,this);
-        getServer().getPluginManager().registerEvents(new LauncherGUIListener() ,this);
-        getServer().getPluginManager().registerEvents(new GravityGUIListener() ,this);
-        getServer().getPluginManager().registerEvents(new PreventPickingUp() ,this);
-        getServer().getPluginManager().registerEvents(new PreventAttacking(),this);
-        getServer().getPluginManager().registerEvents(new PreventDroppingItems(),this);
-        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(),this);
-        getServer().getPluginManager().registerEvents(new ScramblerListener(),this);
-        getServer().getPluginManager().registerEvents(new EnderDragonCheck(),this);
-        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(),this);
-        getServer().getPluginManager().registerEvents(new RandomTPListener(),this);
-        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(),this);
-        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(),this);
-        getServer().getPluginManager().registerEvents(new DamageItemListener(),this);
-        getServer().getPluginManager().registerEvents(new PlayerTPListener(),this);
-        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(),this);
-        getServer().getPluginManager().registerEvents(new PreventHunger(),this);
+        getServer().getPluginManager().registerEvents(new LaunchAbility(this), this);
+        getServer().getPluginManager().registerEvents(new LightningListener(this) ,this);
+        getServer().getPluginManager().registerEvents(new GravityListener(this) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPlacing(this) ,this);
+        getServer().getPluginManager().registerEvents(new CheckChest(this) ,this);
+        getServer().getPluginManager().registerEvents(new DeathCheck(this) ,this);
+        getServer().getPluginManager().registerEvents(new LightningGuiListener(this) ,this);
+        getServer().getPluginManager().registerEvents(new LauncherGUIListener(this) ,this);
+        getServer().getPluginManager().registerEvents(new GravityGUIListener(this) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPickingUp(this) ,this);
+        getServer().getPluginManager().registerEvents(new PreventAttacking(this),this);
+        getServer().getPluginManager().registerEvents(new PreventDroppingItems(this),this);
+        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(this),this);
+        getServer().getPluginManager().registerEvents(new ScramblerListener(this),this);
+        getServer().getPluginManager().registerEvents(new EnderDragonCheck(this),this);
+        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(this),this);
+        getServer().getPluginManager().registerEvents(new RandomTPListener(this),this);
+        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(this),this);
+        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(this),this);
+        getServer().getPluginManager().registerEvents(new DamageItemListener(this),this);
+        getServer().getPluginManager().registerEvents(new PlayerTPListener(this),this);
+        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(this),this);
+        getServer().getPluginManager().registerEvents(new PreventHunger(this),this);
+        this.saveDefaultConfig();
 
 
 
-        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler());
+        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(this));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter());
 
         getLogger().log(Level.INFO, "\n" +
@@ -82,7 +83,7 @@ public class Main extends JavaPlugin {
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
                 "|                             v0.8 BETA                                  \n" +
                 "|                                                                        \n" +
-                "|                         BY: EMERALDWITHERYT   \n" +
+                "|                        BY: EMERALDWITHERYT   \n" +
                 "|                                                                        \n" +
                 "|             NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,\n" +
                 "|           AS SUCH, IT WILL HAVE BUGS. PROCEED WITH CAUTION. \n" +
@@ -157,7 +158,7 @@ public class Main extends JavaPlugin {
                 player.setFlying(false);
                 player.setAllowFlight(false);
             }
-            if(new DeathCheck().getDeadSpeedrunner(player.getName())){
+            if(new DeathCheck(this).getDeadSpeedrunner(player.getName())){
                 player.setGlowing(false);
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
