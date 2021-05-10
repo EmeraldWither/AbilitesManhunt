@@ -1,0 +1,64 @@
+#|------------------------------------------------------------------------
+#|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES
+#|                             v0.8 BETA
+#|
+#|                      BY: EMERALDWITHERYT
+#|
+#|             NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,
+#|           AS SUCH, IT WILL HAVE BUGS. PROCEED WITH CAUTION
+#|------------------------------------------------------------------------
+plugin-prefix: "&2[Abilities Manhunt] "
+config-reload-msg: "&aSuccessfully reloaded the configuration files!"
+messages:
+  start-msg:
+    - "&c-----------------"
+    - "&aStarting the Manhunt!"
+    - "&c----------------"
+  hunter-win-msg:
+    hunters:
+      - "&6-------------------------------"
+      - "&a You have won the game!
+      - "&6-------------------------------"
+    speedrunners:
+      - "&6-------------------------------"
+      - "&4You have lost the game :("
+      - "&6-------------------------------"
+  speedrunner-win-msg:
+    hunters:
+      - "&6-------------------------------"
+      - "&4You have lost the game :("
+      - "&6-------------------------------"
+    speedrunners:
+     - "&6-------------------------------"
+     - "&aYou have won the game!"
+     - "&6-------------------------------"
+abilities:
+  launcher:
+    launch-velocity: 10
+    launch-upwards: false
+  gravity:
+    radius: 5
+  randomtp:
+    tp-radius: 50
+
+# Will remove any special items as
+# to prevent them from being used.
+# It is not suggested you change this!
+clear-items-on-join: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
