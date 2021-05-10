@@ -40,25 +40,10 @@ abilities:
     radius: 5
   randomtp:
     tp-radius: 50
+  playertp:
+    height-above-player: 5
 
 # Will remove any special items as
 # to prevent them from being used.
 # It is not suggested you change this!
 clear-items-on-join: true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
