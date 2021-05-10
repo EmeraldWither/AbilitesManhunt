@@ -47,8 +47,9 @@ public class PlayerTPGUIListener implements Listener {
 
                             SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                             Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                            int height = main.getConfig().getInt("abilities.playertp.height-above-player");
 
-                            player.teleport(selectedPlayer.getLocation().add(0,3,0));
+                            player.teleport(selectedPlayer.getLocation().add(0,height,0));
                             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
