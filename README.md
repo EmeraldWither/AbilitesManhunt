@@ -1,9 +1,12 @@
-# Manhunt but the Hunter has Special Abilites
+# Minecraft Manhunt but the Hunter has Special Abilites
 
 This is a plugin which takes a new take on Manhunt. With 7 planned abilities, it will elevate the manhunt genre. 
--------------------------------------------------------------------------------------------------------------------
+
+You can see the planned features timeline here: https://github.com/EmeraldWither/AbilitesManhunt/projects/1
+
 
 How to get the Code and Compile the Plugin: 
+----------------------------------------------------------------
 
 IntelliJ:
 
@@ -27,7 +30,7 @@ IntelliJ:
 
 Congrats you have compiled the plugin!
 
---------------------------------
+
 How to Push to Github:
 --------------------------------
 
@@ -39,6 +42,6 @@ After editing your files, go to the left and click on Commits.
 
 3) Click on “Commit and Push”.
 
-4) On the popup, click on push.  If it asks for you to merge the commit before you can push it, click on “merge”. 
+4) On the popup, click on the blue push button.  If it asks for you to merge the commit before you can push it, click on “merge”. 
 
-Congrats, you have pushed it to github. 
+Congrats, you have pushed it to github! 
