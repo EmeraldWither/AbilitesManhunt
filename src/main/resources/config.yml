@@ -48,7 +48,7 @@ abilities:
   mob-targeting:
     range: 40
 
-# Will remove any special items as
+# This will remove any special items as
 # to prevent them from being used.
 # It is not suggested you change this!
 clear-items-on-join: true
