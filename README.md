@@ -1,3 +1,44 @@
 # Manhunt but the Hunter has Special Abilites
 
-This is a plugin which takes a new take on Manhunt. With 7 planned abilites, it will elevate the manhunt genre. 
+This is a plugin which takes a new take on Manhunt. With 7 planned abilities, it will elevate the manhunt genre. 
+-------------------------------------------------------------------------------------------------------------------
+
+How to get the Code and Compile the Plugin: 
+
+IntelliJ:
+
+1) Open IntelliJ > File > New > New Project From Version Control
+
+2) Clone this repo. 
+
+3) Open the “pom.xml”.
+
+4) Go to line 32 and replace “REPLACE YOUR DIRECTORY HERE WITH NO “”’, with the directory of your plugins folder.
+
+5) Click on the maven reload button on the top right. 
+
+![2021-05-11 12_36_26-Window](https://user-images.githubusercontent.com/68785503/117853252-30c3c500-b256-11eb-990d-9aa93a50026c.png)
+
+6) Go into your plugins folder, and make sure that there are no folders called “classes”. If there are, delete them.
+
+7) If you wish, edit the plugin. 
+
+8) Click on LifeCycle > Package. 
+
+Congrats you have compiled the plugin!
+
+--------------------------------
+How to Push to Github:
+--------------------------------
+
+After editing your files, go to the left and click on Commits.
+
+1) Make sure that the pom.xml is unselected. 
+
+2) Give a Title and a Description of your commit with the changes. 
+
+3) Click on “Commit and Push”.
+
+4) On the popup, click on push.  If it asks for you to merge the commit before you can push it, click on “merge”. 
+
+Congrats, you have pushed it to github. 
