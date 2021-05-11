@@ -85,7 +85,7 @@ public class Main extends JavaPlugin {
                 "|                                                                        \n" +
                 "|                        BY: EMERALDWITHERYT   \n" +
                 "|                                                                        \n" +
-                "|             NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,\n" +
+                "|              NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,\n" +
                 "|           AS SUCH, IT WILL HAVE BUGS. PROCEED WITH CAUTION. \n" +
                 "--------------------------------------------------------------");
 
@@ -103,7 +103,7 @@ public class Main extends JavaPlugin {
                 "|                                                                        \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "|                                                                        \n" +
-                "|             NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,\n" +
+                "|              NOTE: THIS PLUGIN IS STILL UNDER DEVELOPMENT,\n" +
                 "|           AS SUCH, IT WILL HAVE BUGS. PROCEED WITH CAUTION. \n" +
                 "--------------------------------------------------------------");
 
