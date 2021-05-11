@@ -270,11 +270,16 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
 
 
-        if(args[0].equalsIgnoreCase("reload")){
-            main.reloadConfig();
-            prefix = main.getConfig().getString("plugin-prefix");
-            String msg = main.getConfig().getString("config-reload-msg");
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
+        if(args[0].equalsIgnoreCase("reload")) {
+            if (sender.hasPermission("manhunt.reload") || sender.hasPermission("manhunt.admin")) {
+                main.reloadConfig();
+                prefix = main.getConfig().getString("plugin-prefix");
+                String msg = main.getConfig().getString("config-reload-msg");
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
+                return true;
+            }
+            String invalidPerms = main.getConfig().getString("permission-denied-msg");
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + invalidPerms));
         }
 
         //Bukkit Runnable
