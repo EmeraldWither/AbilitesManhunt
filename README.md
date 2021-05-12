@@ -26,10 +26,9 @@ How to get the Code and Compile the Plugin:
 
 7) If you wish, edit the plugin. 
 
-8) Click on LifeCycle > Package. 
+8) Click on Lifecycle > Package. 
 
 Congrats you have compiled the plugin!
-
 
 
 How to Push to Github:
