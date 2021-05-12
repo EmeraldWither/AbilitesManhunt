@@ -34,6 +34,7 @@ messages:
      - "&aYou have won the game!"
      - "&6-------------------------------"
 abilities:
+    # NOTE: ALL cooldowns should be in SECONDS, not MILLISECONDS or MINUTES!
   lightning:
     cooldown: 60
   launcher:
@@ -50,7 +51,6 @@ abilities:
     tp-radius: 50
     cooldown : 105
   damageitem:
-    # Cooldown should be in SECONDS!
     cooldown: 300
   playertp:
     height-above-player: 5
