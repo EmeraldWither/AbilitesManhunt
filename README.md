@@ -8,7 +8,7 @@ You can see the planned features timeline here: https://github.com/EmeraldWither
 How to get the Code and Compile the Plugin: 
 ----------------------------------------------------------------
 
-IntelliJ:
+    IntelliJ; How to compile using version control: 
 
 1) Open IntelliJ > File > New > New Project From Version Control
 
@@ -29,11 +29,6 @@ IntelliJ:
 8) Click on LifeCycle > Package. 
 
 Congrats you have compiled the plugin!
-
-
-Eclipse:
-
-                                                            Sorry, I don't speak wrong. 
 
 
 
