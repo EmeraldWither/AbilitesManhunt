@@ -17,9 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 public class ScramblerGUIListener implements Listener {
 
@@ -27,6 +25,8 @@ public class ScramblerGUIListener implements Listener {
     public ScramblerGUIListener(Main main){
         this.main = main;
     }
+
+    Map<String, Long> scramblerCooldown = new HashMap<String, Long>();
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -41,6 +41,13 @@ public class ScramblerGUIListener implements Listener {
                     if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getScrambler())){
+                            if (scramblerCooldown.containsKey(player.getName())) {
+                                if (scramblerCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    return;
+                                }
+                            }
                             SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
                             Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
 
@@ -48,6 +55,9 @@ public class ScramblerGUIListener implements Listener {
                             ItemStack[] oldInv = selectedPlayer.getInventory().getStorageContents();
                             Collections.shuffle(Arrays.asList(oldInv));
                             selectedPlayer.getInventory().setStorageContents(oldInv);
+
+                            Integer cooldown = main.getConfig().getInt("abilities.scramble.cooldown");
+                            scramblerCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }

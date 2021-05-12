@@ -19,6 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class LauncherGUIListener implements Listener {
@@ -26,6 +28,7 @@ public class LauncherGUIListener implements Listener {
     public LauncherGUIListener(Main main){
         this.main = main;
     }
+    Map<String, Long> launcherCooldown = new HashMap<String, Long>();
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -39,7 +42,15 @@ public class LauncherGUIListener implements Listener {
                     String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
                     if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
-                        if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getPlayerTP())){
+                        if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLauncher())){
+                            if (launcherCooldown.containsKey(player.getName())) {
+                                if (launcherCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    return;
+                                }
+                            }
+
                             SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                             Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
 
@@ -56,6 +67,9 @@ public class LauncherGUIListener implements Listener {
                             Bukkit.getWorld(selectedPlayer.getWorld().getName()).playSound(selectedPlayer.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1000, 0);
                             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1000, 0);
                             Bukkit.getWorld(player.getWorld().getUID()).spawnParticle(Particle.EXPLOSION_HUGE, selectedPlayer.getLocation(), 10);
+
+                            Integer cooldown = main.getConfig().getInt("abilities.launcher.cooldown");
+                            launcherCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
                         }

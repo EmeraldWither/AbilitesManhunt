@@ -22,7 +22,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GravityGUIListener implements Listener {
     List<String> speedrunner = SpeedrunList.speedrunners;
@@ -32,6 +34,7 @@ public class GravityGUIListener implements Listener {
     public GravityGUIListener(Main main){
         this.main = main;
     }
+    Map<String, Long> gravityCooldown = new HashMap<String, Long>();
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -45,6 +48,14 @@ public class GravityGUIListener implements Listener {
                     if (hunter.contains(event.getView().getPlayer().getName())) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getGravity())){
+                            if (gravityCooldown.containsKey(player.getName())) {
+                                if (gravityCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    return;
+                                }
+                            }
+
                             SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                             Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
                             Byte blockData = 0x0;
@@ -57,6 +68,8 @@ public class GravityGUIListener implements Listener {
                                 block.setType(Material.AIR);
                                 player.getWorld().spawnFallingBlock(block.getLocation(), blockdata);
                             }
+                            Integer cooldown = main.getConfig().getInt("abilities.gravity.cooldown");
+                            gravityCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
                         }

@@ -10,14 +10,15 @@
 plugin-prefix: "&2[Abilities Manhunt] "
 config-reload-msg: "&aSuccessfully reloaded the configuration files!"
 messages:
+  cooldown-msg: "&cYou're currently on cooldown!"
   start-msg:
     - "&c-----------------"
-    - "&The manhunt is starting now!"
+    - "&aThe manhunt is starting now!"
     - "&c----------------"
   hunter-win-msg:
     hunters:
       - "&6-------------------------------"
-      - "&a You have won the game!
+      - "&a You have won the game!"
       - "&6-------------------------------"
     speedrunners:
       - "&6-------------------------------"
@@ -33,20 +34,31 @@ messages:
      - "&aYou have won the game!"
      - "&6-------------------------------"
 abilities:
+  lightning:
+    cooldown: 60
   launcher:
     launch-velocity: 10
     launch-upwards: false
     # If launch-upwards is false, the
     # speedrunner will be launched in
     # the direction that they are looking at.
+    cooldown: 30
   gravity:
     radius: 5
+    cooldown: 60
   randomtp:
     tp-radius: 50
+    cooldown : 105
+  damageitem:
+    # Cooldown should be in SECONDS!
+    cooldown: 300
   playertp:
     height-above-player: 5
   mob-targeting:
     range: 40
+    cooldown: 600
+  scramble:
+    cooldown: 90
 
 # This will remove any special items as
 # to prevent them from being used.

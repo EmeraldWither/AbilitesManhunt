@@ -17,26 +17,29 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 
 public class DamageItemListener implements Listener {
-    List<String> speedrunner;
-    List<String> hunter;
 
-    private final Main main;
-    public DamageItemListener(Main main){
+    private Main main;
+
+    public DamageItemListener(Main main) {
         this.main = main;
     }
 
+    ManhuntCommandHandler manhuntCommandHandler = new ManhuntCommandHandler(main);
+
     @EventHandler
-    public void DetectLauncher(PlayerInteractEvent event) {
-        if ((new ManhuntCommandHandler(main)).hasGameStarted() && event.getPlayer().getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getGravity())){
+    public void DetectDamageItem(PlayerInteractEvent event) {
+        if ((new ManhuntCommandHandler(main)).hasGameStarted() && event.getPlayer().getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getDamageItem())) {
             String name = event.getPlayer().getName();
-            if ((new ManhuntCommandHandler(main)).getTeam(name).equals(Team.HUNTER) && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && this.speedrunner.toString() != null) {
-                Player player = event.getPlayer();
-                SpeedrunnerGUI inv = new SpeedrunnerGUI();
-                inv.createInventory();
-                Inventory getInventory = inv.getInv();
-                player.openInventory(getInventory);
+            if (manhuntCommandHandler.getTeam(name).equals(Team.HUNTER)) {
+                if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+                    Player player = event.getPlayer();
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                    inv.createInventory();
+                    Inventory getInventory = inv.getInv();
+                    player.openInventory(getInventory);
+                }
             }
         }
-
     }
 }
+

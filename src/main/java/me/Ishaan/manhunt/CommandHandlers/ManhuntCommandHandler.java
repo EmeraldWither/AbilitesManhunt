@@ -45,34 +45,11 @@ public class ManhuntCommandHandler implements CommandExecutor {
             Integer commandLength = args.length;
 
             if(commandLength == 0){
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&4---------------------------------\n" +
-                                "&cMinecraft Manhunt, but it's with Special Abilities\n" +
-                                "&7By: EmeraldWitherYT\n" +
-                                "&f \n" +
-                                "&aCommand Usage: \n" +
-                                "&e/manhunt start : Starts the manhunt\n" +
-                                "&e/manhunt hunter <player> : Adds a player to the hunter group.\n" +
-                                "&e/manhunt speedrunner <player>: Adds a player to the speedrunner group. \n" +
-                                "&e/manhunt listgroups: Shows which players are in which groups.\n" +
-                                "&e/manhunt help: Shows this help page.\n" +
-                                "&4--------------------------------"));
+                showHelp(sender);
                 return false;
             }
             if (args[0].equalsIgnoreCase("help")) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&4---------------------------------\n" +
-                                "&cMinecraft Manhunt, but it's with Special Abilities\n" +
-                                "&7By: EmeraldWitherYT\n" +
-                                "&f \n" +
-                                "&aCommand Usage: \n" +
-                                "&e/manhunt start : Starts the manhunt\n" +
-                                "&e/manhunt hunter <player> : Adds a player to the hunter group.\n" +
-                                "&e/manhunt speedrunner <player>: Adds a player to the speedrunner group. \n" +
-                                "&e/manhunt listgroups: Shows which players are in which groups.\n" +
-                                "&e/manhunt help: Shows this help page.\n" +
-                                "&4--------------------------------"));
-                return true;
+                showHelp(sender);
             }
         }
 
@@ -82,83 +59,87 @@ public class ManhuntCommandHandler implements CommandExecutor {
         // Starts the manhunt.
         //
 
-        if(args[0].equalsIgnoreCase("start")){
-            if(!(hunter.isEmpty())) {
-                if(!(speedrunner.isEmpty())) {
+        if(args[0].equalsIgnoreCase("start")) {
+            if (!hasGameStarted()) {
+                if (!(hunter.isEmpty())) {
+                    if (!(speedrunner.isEmpty())) {
 
-                    ManHuntInventory manHuntInventory = new ManHuntInventory();
-                    HasGameStarted = true;
+                        ManHuntInventory manHuntInventory = new ManHuntInventory();
+                        HasGameStarted = true;
 
-                    for(String msg : main.getConfig().getStringList("messages.start-msg")) {
-                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
-                    }
-                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                        if (speedrunner.contains(player.getName())) {
-                            player.getInventory().clear();
-                            player.setHealth(20);
-                            player.setFoodLevel(20);
-                            player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
-                            player.setGameMode(GameMode.SURVIVAL);
-                            player.setAllowFlight(false);
-                            player.setFlying(false);
-                            player.setGlowing(true);
-                            player.setInvulnerable(false);
-
-
-                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-
+                        for (String msg : main.getConfig().getStringList("messages.start-msg")) {
+                            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
                         }
-                    }
+                        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                            if (speedrunner.contains(player.getName())) {
+                                player.getInventory().clear();
+                                player.setHealth(20);
+                                player.setFoodLevel(20);
+                                player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
+                                player.setGameMode(GameMode.SURVIVAL);
+                                player.setAllowFlight(false);
+                                player.setFlying(false);
+                                player.setGlowing(true);
+                                player.setInvulnerable(false);
 
-                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                        if (hunter.contains(player.getName())) {
-                            player.sendMessage(ChatColor.GREEN + "You have received your items!");
-                            player.getInventory().clear();
-                            manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 0);
-                            manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 1);
-                            manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 2);
-                            manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 3);
-                            manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 4);
-                            manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 5);
-                            manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 6);
-                            manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
-                            player.setHealth(20);
-                            player.setFoodLevel(20);
-                            player.setGameMode(GameMode.SURVIVAL);
-                            player.setInvulnerable(true);
-                            player.setAllowFlight(true);
-                            player.setFlying(true);
-                            player.setGlowing(true);
-                            player.setSaturation(10000);
-                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
 
+                                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+
+                            }
                         }
-                    }
-                    if(sender instanceof Player) {
-                        if (((Player) sender).getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
-                            return true;
+
+                        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                            if (hunter.contains(player.getName())) {
+                                player.sendMessage(ChatColor.GREEN + "You have received your items!");
+                                player.getInventory().clear();
+                                manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 0);
+                                manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 1);
+                                manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 2);
+                                manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 3);
+                                manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 4);
+                                manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 5);
+                                manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 6);
+                                manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
+                                player.setHealth(20);
+                                player.setFoodLevel(20);
+                                player.setGameMode(GameMode.SURVIVAL);
+                                player.setInvulnerable(true);
+                                player.setAllowFlight(true);
+                                player.setFlying(true);
+                                player.setGlowing(true);
+                                player.setSaturation(10000);
+                                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+
+                            }
                         }
-                    }
-                    if(!(sender instanceof Player)) {
-                        if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
-                            return true;
+                        if (sender instanceof Player) {
+                            if (((Player) sender).getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
+                                return true;
+                            }
                         }
+                        if (!(sender instanceof Player)) {
+                            if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
+                                return true;
+                            }
+                        }
+                        return true;
                     }
-                    return true;
+                    sender.sendMessage(ChatColor.RED + "There are no players in the speedrunners group!");
+                    return false;
                 }
-                sender.sendMessage(ChatColor.RED + "There are no players in the speedrunners group!");
+
+                sender.sendMessage(ChatColor.RED + "There are no players in the hunters group!");
                 return false;
+
             }
-
-            sender.sendMessage(ChatColor.RED + "There are no players in the hunters group!");
+            sender.sendMessage(ChatColor.RED + "There is already a game in progress! You can force end it \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\"." );
             return false;
-
         }
         //
         // Add Speedrunners
@@ -321,12 +302,27 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if(speedrunner.contains(name)) {
             return Team.SPEEDRUNNER;
         }
-        return null;
+        return Team.NONE;
     }
     public boolean hasGameStarted(){
         return HasGameStarted;
     }
     public void setGameStarted(boolean b){
         HasGameStarted = b;
+    }
+
+    public void showHelp(CommandSender sender){
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&4---------------------------------\n" +
+                        "&cMinecraft Manhunt, but it's with Special Abilities\n" +
+                        "&7By: EmeraldWitherYT\n" +
+                        "&f \n" +
+                        "&aCommand Usage: \n" +
+                        "&e/manhunt start : Starts the manhunt\n" +
+                        "&e/manhunt hunter <player> : Adds a player to the hunter group.\n" +
+                        "&e/manhunt speedrunner <player>: Adds a player to the speedrunner group. \n" +
+                        "&e/manhunt listgroups: Shows which players are in which groups.\n" +
+                        "&e/manhunt help: Shows this help page.\n" +
+                        "&4--------------------------------"));
     }
 }

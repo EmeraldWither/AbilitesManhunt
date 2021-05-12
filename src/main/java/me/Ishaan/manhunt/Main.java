@@ -73,6 +73,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PreventHunger(this),this);
         getServer().getPluginManager().registerEvents(new TargetMobListener(this),this);
         getServer().getPluginManager().registerEvents(new TargetMobGUIListener(this),this);
+        getServer().getPluginManager().registerEvents(new ClearInv(this),this);
         this.saveDefaultConfig();
 
 

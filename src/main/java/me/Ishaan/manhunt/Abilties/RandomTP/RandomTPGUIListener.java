@@ -19,7 +19,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,6 +32,7 @@ public class RandomTPGUIListener implements Listener {
     public RandomTPGUIListener(Main main){
         this.main = main;
     }
+    Map<String, Long> damageCooldown = new HashMap<String, Long>();
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -45,13 +48,25 @@ public class RandomTPGUIListener implements Listener {
                     if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getrandomTP())){
+                            if (damageCooldown.containsKey(player.getName())) {
+                                if (damageCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    return;
+                                }
+                            }
+
                             SkullMeta skull = (SkullMeta) Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
                             Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
                             assert selectedPlayer != null;
 
                             Integer radius = main.getConfig().getInt("abilities.randomtp.tp-radius");
-
                             randomTP(selectedPlayer.getName(), player.getName(), radius);
+
+                            Integer cooldown = main.getConfig().getInt("abilities.randomtp.cooldown");
+                            damageCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+
+
                             selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
