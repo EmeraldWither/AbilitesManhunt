@@ -9,5 +9,6 @@ public enum Ability {
     RANDOMTP,
     DAMAGEITEM,
     PLAYERTP,
-    TARGETMOB
+    TARGETMOB,
+    FREEZER
 }

@@ -1,24 +1,33 @@
 #|------------------------------------------------------------------------
 #|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES
-#|                             v0.8 BETA
+#|                             v0.9 BETA
 #|
 #|                        BY: EMERALDWITHERYT
 #|
 #|               THIS PLUGIN IS STILL UNDER DEVELOPMENT,
 #|           AS SUCH, IT WILL HAVE BUGS. PROCEED WITH CAUTION
 #|------------------------------------------------------------------------
+
 plugin-prefix: "&2[Abilities Manhunt] "
 config-reload-msg: "&aSuccessfully reloaded the configuration files!"
 messages:
-  cooldown-msg: "&cYou're currently on cooldown!"
+  # Placeholders
+  # %time-left% : Gets the remaining time left on cooldown!
+  cooldown-msg: "&cYou're currently on cooldown for the \"&4&l%ability%&c\" ability! You still have &4&l%time-left% &cseconds remaining!"
   start-msg:
     - "&c-----------------"
     - "&aThe manhunt is starting now!"
     - "&c----------------"
+  force-end-msg:
+    # Force-end Placeholders
+    # %player% : Gets the player who force-ended the game!
+    - "&6---------------------------------"
+    - "&4The game has been forcibly ended by &4&l%player%&4."
+    - "&6---------------------------------"
   hunter-win-msg:
     hunters:
       - "&6-------------------------------"
-      - "&a You have won the game!"
+      - "&aYou have won the game!"
       - "&6-------------------------------"
     speedrunners:
       - "&6-------------------------------"
@@ -30,37 +39,82 @@ messages:
       - "&4You have lost the game :("
       - "&6-------------------------------"
     speedrunners:
-     - "&6-------------------------------"
-     - "&aYou have won the game!"
-     - "&6-------------------------------"
+      - "&6--------------------------------"
+      - "&aYou have won the game!"
+      - "&6--------------------------------"
+
+  # Global Placeholders For "Abilities"
+  # %hunter% : Gets the name of the hunter who is trying to use the ability.
+  # %speedrunner% : Gets the name of the selected speedrunner.
+  #
+  # The above placeholders can be used anywhere in the abilities section for "msg" parameter.
+  #
+  # The "msg" parameter is the message that is sent to the hunter when the ability is used.
+  # Some abilities may also have their own special placeholders outlined below.
+  #
+  # ALL cooldowns should be in SECONDS!
+
 abilities:
-    # NOTE: ALL cooldowns should be in SECONDS, not MILLISECONDS or MINUTES!
   lightning:
     cooldown: 60
+    msg: "&aYou have struck lightning down on &2%speedrunner%&a!"
   launcher:
+    # Launcher Placeholders
+    # %velocity% : Gets the launch velocity specified here
+    #                |
+    #                V
     launch-velocity: 10
     launch-upwards: false
     # If launch-upwards is false, the
     # speedrunner will be launched in
     # the direction that they are looking at.
     cooldown: 30
+    msg: "&aLaunched &2%speedrunner% &ainto the air with a velocity of &2%velocity%&a!"
   gravity:
+    # Launcher Placeholders
+    # %radius% : Gets the radius of which the gravity ability applies.
+    #       |
+    #       V
     radius: 5
     cooldown: 60
+    msg: "&aApplied gravity to all blocks around &2%speedrunner%&a in a &2%radius% &ablock radius!"
   randomtp:
+    # RandomTP Placeholders
+    # %distance% : Gets the distance traveled by the RandomTP.
     tp-radius: 50
-    cooldown : 105
+    cooldown : 100
+    msg: "&aRandomly teleported &2%hunter% &ato a distance &2%distance% &ablock(s) away!"
   damageitem:
+    # DamageItem Placeholders
+    # %items% : Gets the number of affected items in the speedrunners inventory.
     cooldown: 300
+    msg: "&aDamaged &2%items% &aitem(s) in &2%speedrunner%&a's inventory!"
   playertp:
     height-above-player: 5
+    msg: "&aTeleported you to &2%speedrunner%&a!"
   mob-targeting:
+    # Scramble Placeholders
+    # %mobs% : Gets the number of mobs that will target the speedrunner.
     range: 40
     cooldown: 600
+    msg: "&aNow sending &2%mobs% &amob(s) to attack &2%speedrunner%&a!"
   scramble:
+    # Scramble Placeholders
+    # %items% : Gets the number of affected items.
     cooldown: 90
+    msg: "&aNow scrambling &2%items% &aitem(s) in &2%speedrunner%s &ainventory!"
+  freeze:
+    time: 5
+    cooldown: 60
+    msg: "&aNow freezing &2%speedrunner% &afor &2%time% &aseconds!"
+    freeze-msg: "&bYou have been frozen by &3%hunter%&b and cannot move!"
+    unfreeze-msg: "&bYou have been unfrozen and move again!"
+    prevent-kicking: true
+    # This prevent the player for being kicked due to the the "Flying is not enabled on this server" kick message.
+    # It is suggested that you do not change this
 
 # This will remove any special items as
 # to prevent them from being used.
 # It is not suggested you change this!
 clear-items-on-join: true
+clear-items-on-leave: true

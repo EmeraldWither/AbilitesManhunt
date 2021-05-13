@@ -32,7 +32,10 @@ public class RandomTPGUIListener implements Listener {
     public RandomTPGUIListener(Main main){
         this.main = main;
     }
-    Map<String, Long> damageCooldown = new HashMap<String, Long>();
+    Map<String, Long> randomTPCooldown = new HashMap<String, Long>();
+
+    String ability = "RandomTP";
+
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -48,10 +51,10 @@ public class RandomTPGUIListener implements Listener {
                     if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getrandomTP())){
-                            if (damageCooldown.containsKey(player.getName())) {
-                                if (damageCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                            if (randomTPCooldown.containsKey(player.getName())) {
+                                if (randomTPCooldown.get(player.getName()) > System.currentTimeMillis()) {
                                     player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
@@ -61,13 +64,17 @@ public class RandomTPGUIListener implements Listener {
                             assert selectedPlayer != null;
 
                             Integer radius = main.getConfig().getInt("abilities.randomtp.tp-radius");
+                            Location oldLoc = selectedPlayer.getLocation();
                             randomTP(selectedPlayer.getName(), player.getName(), radius);
 
+                            double distance = selectedPlayer.getLocation().distance(oldLoc);
+
                             Integer cooldown = main.getConfig().getInt("abilities.randomtp.cooldown");
-                            damageCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                            randomTPCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
 
 
                             selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.randomtp.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%distance%", Integer.toString((int) Math.round(distance)))));
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }

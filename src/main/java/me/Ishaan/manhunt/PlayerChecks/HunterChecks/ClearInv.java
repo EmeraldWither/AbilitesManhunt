@@ -5,10 +5,10 @@ import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +24,7 @@ public class ClearInv implements Listener {
     }
 
     ManHuntInventory inv = new ManHuntInventory();
-    ManhuntCommandHandler manhuntCommandHandler = new ManhuntCommandHandler(this.main);
+    ManhuntCommandHandler manhuntCommandHandler = new ManhuntCommandHandler(main);
 
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent event) {
@@ -66,6 +66,7 @@ public class ClearInv implements Listener {
                             player.closeInventory();
                             player.setFlying(false);
                             player.setAllowFlight(false);
+                            player.setSaturation(5);
                         }
                     }
                 }
@@ -113,11 +114,10 @@ public class ClearInv implements Listener {
                     player.getInventory().clear();
                     player.setGameMode(GameMode.SURVIVAL);
                     player.setInvulnerable(false);
-                    player.closeInventory();
                     player.setFlying(false);
                     player.setAllowFlight(false);
-
-
+                    player.setSaturation(5);
+                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
                 }
             }
         }

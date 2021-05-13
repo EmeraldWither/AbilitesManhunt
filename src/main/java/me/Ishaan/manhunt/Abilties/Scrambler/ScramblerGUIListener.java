@@ -28,6 +28,9 @@ public class ScramblerGUIListener implements Listener {
 
     Map<String, Long> scramblerCooldown = new HashMap<String, Long>();
 
+    String ability = "Scramble Inventory";
+
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
 
@@ -43,8 +46,9 @@ public class ScramblerGUIListener implements Listener {
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getScrambler())){
                             if (scramblerCooldown.containsKey(player.getName())) {
                                 if (scramblerCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                                    Integer timeLeft = (int) (System.currentTimeMillis() - scramblerCooldown.get(player.getName()));
                                     player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((scramblerCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
@@ -58,6 +62,16 @@ public class ScramblerGUIListener implements Listener {
 
                             Integer cooldown = main.getConfig().getInt("abilities.scramble.cooldown");
                             scramblerCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+
+                            int items = 0;
+
+                            for(ItemStack item : oldInv){
+                                if(item != null) {
+                                    items++;
+                                }
+                            }
+
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.scramble.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(items))));
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }

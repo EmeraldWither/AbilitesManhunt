@@ -161,6 +161,24 @@ public class ManHuntInventory {
 
         return mobTargeter;
     }
+    public ItemStack getFreezer(){
+        List<String> lore = new ArrayList<String>();
+        ItemStack freezer = new ItemStack(Material.ICE, 1);
+        ItemMeta meta = freezer.getItemMeta();
+
+        lore.add("");
+        lore.add(ChatColor.AQUA + "" + ChatColor.BOLD + "Freeze the speedrunner in place!");
+        lore.add("");
+        meta.setDisplayName(ChatColor.RED + "Freeze Speedrunner");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        freezer.setItemMeta(meta);
+
+
+        return freezer;
+    }
+
 
     public void giveAbility(Ability ability, String name){
         Player hunter = Bukkit.getPlayer(name);
@@ -189,12 +207,18 @@ public class ManHuntInventory {
         else if(ability.equals(Ability.TARGETMOB)){
             hunter.getInventory().addItem(getMobTargeter());
         }
+        else if(ability.equals(Ability.FREEZER)){
+            hunter.getInventory().addItem(getFreezer());
+        }
     }
     public void giveAbility(Ability ability, String name, Integer slot){
         Player hunter = Bukkit.getPlayer(name);
 
         if(ability.equals(Ability.LAUNCHER)){
             hunter.getInventory().setItem(slot, getLauncher());
+        }
+        else if(ability.equals(Ability.FREEZER)){
+            hunter.getInventory().setItem(slot,getFreezer());
         }
         else if(ability.equals(Ability.LIGHTNING)){
             hunter.getInventory().setItem(slot,getLightning());

@@ -1,11 +1,9 @@
 package me.Ishaan.manhunt;
 
-//
-//LMAO THE IMPORT LIST
-//
-
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemGUIListener;
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemListener;
+import me.Ishaan.manhunt.Abilties.Freeze.FreezeGUIListener;
+import me.Ishaan.manhunt.Abilties.Freeze.FreezeListener;
 import me.Ishaan.manhunt.Abilties.GravityBlocks.GravityGUIListener;
 import me.Ishaan.manhunt.Abilties.GravityBlocks.GravityListener;
 import me.Ishaan.manhunt.Abilties.LauncherListener.LaunchAbility;
@@ -42,7 +40,8 @@ import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
 
-    Plugin plugin = this;
+
+    public Plugin plugin = this;
     List<String> speedrunner = SpeedrunList.speedrunners;
     List<String> hunter = HunterList.hunters;
 
@@ -74,6 +73,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TargetMobListener(this),this);
         getServer().getPluginManager().registerEvents(new TargetMobGUIListener(this),this);
         getServer().getPluginManager().registerEvents(new ClearInv(this),this);
+        getServer().getPluginManager().registerEvents(new FreezeGUIListener(this),this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(this),this);
         this.saveDefaultConfig();
 
 
@@ -86,7 +87,7 @@ public class Main extends JavaPlugin {
                 "|                            NOW ENABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                             v0.8 BETA                                  \n" +
+                "|                             v0.9 BETA                                  \n" +
                 "|                                                                        \n" +
                 "|                        BY: EMERALDWITHERYT   \n" +
                 "|                                                                        \n" +
@@ -104,7 +105,7 @@ public class Main extends JavaPlugin {
                 "|                            NOW DISABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v0.8 BETA                                    \n" +
+                "|                            v0.9 BETA                                    \n" +
                 "|                                                                        \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "|                                                                        \n" +
@@ -156,6 +157,7 @@ public class Main extends JavaPlugin {
                 player.closeInventory();
                 player.setFlying(false);
                 player.setAllowFlight(false);
+                player.setSaturation(5);
             }
             if(speedrunner.contains(player.getName())){
                 player.setGlowing(false);
@@ -165,6 +167,7 @@ public class Main extends JavaPlugin {
                 player.closeInventory();
                 player.setFlying(false);
                 player.setAllowFlight(false);
+                player.setSaturation(5);
             }
             if(new DeathCheck(this).getDeadSpeedrunner(player.getName())){
                 player.setGlowing(false);
@@ -174,6 +177,7 @@ public class Main extends JavaPlugin {
                 player.closeInventory();
                 player.setFlying(false);
                 player.setAllowFlight(false);
+                player.setSaturation(5);
             }
         }
 

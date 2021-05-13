@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class DamageItemGUIListener implements Listener {
     List<String> speedrunner;
@@ -36,6 +35,9 @@ public class DamageItemGUIListener implements Listener {
 
     Map<String, Long> damageCooldown = new HashMap<String, Long>();
 
+    String ability = "Damage Items";
+
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
         SpeedrunnerGUI inv = new SpeedrunnerGUI();
@@ -48,13 +50,14 @@ public class DamageItemGUIListener implements Listener {
                     if (damageCooldown.containsKey(player.getName())) {
                         if (damageCooldown.get(player.getName()) > System.currentTimeMillis()) {
                             player.closeInventory(Reason.UNLOADED);
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((damageCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                             return;
                         }
                     }
 
                     SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                     Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                    int damageableItems = 0;
                     for (ItemStack item : selectedPlayer.getInventory().getContents()) {
                         if (item != null) {
                             if (item.getItemMeta() instanceof Damageable) {
@@ -62,6 +65,7 @@ public class DamageItemGUIListener implements Listener {
                                 if (itemDurablity >= 1) {
                                     int itemDamage = item.getType().getMaxDurability() - (itemDurablity / 2);
                                     item.setDurability((short) itemDamage);
+                                    damageableItems++;
                                 }
                             }
                         }
@@ -69,6 +73,7 @@ public class DamageItemGUIListener implements Listener {
                     Integer cooldown = main.getConfig().getInt("abilities.damageitem.cooldown");
                     damageCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                     player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 100.0F, 0.0F);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.damageitem.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(damageableItems))));
                     player.closeInventory(Reason.UNLOADED);
                 }
             }

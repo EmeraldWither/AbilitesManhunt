@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,6 +28,8 @@ public class TargetMobGUIListener implements Listener {
         this.main = main;
     }
     Map<String, Long> targetMobCooldown = new HashMap<String, Long>();
+
+    String ability = "Command Mobs";
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -40,7 +43,7 @@ public class TargetMobGUIListener implements Listener {
                             if (targetMobCooldown.containsKey(player.getName())) {
                                 if (targetMobCooldown.get(player.getName()) > System.currentTimeMillis()) {
                                     player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((targetMobCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
@@ -50,14 +53,19 @@ public class TargetMobGUIListener implements Listener {
                             Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
                             assert selectedPlayer != null;
                             int range = main.getConfig().getInt("abilities.mob-targeting.range");
+                            List<Entity> entities = selectedPlayer.getNearbyEntities(range ,range ,range);
 
-                            for(Entity entity : selectedPlayer.getNearbyEntities(range ,range ,range)){
+                            int mobs = 0;
+
+                            for(Entity entity : entities){
                                 if(entity instanceof Creature){
                                     ((Creature) entity).setTarget(selectedPlayer);
+                                    mobs++;
                                 }
                             }
                             Integer cooldown = main.getConfig().getInt("abilities.mob-targeting.cooldown");
                             targetMobCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.mob-targeting.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%mobs%", Integer.toString(mobs))));
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }

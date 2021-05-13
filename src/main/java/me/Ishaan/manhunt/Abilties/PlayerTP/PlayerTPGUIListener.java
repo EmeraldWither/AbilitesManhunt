@@ -20,7 +20,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
-import java.util.Objects;
 
 public class PlayerTPGUIListener implements Listener {
 
@@ -52,6 +51,7 @@ public class PlayerTPGUIListener implements Listener {
 
                             player.teleport(selectedPlayer.getLocation().add(0,height,0));
                             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.playertp.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
                         }

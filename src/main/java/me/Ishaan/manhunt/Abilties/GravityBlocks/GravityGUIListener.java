@@ -36,6 +36,8 @@ public class GravityGUIListener implements Listener {
     }
     Map<String, Long> gravityCooldown = new HashMap<String, Long>();
 
+    String ability = "Gravity Blocks";
+
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
 
@@ -51,7 +53,7 @@ public class GravityGUIListener implements Listener {
                             if (gravityCooldown.containsKey(player.getName())) {
                                 if (gravityCooldown.get(player.getName()) > System.currentTimeMillis()) {
                                     player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((gravityCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
@@ -70,6 +72,7 @@ public class GravityGUIListener implements Listener {
                             }
                             Integer cooldown = main.getConfig().getInt("abilities.gravity.cooldown");
                             gravityCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.gravity.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%radius%", Integer.toString(radius))));
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
                         }

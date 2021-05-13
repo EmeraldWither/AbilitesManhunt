@@ -21,7 +21,6 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class LauncherGUIListener implements Listener {
     private final Main main;
@@ -29,6 +28,9 @@ public class LauncherGUIListener implements Listener {
         this.main = main;
     }
     Map<String, Long> launcherCooldown = new HashMap<String, Long>();
+
+    String ability = "Launcher";
+
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -46,7 +48,7 @@ public class LauncherGUIListener implements Listener {
                             if (launcherCooldown.containsKey(player.getName())) {
                                 if (launcherCooldown.get(player.getName()) > System.currentTimeMillis()) {
                                     player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((launcherCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
@@ -70,6 +72,7 @@ public class LauncherGUIListener implements Listener {
 
                             Integer cooldown = main.getConfig().getInt("abilities.launcher.cooldown");
                             launcherCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.launcher.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%velocity%", Integer.toString(velocity))));
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
                         }

@@ -23,7 +23,7 @@ public class DeathCheck implements Listener {
     //Hunters
     List<String> hunter = HunterList.hunters;
 
-    private final List<String> deadSpeedrunners = new ArrayList<String>();
+    public static List<String> deadSpeedrunners = new ArrayList<String>();
 
     private final Main main;
 

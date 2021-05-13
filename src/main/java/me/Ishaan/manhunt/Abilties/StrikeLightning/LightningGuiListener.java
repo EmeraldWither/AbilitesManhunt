@@ -28,6 +28,8 @@ public class LightningGuiListener implements Listener {
 
     Map<String, Long> lightningCooldown = new HashMap<String, Long>();
 
+    String ability = "Strike Lightning";
+
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
@@ -42,20 +44,20 @@ public class LightningGuiListener implements Listener {
                     if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLightning())){
+                            SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
+                            Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                            Integer cooldown = main.getConfig().getInt("abilities.lightning.cooldown");
+
                             if (lightningCooldown.containsKey(player.getName())) {
                                 if (lightningCooldown.get(player.getName()) > System.currentTimeMillis()) {
                                     player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg")));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
-
-                            SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
-                            Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
-
-                            Integer cooldown = main.getConfig().getInt("abilities.lightning.cooldown");
                             lightningCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                             selectedPlayer.getWorld().strikeLightning(selectedPlayer.getLocation());
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.lightning.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
                             player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
 
                         }

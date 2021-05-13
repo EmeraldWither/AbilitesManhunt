@@ -53,12 +53,14 @@ public class EnderDragonCheck implements Listener {
                         }
                         speedrunner.clear();
                         hunter.clear();
+                        DeathCheck.deadSpeedrunners.clear();
                         players.setGlowing(false);
                         players.getInventory().clear();
                         players.setGameMode(GameMode.SURVIVAL);
                         players.setInvulnerable(false);
                         players.closeInventory();
                         players.setFlying(false);
+                        players.setSaturation(5);
                     }
                     new ManhuntCommandHandler(main).setGameStarted(false);
                 }
