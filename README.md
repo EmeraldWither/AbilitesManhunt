@@ -16,7 +16,7 @@ How to get the Code and Compile the Plugin:
 
 3) Open the “pom.xml”.
 
-4) Go to line 32 and replace “REPLACE YOUR DIRECTORY HERE WITH NO “”’, with the directory of your plugins folder.
+4) Go to line 32 and replace “REPLACE YOUR DIRECTORY HERE WITH NO “”’, with the directory of your plugins folder. Then replace "YOUR_GITHUB_USERNAME_HERE", with your github       username. 
 
 5) Click on the maven reload button on the top right. 
 
