@@ -1,8 +1,9 @@
 main: me.EmeraldWither.manhunt.Main
 name: ManhuntAbilites
 description: Minecraft Manhunt, but the Hunter has Special Abilites!
-version: 0.9
+version: 1.0
 api-version: 1.16
 commands:
   manhunt:
+
 
