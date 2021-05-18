@@ -6,7 +6,7 @@
 
     <groupId>io.github.YOUR_GITHUB_USERNAMEr</groupId>
     <artifactId>AbilityManHunt</artifactId>
-    <version>v0.9 BETA</version>
+    <version>v1.0 RELEASE</version>
     <repositories>
         <repository>
             <id>papermc</id>
