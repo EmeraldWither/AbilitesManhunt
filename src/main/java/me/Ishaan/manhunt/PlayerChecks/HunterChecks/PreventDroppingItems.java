@@ -1,8 +1,8 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.Main;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -11,16 +11,18 @@ import java.util.List;
 
 public class PreventDroppingItems implements Listener {
 
-    private final Main main;
-    public PreventDroppingItems(Main main){
+    private Main main;
+    private ManhuntGameManager manhuntGameManager;
+    List<String> hunter;
+    public PreventDroppingItems(ManhuntGameManager manhuntGameManager, Main main){
+        this.manhuntGameManager = manhuntGameManager;
         this.main = main;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);;
     }
-    //Hunters
-    List<String> hunter = HunterList.hunters;
 
     @EventHandler
     public void HunterDropItem(PlayerDropItemEvent event) {
-        if(new ManhuntCommandHandler(main).hasGameStarted()) {
+        if(manhuntGameManager.getGameStatus()) {
             if (hunter.contains(event.getPlayer().getName())) {
                 event.setCancelled(true);
 

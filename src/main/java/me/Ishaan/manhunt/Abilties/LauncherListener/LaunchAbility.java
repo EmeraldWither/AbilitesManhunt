@@ -1,14 +1,12 @@
 package me.Ishaan.manhunt.Abilties.LauncherListener;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,31 +18,39 @@ import java.util.List;
 
 public class LaunchAbility implements Listener {
 
-    List<String> speedrunner = SpeedrunList.speedrunners;
-
-    //Hunters
-    List<String> hunter = HunterList.hunters;
-
-    private final Main main;
-    public LaunchAbility(Main main){
+    private ManhuntGameManager manhuntGameManager;
+    private Manacounter manacounter;
+    private Main main;
+    List<String> hunter;
+    List<String> speedrunner;
+    public LaunchAbility(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter){
         this.main = main;
+        this.manhuntGameManager = manhuntGameManager;
+        this.manacounter = manacounter;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
     }
 
-@EventHandler
+
+    @EventHandler
     public void DetectLauncher(PlayerInteractEvent event){
-    if (new ManhuntCommandHandler(main).hasGameStarted()) {
+    if (manhuntGameManager.getGameStatus()) {
         if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLauncher())){
             String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
+                if (hunter.contains(event.getPlayer().getName())) {
                     if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                         if (speedrunner.toString() != null) {
                             Player player = event.getPlayer();
+                            if (manacounter.getManaList().get(player.getName())>= 20) {
+                                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
+                                inv.createInventory();
+                                Inventory getInventory = inv.getInv();
 
-                            SpeedrunnerGUI inv = new SpeedrunnerGUI();
-                            inv.createInventory();
-                            Inventory getInventory = inv.getInv();
-
-                            player.openInventory(getInventory);
+                                player.openInventory(getInventory);
+                            }
+                            else{
+                                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.mana-error-msg")));
+                            }
                         }
                     }
                 }

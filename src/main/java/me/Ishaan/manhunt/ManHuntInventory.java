@@ -23,10 +23,12 @@ public class ManHuntInventory {
         ItemStack launcher = new ItemStack(Material.FEATHER, 1);
         ItemMeta meta = launcher.getItemMeta();
 
-        lore.add("");
-        lore.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Launches the speedrunner into the air!");
-        lore.add("");
-        meta.setDisplayName(ChatColor.RED + "Launch Speedrunner");
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bLaunch the speedrunner"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"binto the air!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&b(20 Mana) "));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aLaunch Speedrunner &2(20 Mana) "));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         launcher.setItemMeta(meta);
@@ -41,10 +43,12 @@ public class ManHuntInventory {
         ItemStack lightning = new ItemStack(Material.STICK, 1);
         ItemMeta meta = lightning.getItemMeta();
 
-        meta.setDisplayName(ChatColor.RED + "Strike Lightning");
-        lore.add("");
-        lore.add(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Strike lightning down onto the speedrunner.");
-        lore.add("");
+        meta.setDisplayName(ChatColor.GREEN + "Strike Lightning on Speedrunner" + ChatColor.DARK_GREEN + " (10 Mana)");
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bStrike lightning down"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bon the speedrunner!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&3(10 Mana)"));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -58,10 +62,12 @@ public class ManHuntInventory {
         ItemStack gravity = new ItemStack(Material.ANVIL, 1);
         ItemMeta meta = gravity.getItemMeta();
 
-        meta.setDisplayName(ChatColor.RED + "Apply Gravity");
-        lore.add("");
-        lore.add(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Apply gravity to nearby blocks.");
-        lore.add("");
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aApply Gravity to Nearby Blocks &2(60 Mana)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bApply gravity to blocks"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bnear the speedrunner!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&3(60 Mana)"));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -75,10 +81,13 @@ public class ManHuntInventory {
         ItemStack scrambler = new ItemStack(Material.TNT, 1);
         ItemMeta meta = scrambler.getItemMeta();
 
-        meta.setDisplayName(ChatColor.RED + "Scramble Inventory");
-        lore.add("");
-        lore.add(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Scramble the selected players inventory!");
-        lore.add("");
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aScramble Speedrunners Inventory &2(50 Mana) "));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bCompletly scramble the"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bspeedrunners inventory!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&3(50 Mana)"));
+
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -91,10 +100,14 @@ public class ManHuntInventory {
         ItemStack randomTP = new ItemStack(Material.ENDER_PEARL, 1);
         ItemMeta meta = randomTP.getItemMeta();
 
-        lore.add("");
-        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleports the speedrunner within a 50 block radius!");
-        lore.add("");
-        meta.setDisplayName(ChatColor.RED + "Randomly Teleport Speedrunner");
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bRandomly teleport the"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bspeedrunners to a"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bdifferent place!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(80 Mana)"));
+
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aRandomly Teleport Speedrunner &2(80 Mana)"));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         randomTP.setItemMeta(meta);
@@ -108,12 +121,14 @@ public class ManHuntInventory {
         ItemStack damageItem = new ItemStack(Material.GOLDEN_PICKAXE, 1);
         ItemMeta meta = damageItem.getItemMeta();
 
-        meta.setDisplayName(ChatColor.RED + "Damage Item");
-        lore.add("");
-        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Sets the durability of the item that");
-        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "the speedruner is holding to half");
-        lore.add(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "of what it was at!");
-        lore.add("");
+        meta.setDisplayName(ChatColor.GREEN + "Damage Item " + ChatColor.DARK_GREEN +"(40 Mana)");
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bDamage all of the items"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bin the speedrunners"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&binventory by half!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(40 Mana)"));
+
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         if(damageItem.getItemMeta() instanceof Damageable){
@@ -130,10 +145,12 @@ public class ManHuntInventory {
         ItemStack playerTP = new ItemStack(Material.ENDER_PEARL, 1);
         ItemMeta meta = playerTP.getItemMeta();
 
-        lore.add("");
-        lore.add(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Teleport to a speedrunner!");
-        lore.add("");
-        meta.setDisplayName(ChatColor.AQUA + "Teleport To Speedrunner");
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&aAllows you to teleport"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&ato the speedrunner!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(No Mana)"));
+        meta.setDisplayName(ChatColor.AQUA + "Teleport to the Speedrunner");
         meta.setLore(lore);
         meta.addEnchant(Enchantment.MENDING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -149,10 +166,12 @@ public class ManHuntInventory {
         ItemStack mobTargeter = new ItemStack(Material.CARROT_ON_A_STICK, 1);
         ItemMeta meta = mobTargeter.getItemMeta();
 
-        lore.add("");
-        lore.add(ChatColor.YELLOW + "" + ChatColor.BOLD + "Commands all mobs in a radius to target the speedrunner!");
-        lore.add("");
-        meta.setDisplayName(ChatColor.RED + "Command Mobs to Speedrunner");
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bCommand all mobs to"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&btarget the speedrunner!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(100 Mana)"));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aCommand Mobs &2(100 Mana)"));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -165,11 +184,15 @@ public class ManHuntInventory {
         List<String> lore = new ArrayList<String>();
         ItemStack freezer = new ItemStack(Material.ICE, 1);
         ItemMeta meta = freezer.getItemMeta();
-
-        lore.add("");
-        lore.add(ChatColor.AQUA + "" + ChatColor.BOLD + "Freeze the speedrunner in place!");
-        lore.add("");
-        meta.setDisplayName(ChatColor.RED + "Freeze Speedrunner");
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bFreeze the speedrunner"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bright where they are standing!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&4Can cause the player to be"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&4kicked for flying!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(30 Mana)"));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFreeze Player &2(30 Mana)"));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -1,12 +1,14 @@
 package me.Ishaan.manhunt.Abilties.GravityBlocks;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Abilties.CooldownsManager;
+import me.Ishaan.manhunt.Enums.Ability;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,37 +24,43 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GravityGUIListener implements Listener {
-    List<String> speedrunner = SpeedrunList.speedrunners;
-    List<String> hunter = HunterList.hunters;
-
-    private final Main main;
-    public GravityGUIListener(Main main){
-        this.main = main;
-    }
-    Map<String, Long> gravityCooldown = new HashMap<String, Long>();
+public class GravityGUIListener extends CooldownsManager implements Listener {
 
     String ability = "Gravity Blocks";
+
+    Map<String, Long> gravityCooldown = getCooldown(Ability.GRAVITY);
+
+    private Main main;
+    private ManhuntGameManager manhuntGameManager;
+    private Manacounter manacounter;
+    List<String> hunter;
+    List<String> speedrunner;
+    public GravityGUIListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter){
+        this.main = main;
+        this.manacounter = manacounter;
+        this.manhuntGameManager = manhuntGameManager;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+    }
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
 
-        SpeedrunnerGUI inv = new SpeedrunnerGUI();
+        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder){
             if(event.getCurrentItem() != null) {
-                if (new ManhuntCommandHandler(main).hasGameStarted()) {
+                if (manhuntGameManager.getGameStatus()) {
                     if (hunter.contains(event.getView().getPlayer().getName())) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getGravity())){
                             if (gravityCooldown.containsKey(player.getName())) {
                                 if (gravityCooldown.get(player.getName()) > System.currentTimeMillis()) {
-                                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
                                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((gravityCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
@@ -70,10 +78,17 @@ public class GravityGUIListener implements Listener {
                                 block.setType(Material.AIR);
                                 player.getWorld().spawnFallingBlock(block.getLocation(), blockdata);
                             }
+
+                            manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 60);
+                            manacounter.updateActionbar(player);
+
+
                             Integer cooldown = main.getConfig().getInt("abilities.gravity.cooldown");
                             gravityCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.gravity.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%radius%", Integer.toString(radius))));
-                            player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                            selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.gravity.speedrunner-msg").replace("%hunter%", player.getName()).replace("%radius%", Integer.toString(radius))));
+
+                            player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }
                     }

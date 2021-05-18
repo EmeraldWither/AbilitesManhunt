@@ -1,11 +1,14 @@
 package me.Ishaan.manhunt.Abilties.DamageItem;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Abilties.CooldownsManager;
+import me.Ishaan.manhunt.Enums.Ability;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -19,37 +22,39 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DamageItemGUIListener implements Listener {
-    List<String> speedrunner;
-    List<String> hunter;
-
-    private final Main main;
-
-    public DamageItemGUIListener(Main main) {
-        this.main = main;
-    }
-
-    Map<String, Long> damageCooldown = new HashMap<String, Long>();
+public class DamageItemGUIListener extends CooldownsManager implements Listener {
 
     String ability = "Damage Items";
 
+    private Main main;
+    private Manacounter manacounter;
+    private ManhuntGameManager manhuntGameManager;
+    List<String> hunter;
+    List<String> speedrunner;
+    public DamageItemGUIListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter){
+        this.manhuntGameManager = manhuntGameManager;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+        this.main = main;
+        this.manacounter = manacounter;
+    }
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
-        SpeedrunnerGUI inv = new SpeedrunnerGUI();
+        Map<String, Long> damageCooldown = getCooldown(Ability.DAMAGEITEM);
+        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
         Inventory getInventory = inv.getInv();
-        if (event.getInventory().getHolder() instanceof GUIInventoryHolder && event.getCurrentItem() != null && (new ManhuntCommandHandler(main)).hasGameStarted()) {
+        if (event.getInventory().getHolder() instanceof GUIInventoryHolder && event.getCurrentItem() != null && manhuntGameManager.getGameStatus()) {
             String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
-            if ((new ManhuntCommandHandler(main)).getTeam(name).equals(Team.HUNTER)) {
+            if (hunter.contains(event.getView().getPlayer().getName())) {
                 Player player = (Player) event.getView().getPlayer();
                 if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getDamageItem())) {
                     if (damageCooldown.containsKey(player.getName())) {
                         if (damageCooldown.get(player.getName()) > System.currentTimeMillis()) {
-                            player.closeInventory(Reason.UNLOADED);
+                            player.closeInventory(Reason.PLUGIN);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((damageCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                             return;
                         }
@@ -71,10 +76,16 @@ public class DamageItemGUIListener implements Listener {
                         }
                     }
                     Integer cooldown = main.getConfig().getInt("abilities.damageitem.cooldown");
-                    damageCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                    damageCooldown.put(player.getName(), (System.currentTimeMillis() + (cooldown * 1000)));
+
+                    manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 40);
+                    manacounter.updateActionbar(player);
+
                     player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 100.0F, 0.0F);
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.damageitem.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(damageableItems))));
-                    player.closeInventory(Reason.UNLOADED);
+                    selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.damageitem.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(damageableItems))));
+
+                    player.closeInventory(Reason.PLUGIN);
                 }
             }
         }

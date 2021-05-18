@@ -1,9 +1,8 @@
 package me.Ishaan.manhunt.PlayerChecks.HunterChecks;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.Main;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
@@ -11,17 +10,22 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import java.util.List;
 
 public class PreventPickingUp implements Listener {
-    List<String> speedrunner = SpeedrunList.speedrunners;
-    List<String> hunter = HunterList.hunters;
 
-    private final Main main;
-    public PreventPickingUp(Main main){
+    private ManhuntGameManager manhuntGameManager;
+    private Main main;
+    List<String> hunter;
+    List<String> speedrunner;
+    public PreventPickingUp(ManhuntGameManager manhuntGameManager, Main main){
         this.main = main;
+        this.manhuntGameManager = manhuntGameManager;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
     }
+
 
     @EventHandler
     public void ItemPickupEvent(PlayerAttemptPickupItemEvent event){
-        if(new ManhuntCommandHandler(main).hasGameStarted()) {
+        if(manhuntGameManager.getGameStatus()) {
             if (hunter.contains(event.getPlayer().getName())) {
                 event.setCancelled(true);
 

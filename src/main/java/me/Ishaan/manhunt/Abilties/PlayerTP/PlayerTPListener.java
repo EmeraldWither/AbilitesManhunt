@@ -1,14 +1,10 @@
 package me.Ishaan.manhunt.Abilties.PlayerTP;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,27 +16,28 @@ import java.util.List;
 
 public class PlayerTPListener implements Listener {
 
-    List<String> speedrunner = SpeedrunList.speedrunners;
-
-    //Hunters
-    List<String> hunter = HunterList.hunters;
-
-    private final Main main;
-    public PlayerTPListener(Main main){
+    private Main main;
+    private ManhuntGameManager manhuntGameManager;
+    List<String> hunter;
+    List<String> speedrunner;
+    public PlayerTPListener(ManhuntGameManager manhuntGameManager, Main main){
         this.main = main;
+        this.manhuntGameManager = manhuntGameManager;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
     }
 
 @EventHandler
     public void DetectLauncher(PlayerInteractEvent event){
-    if (new ManhuntCommandHandler(main).hasGameStarted()) {
+    if (manhuntGameManager.getGameStatus()) {
         if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getPlayerTP())){
             String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
+                if (hunter.contains(event.getPlayer().getName())) {
                     if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                         if (speedrunner.toString() != null) {
                             Player player = event.getPlayer();
 
-                            SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                            SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
                             inv.createInventory();
                             Inventory getInventory = inv.getInv();
 

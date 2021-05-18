@@ -1,5 +1,6 @@
 package me.Ishaan.manhunt;
 
+import me.Ishaan.manhunt.Abilties.CooldownsManager;
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemGUIListener;
 import me.Ishaan.manhunt.Abilties.DamageItem.DamageItemListener;
 import me.Ishaan.manhunt.Abilties.Freeze.FreezeGUIListener;
@@ -20,12 +21,12 @@ import me.Ishaan.manhunt.Abilties.TargetMobs.TargetMobGUIListener;
 import me.Ishaan.manhunt.Abilties.TargetMobs.TargetMobListener;
 import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.CommandHandlers.ManhuntTabCompleter;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
+import me.Ishaan.manhunt.Mana.Manacounter;
 import me.Ishaan.manhunt.PlayerChecks.HunterChecks.*;
 import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,46 +42,46 @@ import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
 
-
     public Plugin plugin = this;
-    List<String> speedrunner = SpeedrunList.speedrunners;
-    List<String> hunter = HunterList.hunters;
-
     @Override
-    public void onEnable() {
-        getServer().getPluginManager().registerEvents(new LaunchAbility(this), this);
-        getServer().getPluginManager().registerEvents(new LightningListener(this) ,this);
-        getServer().getPluginManager().registerEvents(new GravityListener(this) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPlacing(this) ,this);
-        getServer().getPluginManager().registerEvents(new CheckChest(this) ,this);
-        getServer().getPluginManager().registerEvents(new DeathCheck(this) ,this);
-        getServer().getPluginManager().registerEvents(new LightningGuiListener(this) ,this);
-        getServer().getPluginManager().registerEvents(new LauncherGUIListener(this) ,this);
-        getServer().getPluginManager().registerEvents(new GravityGUIListener(this) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPickingUp(this) ,this);
-        getServer().getPluginManager().registerEvents(new PreventAttacking(this),this);
-        getServer().getPluginManager().registerEvents(new PreventDroppingItems(this),this);
-        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(this),this);
-        getServer().getPluginManager().registerEvents(new ScramblerListener(this),this);
-        getServer().getPluginManager().registerEvents(new EnderDragonCheck(this),this);
-        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(this),this);
-        getServer().getPluginManager().registerEvents(new RandomTPListener(this),this);
-        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(this),this);
-        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(this),this);
-        getServer().getPluginManager().registerEvents(new DamageItemListener(this),this);
-        getServer().getPluginManager().registerEvents(new PlayerTPListener(this),this);
-        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(this),this);
-        getServer().getPluginManager().registerEvents(new PreventHunger(this),this);
-        getServer().getPluginManager().registerEvents(new TargetMobListener(this),this);
-        getServer().getPluginManager().registerEvents(new TargetMobGUIListener(this),this);
-        getServer().getPluginManager().registerEvents(new ClearInv(this),this);
-        getServer().getPluginManager().registerEvents(new FreezeGUIListener(this),this);
-        getServer().getPluginManager().registerEvents(new FreezeListener(this),this);
-        this.saveDefaultConfig();
+    public void onEnable(){
+        ManhuntGameManager manhuntGameManager = new ManhuntGameManager();
+        CooldownsManager cooldownsManager = new CooldownsManager();
+        Manacounter manacounter = new Manacounter(manhuntGameManager,this);
+
+        getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter), this);
+        getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter) ,this);
+        getServer().getPluginManager().registerEvents(new GravityListener(manhuntGameManager, this, manacounter) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPlacing(manhuntGameManager, this) ,this);
+        getServer().getPluginManager().registerEvents(new CheckChest(manhuntGameManager, this) ,this);
+        getServer().getPluginManager().registerEvents(new DeathCheck(manhuntGameManager, this, manacounter, cooldownsManager) ,this);
+        getServer().getPluginManager().registerEvents(new LightningGuiListener(manhuntGameManager, this, manacounter) ,this);
+        getServer().getPluginManager().registerEvents(new LauncherGUIListener(manhuntGameManager, this, manacounter) ,this);
+        getServer().getPluginManager().registerEvents(new GravityGUIListener(manhuntGameManager, this, manacounter) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPickingUp(manhuntGameManager, this) ,this);
+        getServer().getPluginManager().registerEvents(new PreventAttacking(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(manhuntGameManager, this,  manacounter),this);
+        getServer().getPluginManager().registerEvents(new ScramblerListener(manhuntGameManager, this, manacounter), this);
+        getServer().getPluginManager().registerEvents(new EnderDragonCheck(manhuntGameManager, this, cooldownsManager, manacounter),this);
+        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(manhuntGameManager, this, manacounter),this);
+        getServer().getPluginManager().registerEvents(new RandomTPListener(manhuntGameManager, this, manacounter), this);
+        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(manhuntGameManager, this, manacounter),this);
+        getServer().getPluginManager().registerEvents(new DamageItemListener(manhuntGameManager, this, manacounter),this);
+        getServer().getPluginManager().registerEvents(new PlayerTPListener(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new PreventHunger(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new TargetMobListener(manhuntGameManager, this, manacounter),this);
+        getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhuntGameManager, this, manacounter),this);
+        getServer().getPluginManager().registerEvents(new ClearInv(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhuntGameManager, this, manacounter),this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(manhuntGameManager, this, manacounter),this);
+            this.saveDefaultConfig();
 
 
 
-        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(this));
+        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhuntGameManager, this, manacounter, cooldownsManager));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter());
 
         getLogger().log(Level.INFO, "\n" +
@@ -100,6 +102,14 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        ManhuntGameManager manhuntGameManager = new ManhuntGameManager();
+
+
+        List<String> speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        List<String> hunter = manhuntGameManager.getTeam(Team.HUNTER);
+
+
         getLogger().log(Level.WARNING, "\n" +
                 "--------------------------------------------------------------\n" +
                 "|                            NOW DISABLING:                              \n" +
@@ -117,7 +127,7 @@ public class Main extends JavaPlugin {
         for(Player player : Bukkit.getOnlinePlayers()){
             if(player.getOpenInventory() != null) {
                 if (player.getOpenInventory().getTopInventory().getHolder() instanceof GUIInventoryHolder) {
-                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
                 }
             }
             for(ItemStack item : player.getInventory().getStorageContents()){
@@ -158,6 +168,9 @@ public class Main extends JavaPlugin {
                 player.setFlying(false);
                 player.setAllowFlight(false);
                 player.setSaturation(5);
+                for(PotionEffect potionEffect: player.getActivePotionEffects()){
+                    player.removePotionEffect(potionEffect.getType());
+                }
             }
             if(speedrunner.contains(player.getName())){
                 player.setGlowing(false);
@@ -168,8 +181,11 @@ public class Main extends JavaPlugin {
                 player.setFlying(false);
                 player.setAllowFlight(false);
                 player.setSaturation(5);
+                for(PotionEffect potionEffect: player.getActivePotionEffects()){
+                    player.removePotionEffect(potionEffect.getType());
+                }
             }
-            if(new DeathCheck(this).getDeadSpeedrunner(player.getName())){
+            if(manhuntGameManager.getTeam(Team.DEAD).contains(player.getName())){
                 player.setGlowing(false);
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
@@ -179,6 +195,7 @@ public class Main extends JavaPlugin {
                 player.setAllowFlight(false);
                 player.setSaturation(5);
             }
+
         }
 
     }

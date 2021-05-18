@@ -1,11 +1,14 @@
 package me.Ishaan.manhunt.Abilties.StrikeLightning;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Abilties.CooldownsManager;
+import me.Ishaan.manhunt.Enums.Ability;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.GUIInventoryHolder;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,32 +19,38 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class LightningGuiListener implements Listener {
-
-    private final Main main;
-    public LightningGuiListener(Main main){
-        this.main = main;
-    }
-
-    Map<String, Long> lightningCooldown = new HashMap<String, Long>();
-
+public class LightningGuiListener extends CooldownsManager implements Listener {
+    Map<String, Long> lightningCooldown = getCooldown(Ability.LIGHTNING);
     String ability = "Strike Lightning";
+
+    private Main main;
+    private Manacounter manacounter;
+    private ManhuntGameManager manhuntGameManager;
+    List<String> hunter;
+    List<String> speedrunner;
+    public LightningGuiListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter){
+        this.main = main;
+        this.manhuntGameManager = manhuntGameManager;
+        this.manacounter = manacounter;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+    }
 
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event){
 
-        SpeedrunnerGUI inv = new SpeedrunnerGUI();
+        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
         Inventory getInventory = inv.getInv();
 
         if(event.getInventory().getHolder() instanceof GUIInventoryHolder) {
             if (event.getCurrentItem() != null) {
-                if(new ManhuntCommandHandler(main).hasGameStarted()) {
+                if(manhuntGameManager.getGameStatus()) {
                     String name = Bukkit.getPlayer(event.getWhoClicked().getName()).getName();
-                    if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
+                    if (hunter.contains(name)) {
                         Player player = (Player) event.getView().getPlayer();
                         if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLightning())){
                             SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
@@ -50,15 +59,21 @@ public class LightningGuiListener implements Listener {
 
                             if (lightningCooldown.containsKey(player.getName())) {
                                 if (lightningCooldown.get(player.getName()) > System.currentTimeMillis()) {
-                                    player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
                                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getName())  - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                                     return;
                                 }
                             }
+
+                            manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 10);
+                            manacounter.updateActionbar(player);
+
+
                             lightningCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                             selectedPlayer.getWorld().strikeLightning(selectedPlayer.getLocation());
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.lightning.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
-                            player.closeInventory(InventoryCloseEvent.Reason.UNLOADED);
+                            selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.lightning.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
+                            player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                         }
                     }

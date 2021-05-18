@@ -1,41 +1,60 @@
 package me.Ishaan.manhunt.CommandHandlers;
 
+import me.Ishaan.manhunt.Abilties.CooldownsManager;
 import me.Ishaan.manhunt.Enums.Ability;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
-import me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ManhuntCommandHandler implements CommandExecutor {
 
+    private ManhuntGameManager manhuntGameManager;
+    private CooldownsManager cooldownsManager;
+    List<String> speedrunner;
+    List<String> hunter;
+    List<String> deadSpeedrunner;
+    HashMap<String, Integer> Mana;
+    private Main main;
+    private Manacounter manacounter;
 
-    //Speedrunners
-    List<String> speedrunner = SpeedrunList.getSpeedruners();
-    //Hunters
-    List<String> hunter = HunterList.getHunters();
-    public static boolean HasGameStarted = false;
-
-    private final Main main;
-    public ManhuntCommandHandler(Main main){
+    public ManhuntCommandHandler(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter, CooldownsManager cooldownsManager) {
+        this.manhuntGameManager = manhuntGameManager;
+        this.cooldownsManager = cooldownsManager;
+        this.speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        this.hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        this.deadSpeedrunner = manhuntGameManager.getTeam(Team.DEAD);
         this.main = main;
+        this.manacounter = manacounter;
+        this.Mana = manacounter.getManaList();
     }
+
+
+
 
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        String prefix = ChatColor.translateAlternateColorCodes('&',main.getConfig().getString("plugin-prefix"));
+
+        String prefix = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("plugin-prefix")));
 
         //
         // Help Commands
@@ -45,7 +64,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
             Integer commandLength = args.length;
 
-            if(commandLength == 0){
+            if (commandLength == 0) {
                 showHelp(sender);
                 return false;
             }
@@ -55,24 +74,32 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
 
 
-
         //
         // Starts the manhunt.
         //
 
-        if(args[0].equalsIgnoreCase("start")) {
-            if (!hasGameStarted()) {
+        if (args[0].equalsIgnoreCase("start")) {
+            if (!(manhuntGameManager.getGameStatus())) {
                 if (!(hunter.isEmpty())) {
                     if (!(speedrunner.isEmpty())) {
 
+                        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+                        Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
+
+                        org.bukkit.scoreboard.Team hunterTeam = scoreboard.registerNewTeam("hunterTeam");
+                        org.bukkit.scoreboard.Team speedrunnerTeam = scoreboard.registerNewTeam("speedrunnerTeam");
+
+                        hunterTeam.setColor(ChatColor.DARK_RED);
+                        speedrunnerTeam.setColor(ChatColor.DARK_GREEN);
+
                         ManHuntInventory manHuntInventory = new ManHuntInventory();
-                        HasGameStarted = true;
+                        manhuntGameManager.setGameStatus(true);
 
                         for (String msg : main.getConfig().getStringList("messages.start-msg")) {
                             Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
                         }
                         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                            if (speedrunner.contains(player.getName())) {
+                            if (getTeam(player.getName()).equals(Team.SPEEDRUNNER)) {
                                 player.getInventory().clear();
                                 player.setHealth(20);
                                 player.setFoodLevel(20);
@@ -82,24 +109,33 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 player.setFlying(false);
                                 player.setGlowing(true);
                                 player.setInvulnerable(false);
-
+                                for(PotionEffect potionEffect: player.getActivePotionEffects()){
+                                    player.removePotionEffect(potionEffect.getType());
+                                }
 
                                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-
+                                PotionEffect regenEffect = new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0);
+                                PotionEffect resistanceEffect = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0);
+                                PotionEffect speedEffect = new PotionEffect(PotionEffectType.SPEED, 6000, 0);
+                                PotionEffect saturationEffect = new PotionEffect(PotionEffectType.SATURATION, 6000, 0);
+                                player.addPotionEffect(regenEffect);
+                                player.addPotionEffect(resistanceEffect);
+                                player.addPotionEffect(speedEffect);
+                                player.addPotionEffect(saturationEffect);
+                                speedrunnerTeam.addEntry(player.getName());
                             }
                         }
 
                         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                            if (hunter.contains(player.getName())) {
-                                player.sendMessage(ChatColor.GREEN + "You have received your items!");
+                            if (getTeam(player.getName()).equals(Team.HUNTER)) {
                                 player.getInventory().clear();
-                                manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 0);
-                                manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 1);
-                                manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 2);
-                                manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 3);
-                                manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 4);
-                                manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 5);
-                                manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 6);
+                                manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
+                                manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
+                                manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
+                                manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 3);
+                                manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 4);
+                                manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 5);
+                                manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 6);
                                 manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 7);
                                 manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
                                 player.setHealth(20);
@@ -111,7 +147,13 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 player.setGlowing(true);
                                 player.setSaturation(10000);
                                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-
+                                for(PotionEffect potionEffect: player.getActivePotionEffects()){
+                                    player.removePotionEffect(potionEffect.getType());
+                                }
+                                PotionEffect potionEffect = new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 2);
+                                potionEffect.withParticles(false);
+                                player.addPotionEffect(potionEffect);
+                                hunterTeam.addEntry(player.getName());
                             }
                         }
                         if (sender instanceof Player) {
@@ -130,6 +172,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 return true;
                             }
                         }
+                        manacounter.startMana((JavaPlugin) main.plugin, 0, 20);
                         return true;
                     }
                     sender.sendMessage(ChatColor.RED + "There are no players in the speedrunners group!");
@@ -140,15 +183,15 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 return false;
 
             }
-            sender.sendMessage(ChatColor.RED + "There is already a game in progress! You can force end it \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\"." );
+            sender.sendMessage(ChatColor.RED + "There is already a game in progress! You can force end it \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
             return false;
         }
         //
         // Add Speedrunners
         //
 
-        if(args[0].equalsIgnoreCase("speedrunner")) {
-            if (!(hasGameStarted())) {
+        if (args[0].equalsIgnoreCase("speedrunner")) {
+            if (!(manhuntGameManager.getGameStatus())) {
 
                 Integer argsLength = args.length;
                 if (argsLength > 1) {
@@ -188,7 +231,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("hunter")) {
 
             Integer argsLength = args.length;
-            if(!(hasGameStarted())) {
+            if (!(manhuntGameManager.getGameStatus())) {
                 if (argsLength > 1) {
                     if (Bukkit.getPlayer(args[1]) != null) {
                         if (Bukkit.getPlayer(args[1]).isOnline()) {
@@ -217,15 +260,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
                 return false;
             }
-            sender.sendMessage(ChatColor.RED + "There is a game in progress! You can force end it \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\"." );
+            sender.sendMessage(ChatColor.RED + "There is a game in progress! You can force end it \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
             return false;
         }
 
 
-
         //List Groups Command
 
-        if(args[0].equalsIgnoreCase("listgroups")) {
+        if (args[0].equalsIgnoreCase("listgroups")) {
 
             CommandSender player = sender;
             String speedrunnersList = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
@@ -239,11 +281,11 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if (speedrunner.isEmpty()) {
 
                 player.sendMessage(ChatColor.GOLD + "-----------------------------------------");
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&cSpeedrunnner: &4There is no one in this group!"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&cspeedrunner: &4There is no one in this group!"));
                 player.sendMessage("");
             } else {
                 player.sendMessage(ChatColor.GOLD + "-----------------------------------------");
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&cSpeedrunnner: &4" + speedrunnersList));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&cspeedrunner: &4" + speedrunnersList));
                 player.sendMessage("");
             }
 
@@ -263,7 +305,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
 
 
-        if(args[0].equalsIgnoreCase("reload")) {
+        if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("manhunt.reload") || sender.hasPermission("manhunt.admin")) {
                 main.reloadConfig();
                 prefix = main.getConfig().getString("plugin-prefix");
@@ -272,32 +314,22 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 return true;
             }
             String invalidPerms = main.getConfig().getString("permission-denied-msg");
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + invalidPerms));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + invalidPerms));
         }
 
-        if(args[0].equalsIgnoreCase("forceend")){
-            if(hasGameStarted()) {
+        if (args[0].equalsIgnoreCase("forceend")) {
+            if (manhuntGameManager.getGameStatus()) {
                 if (sender.hasPermission("manhunt.forceend")) {
                     endGame(sender);
                     return true;
                 }
             }
-            sender.sendMessage(ChatColor.RED + "There is no game in progress! You can start one with \"" + ChatColor.DARK_RED + "/manhunt start" + ChatColor.RED + "\"." );
+            sender.sendMessage(ChatColor.RED + "There is no game in progress! You can start one with \"" + ChatColor.DARK_RED + "/manhunt start" + ChatColor.RED + "\".");
             return false;
         }
-
-        //Bukkit Runnable
-        // Test only right now
-       /* if (args[0].equalsIgnoreCase("runnable")){
-            sender.sendMessage("Started Countdown");
-            JavaPlugin javaPlugin = new Main().javaPlugin;
-            ManaCounter manaCounter = new ManaCounter();
-            manaCounter.run();
-            sender.sendMessage("Finished Countdown");
-        }*/
         return false;
-
     }
+
 
     public void addTeam(Team team, String name){
         if(team.equals(Team.HUNTER)){
@@ -325,12 +357,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
         return Team.NONE;
     }
-    public boolean hasGameStarted(){
-        return HasGameStarted;
-    }
-    public void setGameStarted(boolean b){
-        HasGameStarted = b;
-    }
 
     public void showHelp(CommandSender sender){
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -348,8 +374,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         "&e/manhunt forceend: Forcefully ends the game.\n" +
                         "&4--------------------------------"));
     }
-    public void endGame(CommandSender sender){
-        if(hasGameStarted()){
+    public void endGame(CommandSender sender) {
+        if (manhuntGameManager.getGameStatus()) {
             for (Player players : Bukkit.getOnlinePlayers()) {
                 players.setGlowing(false);
                 players.getInventory().clear();
@@ -359,15 +385,26 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 players.setFlying(false);
                 players.setAllowFlight(false);
                 players.setSaturation(5);
+                for(PotionEffect potionEffect: players.getActivePotionEffects()){
+                    players.removePotionEffect(potionEffect.getType());
+                }
 
             }
-            for(String msg : main.getConfig().getStringList("messages.force-end-msg")){
+            for (String msg : main.getConfig().getStringList("messages.force-end-msg")) {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%player%", sender.getName())));
             }
             speedrunner.clear();
             hunter.clear();
-            DeathCheck.deadSpeedrunners.clear();
-            setGameStarted(false);
+            deadSpeedrunner.clear();
+            manacounter.cancelMana();
+            manhuntGameManager.setGameStatus(false);
+            cooldownsManager.clearCooldown();
+            manhuntGameManager.getTeam(Team.FROZEN).clear();
+            for(org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
+                if(team.getName().equals("hunterTeam") || team.getName().equals("speedrunnerTeam")){
+                    team.unregister();
+                }
+            }
         }
     }
 }

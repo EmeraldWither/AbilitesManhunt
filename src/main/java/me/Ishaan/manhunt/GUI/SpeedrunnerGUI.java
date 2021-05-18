@@ -1,7 +1,8 @@
 package me.Ishaan.manhunt.GUI;
 
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.Enums.Team;
+import me.Ishaan.manhunt.Main;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,16 +18,20 @@ import java.util.List;
 
 public class SpeedrunnerGUI {
 
-    List<String> speedrunner = SpeedrunList.speedrunners;
-
-    //Hunters
-    List<String> hunter = HunterList.hunters;
-
-    public Inventory createInventory() {
+    private ManhuntGameManager manhuntGameManager;
+    private Main main;
+    List<String> hunter;
+    List<String> speedrunner;
+    public SpeedrunnerGUI(ManhuntGameManager manhuntGameManager, Main main){
+        this.main = main;
+        this.manhuntGameManager = manhuntGameManager;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+    }
+    public Inventory createInventory(){
 
         Inventory inv;
-        inv = Bukkit.createInventory(new GUIInventoryHolder(), 9, ChatColor.translateAlternateColorCodes('&',"&9&lSelect Speedrunner"));
-
+        inv = Bukkit.createInventory(new GUIInventoryHolder(), 9, ChatColor.translateAlternateColorCodes('&',"&9&lSelect a Speedrunner: "));
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if (speedrunner.contains(player.getName())) {
                 ItemStack skull = new ItemStack(Material.PLAYER_HEAD);

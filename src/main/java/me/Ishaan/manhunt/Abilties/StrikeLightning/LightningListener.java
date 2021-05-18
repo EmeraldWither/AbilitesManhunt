@@ -1,14 +1,12 @@
 package me.Ishaan.manhunt.Abilties.StrikeLightning;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
 import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.GUI.SpeedrunnerGUI;
 import me.Ishaan.manhunt.Main;
 import me.Ishaan.manhunt.ManHuntInventory;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,40 +17,47 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 
 public class LightningListener implements Listener {
-    //WIP
 
-    //Speedrunners
-    List<String> speedrunner = SpeedrunList.speedrunners;
-
-    //Hunters
-    List<String> hunter = HunterList.hunters;
-
-    private final Main main;
-    public LightningListener(Main main){
+    private Main main;
+    private ManhuntGameManager manhuntGameManager;
+    private Manacounter manacounter;
+    List<String> hunter;
+    List<String> speedrunner;
+    public LightningListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter){
         this.main = main;
+        this.manacounter = manacounter;
+        this.manhuntGameManager = manhuntGameManager;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
     }
+
+
 
     @EventHandler
     public void StrikeLightning(PlayerInteractEvent event) {
-        if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-            if (new ManhuntCommandHandler(main).hasGameStarted()) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (manhuntGameManager.getGameStatus()) {
                 String name = event.getPlayer().getName();
-                if (new ManhuntCommandHandler(main).getTeam(name).equals(Team.HUNTER)) {
-                    if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLightning())){
-                        Player player = event.getPlayer();
+                if (hunter.contains(name)) {
+                        if (event.getPlayer().getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLightning())) {
+                            if (manacounter.getManaList().get(name) >= 10) {
+                                Player player = event.getPlayer();
 
-                            SpeedrunnerGUI inv = new SpeedrunnerGUI();
+                            SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
                             inv.createInventory();
                             Inventory getInventory = inv.getInv();
 
                             player.openInventory(getInventory);
-
+                            return;
+                        }
+                        else {
+                            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.mana-error-msg")));
                         }
                     }
                 }
             }
         }
     }
-
+}
 
 

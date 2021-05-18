@@ -1,9 +1,10 @@
 package me.Ishaan.manhunt.PlayerChecks.SpeedrunnerChecks;
 
-import me.Ishaan.manhunt.CommandHandlers.ManhuntCommandHandler;
+import me.Ishaan.manhunt.Abilties.CooldownsManager;
+import me.Ishaan.manhunt.Enums.Team;
 import me.Ishaan.manhunt.Main;
-import me.Ishaan.manhunt.PlayerLists.HunterList;
-import me.Ishaan.manhunt.PlayerLists.SpeedrunList;
+import me.Ishaan.manhunt.Mana.Manacounter;
+import me.Ishaan.manhunt.ManhuntGameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -13,27 +14,32 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
 
 public class EnderDragonCheck implements Listener {
-    //Speedrunners
-    List<String> speedrunner = SpeedrunList.getSpeedruners();
-
-    //Hunters
-
-    List<String> hunter = HunterList.getHunters();
-
-    private final Main main;
-
-    public EnderDragonCheck(Main main) {
+    private ManhuntGameManager manhuntGameManager;
+    private Main main;
+    private CooldownsManager cooldownsManager;
+    private Manacounter manacounter;
+    List<String> hunter;
+    List<String> speedrunner;
+    List<String> deadSpeedrunners;
+    public EnderDragonCheck(ManhuntGameManager manhuntGameManager, Main main, CooldownsManager cooldownsManager, Manacounter manacounter){
         this.main = main;
+        this.cooldownsManager = cooldownsManager;
+        this.manhuntGameManager = manhuntGameManager;
+        this.manacounter = manacounter;
+        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        deadSpeedrunners = manhuntGameManager.getTeam(Team.DEAD);
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
     }
 
     @EventHandler
     public void DragonDeath(EnderDragonChangePhaseEvent event) {
         if (event.getCurrentPhase().equals(EnderDragon.Phase.DYING)) {
-            if (new ManhuntCommandHandler(main).hasGameStarted()) {
+            if (manhuntGameManager.getGameStatus()) {
                 if (speedrunner.size() >= 1) {
                     for (Player players : Bukkit.getOnlinePlayers()) {
                         String speedrunners = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
@@ -53,7 +59,10 @@ public class EnderDragonCheck implements Listener {
                         }
                         speedrunner.clear();
                         hunter.clear();
-                        DeathCheck.deadSpeedrunners.clear();
+                        deadSpeedrunners.clear();
+                        for(PotionEffect potionEffect: players.getActivePotionEffects()){
+                            players.removePotionEffect(potionEffect.getType());
+                        }
                         players.setGlowing(false);
                         players.getInventory().clear();
                         players.setGameMode(GameMode.SURVIVAL);
@@ -61,8 +70,16 @@ public class EnderDragonCheck implements Listener {
                         players.closeInventory();
                         players.setFlying(false);
                         players.setSaturation(5);
+                        players.chat(ChatColor.GOLD + "GG!");
                     }
-                    new ManhuntCommandHandler(main).setGameStarted(false);
+                    cooldownsManager.clearCooldown();
+                    manacounter.cancelMana();
+                    manhuntGameManager.setGameStatus(false);
+                    for(org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
+                        if(team.getName().equals("hunterTeam") || team.getName().equals("speedrunnerTeam")){
+                            team.unregister();
+                        }
+                    }
                 }
             }
         }

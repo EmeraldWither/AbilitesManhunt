@@ -10,5 +10,6 @@ public enum Ability {
     DAMAGEITEM,
     PLAYERTP,
     TARGETMOB,
-    FREEZER
+    FREEZER,
+    NONE
 }
