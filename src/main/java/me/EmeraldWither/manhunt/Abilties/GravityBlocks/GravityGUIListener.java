@@ -9,11 +9,11 @@ import me.EmeraldWither.manhunt.Main;
 import me.EmeraldWither.manhunt.ManHuntInventory;
 import me.EmeraldWither.manhunt.Mana.Manacounter;
 import me.EmeraldWither.manhunt.ManhuntGameManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +43,7 @@ public class GravityGUIListener extends CooldownsManager implements Listener {
         this.manacounter = manacounter;
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
     }
 
     @EventHandler
@@ -67,16 +67,17 @@ public class GravityGUIListener extends CooldownsManager implements Listener {
                             }
 
                             SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
-                            Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
+                            Player selectedPlayer = skull.getOwningPlayer().getPlayer();
                             Byte blockData = 0x0;
 
-                            Integer radius = main.getConfig().getInt("abilities.gravity.radius");
+                            int radius = main.getConfig().getInt("abilities.gravity.radius");
 
                             for (Block block : getBlocks(selectedPlayer.getLocation().getBlock(), radius)) {
-
-                                BlockData blockdata = block.getBlockData();
-                                block.setType(Material.AIR);
-                                player.getWorld().spawnFallingBlock(block.getLocation(), blockdata);
+                                if(block.getRelative(BlockFace.DOWN).getType() == Material.AIR){
+                                    BlockData blockdata = block.getBlockData();
+                                    block.setType(Material.AIR);
+                                    player.getWorld().spawnFallingBlock(block.getLocation(), blockdata);
+                                }
                             }
 
                             manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 60);

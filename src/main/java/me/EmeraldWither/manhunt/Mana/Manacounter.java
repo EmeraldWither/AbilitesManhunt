@@ -31,8 +31,8 @@ public class Manacounter{
         this.HasGameStarted = manhuntGameManager.getGameStatus();
         this.main = main;
     }
-
     public void startMana(JavaPlugin plugin, Integer delay, Integer repeat){
+        Integer manaAmount = main.getConfig().getInt("mana-amount");
         Mana.clear();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
@@ -47,7 +47,7 @@ public class Manacounter{
                     if (manhuntGameManager.getTeam(Team.HUNTER).contains(player.getName())) {
                         if (getManaList().containsKey(player.getName())) {
                             if (Mana.get(player.getName()) < 100) {
-                                Mana.put(player.getName(), (Mana.get(player.getName()) + 1));
+                                Mana.put(player.getName(), (Mana.get(player.getName()) + manaAmount));
                                 updateActionbar(player);
                             }
                             if (Mana.get(player.getName()) == 100) {

@@ -113,12 +113,12 @@ public class FreezeGUIListener extends CooldownsManager implements Listener {
 
     @EventHandler
     public void PlayerKick(PlayerKickEvent event){
-        if(main.getConfig().getBoolean("abilities.freeze.prevent-kicking")) {
-            if (manhuntGameManager.getTeam(Team.FROZEN).contains(event.getPlayer().getName())) {
+        if(!(Bukkit.getServer().getAllowFlight())){
+            if(main.getConfig().getBoolean("abilities.freeze.prevent-kicking")) {
                 if (manhuntGameManager.getGameStatus()) {
                     if (event.getReason().equalsIgnoreCase("Flying is not enabled on this server")) {
                         event.setCancelled(true);
-                        Bukkit.getServer().getLogger().log(Level.WARNING, "[Abilites Manhunt] " + event.getPlayer().getName() + " would have been kicked for flying due to them being frozen. We have prevented this by preventing them from getting kicked. You can change in the config.");
+                        Bukkit.getServer().getLogger().log(Level.WARNING, "[Abilites Manhunt] " + event.getPlayer().getName() + " would have been kicked for flying due to them being frozen. We have prevented this by preventing them from getting kicked. You can change this behavior in the, \"config.yml\" file.");
                     }
                 }
             }

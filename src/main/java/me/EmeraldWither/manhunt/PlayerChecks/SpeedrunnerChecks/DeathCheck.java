@@ -48,36 +48,46 @@ public class DeathCheck implements Listener {
                 event.setShouldDropExperience(false);
 
                 if (speedrunner.size() == 0) {
-                    for (Player players : Bukkit.getOnlinePlayers()) {
-
                         String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
-                        if (hunter.contains(players.getName())) {
+                        for (String hunter : hunter) {
+                            Player players =Bukkit.getPlayer(hunter);
                             players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_RED + "Congrats to " + hunters + "!", 20, 100, 20);
                             players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
                             for (String msg : main.getConfig().getStringList("messages.hunter-win-msg.hunters")) {
                                 players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                             }
+                            for(PotionEffect potionEffect: players.getActivePotionEffects()){
+                                players.removePotionEffect(potionEffect.getType());
+                            }
+                            players.setGlowing(false);
+                            players.getInventory().clear();
+                            players.setGameMode(GameMode.SURVIVAL);
+                            players.setInvulnerable(false);
+                            players.closeInventory();
+                            players.setFlying(false);
+                            players.setAllowFlight(false);
+                            players.chat(ChatColor.GOLD + "GG!");
                         }
-                        if (deadSpeedrunners.contains(players.getName())) {
+                        for (String player : deadSpeedrunners) {
+                            Player players = Bukkit.getPlayer(player);
                             players.sendTitle(ChatColor.GREEN + "DEFEATED", ChatColor.DARK_RED + "Congrats to " + hunters + "!", 20, 100, 20);
                             deadSpeedrunners.remove(players.getName());
                             for (String msg : main.getConfig().getStringList("messages.hunter-win-msg.speedrunners")) {
                                 players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                             }
-                        }
-                        for(PotionEffect potionEffect: players.getActivePotionEffects()){
-                            players.removePotionEffect(potionEffect.getType());
+                            for(PotionEffect potionEffect: players.getActivePotionEffects()){
+                                players.removePotionEffect(potionEffect.getType());
+                            }
+                            players.setGlowing(false);
+                            players.getInventory().clear();
+                            players.setGameMode(GameMode.SURVIVAL);
+                            players.setInvulnerable(false);
+                            players.closeInventory();
+                            players.setFlying(false);
+                            players.setAllowFlight(false);
+                            players.chat(ChatColor.GOLD + "GG!");
                         }
 
-                        players.setGlowing(false);
-                        players.getInventory().clear();
-                        players.setGameMode(GameMode.SURVIVAL);
-                        players.setInvulnerable(false);
-                        players.closeInventory();
-                        players.setFlying(false);
-                        players.setAllowFlight(false);
-                        players.chat(ChatColor.GOLD + "GG!");
-                    }
                     manacounter.cancelMana();
                     speedrunner.clear();
                     deadSpeedrunners.clear();

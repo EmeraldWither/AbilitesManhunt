@@ -26,14 +26,14 @@ import java.util.Objects;
 
 public class ManhuntCommandHandler implements CommandExecutor {
 
-    private ManhuntGameManager manhuntGameManager;
-    private CooldownsManager cooldownsManager;
+    private final ManhuntGameManager manhuntGameManager;
+    private final CooldownsManager cooldownsManager;
     List<String> speedrunner;
     List<String> hunter;
     List<String> deadSpeedrunner;
     HashMap<String, Integer> Mana;
-    private Main main;
-    private Manacounter manacounter;
+    private final Main main;
+    private final Manacounter manacounter;
 
     public ManhuntCommandHandler(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter, CooldownsManager cooldownsManager) {
         this.manhuntGameManager = manhuntGameManager;
@@ -55,14 +55,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
 
         String prefix = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("plugin-prefix")));
-
+        Integer manaDelay = main.getConfig().getInt("mana-delay");
         //
         // Help Commands
         //
 
         if (label.equalsIgnoreCase("manhunt")) {
 
-            Integer commandLength = args.length;
+            int commandLength = args.length;
 
             if (commandLength == 0) {
                 showHelp(sender);
@@ -91,12 +91,15 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
                         hunterTeam.setColor(ChatColor.DARK_RED);
                         speedrunnerTeam.setColor(ChatColor.DARK_GREEN);
+                        hunterTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+                        hunterTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
 
                         ManHuntInventory manHuntInventory = new ManHuntInventory();
                         manhuntGameManager.setGameStatus(true);
-
+                        String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
+                        String speedrunners = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
                         for (String msg : main.getConfig().getStringList("messages.start-msg")) {
-                            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                         }
                         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                             if (getTeam(player.getName()).equals(Team.SPEEDRUNNER)) {
@@ -156,44 +159,31 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 hunterTeam.addEntry(player.getName());
                             }
                         }
-                        if (sender instanceof Player) {
-                            if (((Player) sender).getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
-                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
-                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
-                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
-                                return true;
-                            }
-                        }
-                        if (!(sender instanceof Player)) {
                             if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY).equals(true)) {
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
                                 return true;
                             }
-                        }
-                        manacounter.startMana((JavaPlugin) main.plugin, 0, 20);
+                        manacounter.startMana((JavaPlugin) main.plugin, 0, manaDelay);
                         return true;
-                    }
-                    sender.sendMessage(ChatColor.RED + "There are no players in the speedrunners group!");
+                        }
+                    sender.sendMessage(ChatColor.DARK_RED + "There are no players in the speedrunners group!");
                     return false;
-                }
-
-                sender.sendMessage(ChatColor.RED + "There are no players in the hunters group!");
+                    }
+                sender.sendMessage(ChatColor.DARK_RED + "There are no players in the hunters group!");
                 return false;
-
-            }
+                }
             sender.sendMessage(ChatColor.RED + "There is already a game in progress! You can force end it \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
             return false;
-        }
-        //
+            }//
         // Add Speedrunners
         //
 
         if (args[0].equalsIgnoreCase("speedrunner")) {
             if (!(manhuntGameManager.getGameStatus())) {
 
-                Integer argsLength = args.length;
+                int argsLength = args.length;
                 if (argsLength > 1) {
                     if (Bukkit.getPlayer(args[1]) != null) {
                         if (Bukkit.getPlayer(args[1]).isOnline()) {
@@ -344,7 +334,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 hunter.remove(name);
             }
         }
-        return;
     }
     public Team getTeam(String playerName){
         String name = Bukkit.getPlayer(playerName).getName();

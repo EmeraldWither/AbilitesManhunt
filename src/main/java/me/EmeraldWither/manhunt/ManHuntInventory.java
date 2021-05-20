@@ -201,39 +201,6 @@ public class ManHuntInventory {
 
         return freezer;
     }
-
-
-    public void giveAbility(Ability ability, String name){
-        Player hunter = Bukkit.getPlayer(name);
-
-        if(ability.equals(Ability.LAUNCHER)){
-            hunter.getInventory().addItem(getLauncher());
-        }
-        else if(ability.equals(Ability.LIGHTNING)){
-            hunter.getInventory().addItem(getLightning());
-        }
-        else if(ability.equals(Ability.GRAVITY)){
-            hunter.getInventory().addItem(getGravity());
-        }
-        else if(ability.equals(Ability.SCRAMBLE)){
-            hunter.getInventory().addItem(getScrambler());
-        }
-        else if(ability.equals(Ability.RANDOMTP)){
-            hunter.getInventory().addItem(getrandomTP());
-        }
-        else if(ability.equals(Ability.DAMAGEITEM)){
-            hunter.getInventory().addItem(getDamageItem());
-        }
-        else if(ability.equals(Ability.PLAYERTP)){
-            hunter.getInventory().addItem(getPlayerTP());
-        }
-        else if(ability.equals(Ability.TARGETMOB)){
-            hunter.getInventory().addItem(getMobTargeter());
-        }
-        else if(ability.equals(Ability.FREEZER)){
-            hunter.getInventory().addItem(getFreezer());
-        }
-    }
     public void giveAbility(Ability ability, String name, Integer slot){
         Player hunter = Bukkit.getPlayer(name);
 
