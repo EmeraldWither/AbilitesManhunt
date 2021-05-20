@@ -46,6 +46,6 @@ After editing your files, go to the left and click on Commits.
 
 3) Click on “Commit and Push”.
 
-4) On the popup, click on the blue push button.  If it asks for you to merge the commit before you can push it, click on “merge”. 
+4) On the popup, click on the blue push button.  If it asks for you to merge or rebase the commit before you can push it, click on “rebase”. 
 
 Congrats, you have pushed it to github! 
