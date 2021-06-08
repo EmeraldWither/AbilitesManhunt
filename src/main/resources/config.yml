@@ -1,7 +1,7 @@
 #                                                                           #
 #|------------------------------------------------------------------------| #
 #|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES         | #
-#|                             v1.0 RELEASE                               | #
+#|                             v1.2 RELEASE                               | #
 #|                                                                        | #
 #|                        BY: EMERALDWITHERYT                             | #
 #|------------------------------------------------------------------------| #
@@ -21,41 +21,76 @@ messages:
   # %hunter% : Gives a list of hunters
   # %speedrunner% : Gives a list of speedrunners
   start-msg:
-    - "&6================================="
+    - "&6&m-----------------------------------"
     - "      &e&l MINECRAFT   MANHUNT"
     - "       &6&lBY: EMERALDWITHERYT "
     - ""
     - "   &3&lThe manhunt is now starting!"
     - ""
-    - "&cHUNTERS: %hunters%"
-    - "&aSPEEDRUNNERS: %speedrunners%"
+    - "&cHUNTERS:"
+    - "&4%hunters%"
+    - ""
+    - "&aSPEEDRUNNERS:"
+    - "&2%speedrunners%"
     - ""
     - "           &2&lGOOD LUCK"
-    - "&6================================="
+    - "&6&m-----------------------------------"
   force-end-msg:
     # Force-end Placeholders
     # %player% : Gets the player who force-ended the game!
-    - "&6---------------------------------"
+    - "&6-------------------------------------------"
     - "&4The game has been forcibly ended by &4&l%player%&4."
-    - "&6---------------------------------"
+    - "&6-------------------------------------------"
   hunter-win-msg:
     hunters:
-      - "&6-------------------------------"
-      - "&aYou have won the game!"
-      - "&6-------------------------------"
+      - "&6---------------------------------------"
+      - "                &a&lVICTORY"
+      - ""
+      - "        &2YOU HAVE WON THE GAME!"
+      - ""
+      - "        &aWINNING TEAM: &2HUNTERS"
+      - "      &cLOSING TEAM: &4SPEEDRUNNERS"
+      - ""
+      - "         &3THANK YOU FOR PLAYING"
+      - "        &7 Made by : EmeraldWither"
+      - "&6---------------------------------------"
     speedrunners:
-      - "&6-------------------------------"
-      - "&4You have lost the game :("
-      - "&6-------------------------------"
+      - "&6---------------------------------------"
+      - "                 &c&lDEFEAT"
+      - ""
+      - "        &4YOU HAVE LOST THE GAME :("
+      - ""
+      - "        &aWINNING TEAM: &2HUNTERS"
+      - "      &cLOSING TEAM: &4SPEEDRUNNERS"
+      - ""
+      - "         &3THANK YOU FOR PLAYING"
+      - "        &7 Made by : EmeraldWither"
+      - "&6---------------------------------------"
   speedrunner-win-msg:
     hunters:
-      - "&6-------------------------------"
-      - "&4You have lost the game :("
-      - "&6-------------------------------"
+      - "&6---------------------------------------"
+      - "                 &c&lDEFEAT"
+      - ""
+      - "        &2YOU HAVE LOST THE GAME :("
+      - ""
+      - "      &aWINNING TEAM: &2SPEEDRUNNERS"
+      - "         &cLOSING TEAM: &4HUNTERS"
+      - ""
+      - "         &3THANK YOU FOR PLAYING"
+      - "        &7 Made by : EmeraldWither"
+      - "&6---------------------------------------"
     speedrunners:
-      - "&6--------------------------------"
-      - "&aYou have won the game!"
-      - "&6--------------------------------"
+      - "&6---------------------------------------"
+      - "                &a&lVICTORY"
+      - ""
+      - "        &2YOU HAVE WON THE GAME!"
+      - ""
+      - "      &aWINNING TEAM: &SPEEDRUNNERS"
+      - "         &cLOSING TEAM: &HUNTERS"
+      - ""
+      - "         &3THANK YOU FOR PLAYING"
+      - "        &7 Made by : EmeraldWither"
+      - "&6---------------------------------------"
 
   # Global Placeholders For "Abilities"
   # %hunter% : Gets the name of the hunter who is trying to use the ability.
@@ -65,6 +100,9 @@ messages:
   #
   # The "msg" parameter is the message that is sent to the hunter when the ability is used.
   # Some abilities may also have their own special placeholders outlined below.
+  #
+  # The "speedrunner-msg" parameter is the message that is sent to the speedrunner
+  # when the hunter uses a ability on the speedrunner. The %hunter% placeholder does work.
   #
   # ALL cooldowns should be in SECONDS!
 
@@ -135,10 +173,11 @@ abilities:
     speedrunner-unfreeze-msg: "&aYou have been unfrozen and move again!"
     prevent-kicking: true
     # This prevent the player for being kicked due to the the "Flying is not enabled on this server" kick message.
-    # It is suggested that you do not change this
+    # It is suggested that you do not change this and keep it as true to prevent problems while playing.
 
 # This will remove any special items as
 # to prevent them from being used.
 # It is not suggested you change this!
 clear-items-on-join: true
 clear-items-on-leave: true
+prevent-advancements: true
