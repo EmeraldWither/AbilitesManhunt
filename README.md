@@ -1,6 +1,6 @@
 # Minecraft Manhunt but the Hunter has Special Abilites
 ----------------------------------------------------------
-#### Version 1.1 has been released! You can check it out here : https://github.com/EmeraldWither/AbilitesManhunt/releases/tag/v.1.1
+#### Version 1.2 has been released! You can check it out here : https://github.com/EmeraldWither/AbilitesManhunt/releases/tag/v1.2
 
 ----------------------------------------------------------
 
