@@ -4,7 +4,7 @@
 
 ----------------------------------------------------------
 
-This is a plugin which takes a new take on Manhunt. With 7 planned abilities, it will elevate the manhunt genre. 
+This is a plugin which takes a new take on Manhunt. With 8 abilities, it will elevate the manhunt genre. 
 
 ~~You can see the planned features timeline here: https://github.com/EmeraldWither/AbilitesManhunt/projects/1~~
 
