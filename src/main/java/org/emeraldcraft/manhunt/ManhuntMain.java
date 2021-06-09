@@ -40,14 +40,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
-public class Main extends JavaPlugin {
+public class ManhuntMain extends JavaPlugin {
 
     public Plugin plugin = this;
+    public DataManager data;
     @Override
     public void onEnable(){
         ManhuntGameManager manhuntGameManager = new ManhuntGameManager();
         Manacounter manacounter = new Manacounter(manhuntGameManager,this);
         AbilitesManager abilitesManager = new AbilitesManager(manhuntGameManager);
+        this.data = new DataManager(this);
 
         getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter, abilitesManager), this);
         getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
@@ -90,7 +92,7 @@ public class Main extends JavaPlugin {
                 "|                            NOW ENABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.2 RELEASE                                  \n" +
+                "|                            v1.2.2 RELEASE                                  \n" +
                 "|                                                                        \n" +
                 "|                        BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
@@ -113,7 +115,7 @@ public class Main extends JavaPlugin {
                 "|                            NOW DISABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.2 RELEASE                                  \n" +
+                "|                            v1.2.2 RELEASE                                  \n" +
                 "|                                                                        \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");

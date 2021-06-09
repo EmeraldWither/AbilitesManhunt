@@ -11,10 +11,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManHuntInventory;
 import org.emeraldcraft.manhunt.Mana.Manacounter;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class LightningGuiListener implements Listener {
     String ability = "Strike Lightning";
 
-    private Main main;
+    private ManhuntMain manhuntMain;
     private Manacounter manacounter;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
@@ -30,8 +30,8 @@ public class LightningGuiListener implements Listener {
     List<String> speedrunner;
     Map<String, Long> lightningCooldown;
 
-    public LightningGuiListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter, AbilitesManager AbilitesManager) {
-        this.main = main;
+    public LightningGuiListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+        this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         this.manacounter = manacounter;
         this.abilitesManager = AbilitesManager;
@@ -49,12 +49,12 @@ public class LightningGuiListener implements Listener {
                 if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLightning())) {
                     SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                     Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
-                    Integer cooldown = main.getConfig().getInt("abilities.lightning.cooldown");
+                    Integer cooldown = manhuntMain.getConfig().getInt("abilities.lightning.cooldown");
 
                     if (lightningCooldown.containsKey(player.getName())) {
                         if (lightningCooldown.get(player.getName()) > System.currentTimeMillis()) {
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                             return;
                         }
                     }
@@ -65,8 +65,8 @@ public class LightningGuiListener implements Listener {
 
                     lightningCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
                     selectedPlayer.getWorld().strikeLightning(selectedPlayer.getLocation());
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.lightning.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
-                    selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.lightning.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.lightning.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
+                    selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.lightning.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
                     player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
                 }

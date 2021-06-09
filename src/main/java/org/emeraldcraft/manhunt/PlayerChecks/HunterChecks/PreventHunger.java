@@ -4,19 +4,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 
 public class PreventHunger implements Listener {
 
-    private Main main;
+    private ManhuntMain manhuntMain;
     private ManhuntGameManager manhuntGameManager;
     List<String> hunter;
     List<String> speedrunner;
-    public PreventHunger(ManhuntGameManager manhuntGameManager, Main main){
-        this.main = main;
+    public PreventHunger(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
+        this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);
         speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;

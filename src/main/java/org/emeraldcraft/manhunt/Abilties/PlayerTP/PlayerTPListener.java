@@ -10,21 +10,21 @@ import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.Team;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 
 public class PlayerTPListener implements Listener {
 
-    private Main main;
+    private ManhuntMain manhuntMain;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
     List<String> hunter;
     List<String> speedrunner;
 
-    public PlayerTPListener(ManhuntGameManager manhuntGameManager, Main main, AbilitesManager abilitesManager) {
-        this.main = main;
+    public PlayerTPListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager abilitesManager) {
+        this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         this.abilitesManager = abilitesManager;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);
@@ -38,7 +38,7 @@ public class PlayerTPListener implements Listener {
             Player player = event.getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.PLAYERTP)) {
 
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
+                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                 inv.createInventory();
                 Inventory getInventory = inv.getInv();
 

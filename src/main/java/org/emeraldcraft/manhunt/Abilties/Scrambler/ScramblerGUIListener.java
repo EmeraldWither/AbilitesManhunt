@@ -12,9 +12,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.Mana.Manacounter;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ public class ScramblerGUIListener  implements Listener {
 
     String ability = "Scramble Inventory";
 
-    private Main main;
+    private ManhuntMain manhuntMain;
     private Manacounter manacounter;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
@@ -30,8 +30,8 @@ public class ScramblerGUIListener  implements Listener {
     List<String> hunter;
     List<String> speedrunner;
 
-    public ScramblerGUIListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter, AbilitesManager AbilitesManager) {
-        this.main = main;
+    public ScramblerGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+        this.manhuntMain = manhuntMain;
         this.abilitesManager = AbilitesManager;
         this.manhuntGameManager = manhuntGameManager;
         this.manacounter = manacounter;
@@ -51,7 +51,7 @@ public class ScramblerGUIListener  implements Listener {
                     if (scramblerCooldown.get(player.getName()) > System.currentTimeMillis()) {
                         Integer timeLeft = (int) (System.currentTimeMillis() - scramblerCooldown.get(player.getName()));
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((scramblerCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((scramblerCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }
@@ -63,7 +63,7 @@ public class ScramblerGUIListener  implements Listener {
                 Collections.shuffle(Arrays.asList(oldInv));
                 selectedPlayer.getInventory().setStorageContents(oldInv);
 
-                Integer cooldown = main.getConfig().getInt("abilities.scramble.cooldown");
+                Integer cooldown = manhuntMain.getConfig().getInt("abilities.scramble.cooldown");
                 scramblerCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
 
                 int items = 0;
@@ -78,8 +78,8 @@ public class ScramblerGUIListener  implements Listener {
                 manacounter.updateActionbar(player);
 
 
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.scramble.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(items))));
-                selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.scramble.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(items))));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.scramble.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(items))));
+                selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.scramble.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%items%", Integer.toString(items))));
                 player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
             }

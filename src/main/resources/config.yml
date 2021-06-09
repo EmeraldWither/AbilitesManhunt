@@ -1,7 +1,7 @@
 #                                                                           #
 #|------------------------------------------------------------------------| #
 #|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES         | #
-#|                             v1.2 RELEASE                               | #
+#|                             v1.2.2 RELEASE                               | #
 #|                                                                        | #
 #|                        BY: EMERALDWITHERYT                             | #
 #|------------------------------------------------------------------------| #
@@ -13,6 +13,14 @@ mana-delay: 20
 mana-amount: 1
 config-reload-msg: "&aSuccessfully reloaded the configuration files!"
 messages:
+  stats-msg:
+    - "&6&m&l---------------------------------------"
+    - "&b%player%'s Manhunt Stats:"
+    - "&aWins: &2%wins%"
+    - "&cLosses: &4%losses%"
+    - "&cDeaths: &4%deaths%"
+    - "&6&m&l---------------------------------------"
+
   # Placeholders
   # %time-left% : Gets the remaining time left on cooldown! Does NOT work with the mana-error-msg.
   cooldown-msg: "&4[Error] &cYou're currently on cooldown for the \"&4&l%ability%&c\" ability! You still have &4&l%time-left% &cseconds remaining!"
@@ -27,11 +35,9 @@ messages:
     - ""
     - "   &3&lThe manhunt is now starting!"
     - ""
-    - "&cHUNTERS:"
-    - "&4%hunters%"
+    - "&cHUNTERS: &4%hunters%"
     - ""
-    - "&aSPEEDRUNNERS:"
-    - "&2%speedrunners%"
+    - "&aSPEEDRUNNERS: &2%speedrunners%"
     - ""
     - "           &2&lGOOD LUCK"
     - "&6&m-----------------------------------"

@@ -10,20 +10,20 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.emeraldcraft.manhunt.Enums.Team;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 
 public class CheckChest implements Listener{
 
     private ManhuntGameManager manhuntGameManager;
-    private Main main;
+    private ManhuntMain manhuntMain;
 
     List<String> hunter;
-    public CheckChest(ManhuntGameManager manhuntGameManager, Main main){
+    public CheckChest(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntGameManager = manhuntGameManager;
-        this.main = main;
+        this.manhuntMain = manhuntMain;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);;
     }
 
@@ -32,7 +32,7 @@ public class CheckChest implements Listener{
         if(hunter.contains(event.getView().getPlayer().getName())) {
             if(manhuntGameManager.getGameStatus()) {
 
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
+                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                 Inventory getInventory = inv.getInv();
 
                 if (event.getInventory() != getInventory) {
@@ -46,7 +46,7 @@ public class CheckChest implements Listener{
     public void ChestDragEvent(InventoryDragEvent event){
         if(manhuntGameManager.getGameStatus()) {
             if (hunter.contains(event.getView().getPlayer().getName())) {
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
+                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                 Inventory getInventory = inv.getInv();
 
                 if (event.getInventory() != getInventory) {
@@ -60,7 +60,7 @@ public class CheckChest implements Listener{
         if(manhuntGameManager.getGameStatus()) {
             if (event.getSource().getHolder() instanceof Player) {
                 if (hunter.contains(((Player) event.getSource().getHolder()).getName())) {
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, main);
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                     Inventory getInventory = inv.getInv();
 
                     if (event.getSource() != getInventory) {

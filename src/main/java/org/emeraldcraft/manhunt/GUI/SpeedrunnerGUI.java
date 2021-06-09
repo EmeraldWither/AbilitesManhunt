@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,11 @@ import java.util.List;
 public class SpeedrunnerGUI {
 
     private ManhuntGameManager manhuntGameManager;
-    private Main main;
+    private ManhuntMain manhuntMain;
     List<String> hunter;
     List<String> speedrunner;
-    public SpeedrunnerGUI(ManhuntGameManager manhuntGameManager, Main main){
-        this.main = main;
+    public SpeedrunnerGUI(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
+        this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);
         speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;

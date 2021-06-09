@@ -12,23 +12,23 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.Mana.Manacounter;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 
 public class EnderDragonCheck implements Listener {
     private ManhuntGameManager manhuntGameManager;
-    private Main main;
+    private ManhuntMain manhuntMain;
     private org.emeraldcraft.manhunt.Abilties.AbilitesManager AbilitesManager;
     private Manacounter manacounter;
     List<String> hunter;
     List<String> speedrunner;
     List<String> deadSpeedrunners;
 
-    public EnderDragonCheck(ManhuntGameManager manhuntGameManager, Main main, AbilitesManager AbilitesManager, Manacounter manacounter) {
-        this.main = main;
+    public EnderDragonCheck(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager AbilitesManager, Manacounter manacounter) {
+        this.manhuntMain = manhuntMain;
         this.AbilitesManager = AbilitesManager;
         this.manhuntGameManager = manhuntGameManager;
         this.manacounter = manacounter;
@@ -49,7 +49,7 @@ public class EnderDragonCheck implements Listener {
                         players.setAllowFlight(false);
                         players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + speedrunners + "!", 20, 100, 20);
                         players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
-                        for (String msg : main.getConfig().getStringList("messages.speedrunner-win-msg.hunters")) {
+                        for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.hunters")) {
                             players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                         }
                         for (PotionEffect potionEffect : players.getActivePotionEffects()) {
@@ -73,7 +73,7 @@ public class EnderDragonCheck implements Listener {
                     for (String player : speedrunner) {
                         Player players = Bukkit.getPlayer(player);
                         players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + speedrunners + "!", 20, 100, 20);
-                        for (String msg : main.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
+                        for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
                             players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                         }
                         for (PotionEffect potionEffect : players.getActivePotionEffects()) {
@@ -92,7 +92,7 @@ public class EnderDragonCheck implements Listener {
                     for (String player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
                         players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + speedrunners + "!", 20, 100, 20);
-                        for (String msg : main.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
+                        for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
                             players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                         }
                         for (PotionEffect potionEffect : players.getActivePotionEffects()) {

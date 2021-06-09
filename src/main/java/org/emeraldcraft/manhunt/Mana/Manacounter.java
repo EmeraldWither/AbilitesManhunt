@@ -7,8 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,17 +22,17 @@ public class Manacounter{
     List<String> speedrunner;
     List<String> hunter;
     boolean HasGameStarted;
-    private Main main;
+    private ManhuntMain manhuntMain;
 
-    public Manacounter(ManhuntGameManager manhuntGameManager, Main main) {
+    public Manacounter(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain) {
         this.manhuntGameManager = manhuntGameManager;
         this.speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
         this.hunter = manhuntGameManager.getTeam(Team.HUNTER);
         this.HasGameStarted = manhuntGameManager.getGameStatus();
-        this.main = main;
+        this.manhuntMain = manhuntMain;
     }
     public void startMana(JavaPlugin plugin, Integer delay, Integer repeat){
-        Integer manaAmount = main.getConfig().getInt("mana-amount");
+        Integer manaAmount = manhuntMain.getConfig().getInt("mana-amount");
         Mana.clear();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
@@ -60,7 +60,7 @@ public class Manacounter{
         }, delay, repeat);
     }
     public void cancelMana(){
-        Bukkit.getServer().getScheduler().cancelTasks(main.plugin);
+        Bukkit.getServer().getScheduler().cancelTasks(manhuntMain.plugin);
         id = -1;
         Mana.clear();
     }

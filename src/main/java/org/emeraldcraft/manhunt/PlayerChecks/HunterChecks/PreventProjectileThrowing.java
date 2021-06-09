@@ -5,19 +5,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 
 public class PreventProjectileThrowing implements Listener {
 
     private ManhuntGameManager manhuntGameManager;
-    private Main main;
+    private ManhuntMain manhuntMain;
     List<String> hunter;
     List<String> speedrunner;
-    public PreventProjectileThrowing(ManhuntGameManager manhuntGameManager, Main main){
-        this.main = main;
+    public PreventProjectileThrowing(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
+        this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);
         speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;

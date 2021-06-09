@@ -65,10 +65,10 @@ public class ManhuntGameManager {
     public void setGameStatus(boolean b){
         hasGameStarted = b;
     }
-    public boolean startGame(CommandSender sender, Main main, Manacounter manacounter, Integer manadelay) {
-        String prefix = main.getConfig().getString("plugin-prefix");
+    public boolean startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay) {
+        String prefix = manhuntMain.getConfig().getString("plugin-prefix");
         try {
-            new SpeedrunnerGUI(this, main).createInventory();
+            new SpeedrunnerGUI(this, manhuntMain).createInventory();
             hunterTeam.setColor(ChatColor.RED);
             hunterTeam.setPrefix("[HUNTER] ");
             speedrunnerTeam.setColor(ChatColor.GREEN);
@@ -84,7 +84,7 @@ public class ManhuntGameManager {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (getTeam(player.getName()).equals(Team.SPEEDRUNNER)) {
                     player.spigot().respawn();
-                    for (String msg : main.getConfig().getStringList("messages.start-msg")) {
+                    for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
 
                     }
@@ -118,7 +118,7 @@ public class ManhuntGameManager {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (getTeam(player.getName()).equals(Team.HUNTER)) {
                     player.spigot().respawn();
-                    for (String msg : main.getConfig().getStringList("messages.start-msg")) {
+                    for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                     }
                     player.getInventory().clear();
@@ -156,7 +156,7 @@ public class ManhuntGameManager {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
             return true;
         }
-        manacounter.startMana((JavaPlugin) main.plugin, 0, manadelay);
+        manacounter.startMana((JavaPlugin) manhuntMain.plugin, 0, manadelay);
         return true;
     }
         catch(Exception e){

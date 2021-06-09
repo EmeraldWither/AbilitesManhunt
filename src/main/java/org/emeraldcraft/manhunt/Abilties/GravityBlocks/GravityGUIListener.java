@@ -16,9 +16,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.Mana.Manacounter;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +30,14 @@ public class GravityGUIListener implements Listener {
 
     Map<String, Long> gravityCooldown;
 
-    private Main main;
+    private ManhuntMain manhuntMain;
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
     private AbilitesManager abilitesManager;
     List<String> hunter;
     List<String> speedrunner;
-    public GravityGUIListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter, AbilitesManager AbilitesManager){
-        this.main = main;
+    public GravityGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
+        this.manhuntMain = manhuntMain;
         this.abilitesManager = AbilitesManager;
         this.manacounter = manacounter;
         this.manhuntGameManager = manhuntGameManager;
@@ -54,13 +54,13 @@ public class GravityGUIListener implements Listener {
                 if (gravityCooldown.containsKey(player.getName())) {
                     if (gravityCooldown.get(player.getName()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((gravityCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((gravityCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }
                 SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                 Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
-                int radius = main.getConfig().getInt("abilities.gravity.radius");
+                int radius = manhuntMain.getConfig().getInt("abilities.gravity.radius");
                 for (Block block : getBlocks(selectedPlayer.getLocation().getBlock(), radius)) {
                     if (block.getRelative(BlockFace.DOWN).getType() == Material.AIR) {
                         BlockData blockdata = block.getBlockData();
@@ -73,10 +73,10 @@ public class GravityGUIListener implements Listener {
                 manacounter.updateActionbar(player);
 
 
-                Integer cooldown = main.getConfig().getInt("abilities.gravity.cooldown");
+                Integer cooldown = manhuntMain.getConfig().getInt("abilities.gravity.cooldown");
                 gravityCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.gravity.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%radius%", Integer.toString(radius))));
-                selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.gravity.speedrunner-msg").replace("%hunter%", player.getName()).replace("%radius%", Integer.toString(radius))));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.gravity.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%radius%", Integer.toString(radius))));
+                selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.gravity.speedrunner-msg").replace("%hunter%", player.getName()).replace("%radius%", Integer.toString(radius))));
 
                 player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 

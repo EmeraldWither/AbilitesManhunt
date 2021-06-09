@@ -5,19 +5,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 
 public class PreventPlacing implements Listener {
 
     private ManhuntGameManager manhuntGameManager;
-    private Main main;
+    private ManhuntMain manhuntMain;
     List<String> hunter;
     List<String> speedrunner;
-    public PreventPlacing(ManhuntGameManager manhuntGameManager, Main main){
-        this.main = main;
+    public PreventPlacing(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
+        this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(Team.HUNTER);
         speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;

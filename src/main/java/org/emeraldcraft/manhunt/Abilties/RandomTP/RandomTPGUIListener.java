@@ -13,9 +13,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Main;
 import org.emeraldcraft.manhunt.Mana.Manacounter;
 import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomTPGUIListener implements Listener {
 
-    private Main main;
+    private ManhuntMain manhuntMain;
     String ability = "RandomTP";
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
@@ -32,8 +32,8 @@ public class RandomTPGUIListener implements Listener {
     Map<String, Long> randomTPCooldown;
     List<String> hunter;
     List<String> speedrunner;
-    public RandomTPGUIListener(ManhuntGameManager manhuntGameManager, Main main, Manacounter manacounter, AbilitesManager AbilitesManager){
-        this.main = main;
+    public RandomTPGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
+        this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
         this.manhuntGameManager = manhuntGameManager;
         this.abilitesManager = AbilitesManager;
@@ -50,7 +50,7 @@ public class RandomTPGUIListener implements Listener {
                 if (randomTPCooldown.containsKey(player.getName())) {
                     if (randomTPCooldown.get(player.getName()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }
@@ -63,19 +63,19 @@ public class RandomTPGUIListener implements Listener {
                 manacounter.updateActionbar(player);
 
 
-                Integer radius = main.getConfig().getInt("abilities.randomtp.tp-radius");
+                Integer radius = manhuntMain.getConfig().getInt("abilities.randomtp.tp-radius");
                 Location oldLoc = selectedPlayer.getLocation();
                 randomTP(selectedPlayer.getName(), player.getName(), radius);
 
                 double distance = selectedPlayer.getLocation().distance(oldLoc);
 
-                Integer cooldown = main.getConfig().getInt("abilities.randomtp.cooldown");
+                Integer cooldown = manhuntMain.getConfig().getInt("abilities.randomtp.cooldown");
                 randomTPCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
 
 
                 selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.randomtp.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%distance%", Integer.toString((int) Math.round(distance)))));
-                selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getConfig().getString("abilities.randomtp.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%distance%", Integer.toString((int) Math.round(distance)))));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.randomtp.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%distance%", Integer.toString((int) Math.round(distance)))));
+                selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.randomtp.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName()).replace("%distance%", Integer.toString((int) Math.round(distance)))));
                 player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
 
             }
