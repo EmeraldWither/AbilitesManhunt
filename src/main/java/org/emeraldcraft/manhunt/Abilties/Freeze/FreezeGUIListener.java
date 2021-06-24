@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -40,8 +40,8 @@ public class FreezeGUIListener  implements Listener {
         this.abilitesManager = AbilitesManager;
         this.manacounter = manacounter;
         this.manhuntGameManager = manhuntGameManager;
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
         this.freezeCooldown = AbilitesManager.getCooldown(Ability.FREEZER);
     }
 
@@ -82,16 +82,34 @@ public class FreezeGUIListener  implements Listener {
     }
 
     public void FreezePlayer(Player hunter, Player speedrunner, Integer time) {
+        //Add them to the frozen team scoreboard.
+        org.bukkit.scoreboard.Team frozenTeam = manhuntGameManager.getScoreboardTeam(ManhuntTeam.FROZEN);
+        org.bukkit.scoreboard.Team speedrunnerTeam = manhuntGameManager.getScoreboardTeam(ManhuntTeam.SPEEDRUNNER);
+
+        speedrunnerTeam.removeEntry(speedrunner.getName());
+        frozenTeam.addEntry(speedrunner.getName());
+
+        speedrunner.setScoreboard(Objects.requireNonNull(frozenTeam.getScoreboard()));
+
+
         Integer delay = time * 20;
         speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-freeze-msg").replace("%hunter%", hunter.getName()).replace("%time%", Integer.toString(time))));
-        manhuntGameManager.getTeam(Team.FROZEN).add(speedrunner.getName());
+        manhuntGameManager.getTeam(ManhuntTeam.FROZEN).add(speedrunner.getName());
         Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.plugin, new Runnable() {
             @Override
             public void run() {
+
+                // Re-add them to the speedrunners scoreboard team
+                frozenTeam.removeEntry(speedrunner.getName());
+                speedrunnerTeam.addEntry(speedrunner.getName());
+                speedrunner.setScoreboard(Objects.requireNonNull(speedrunnerTeam.getScoreboard()));
+                manhuntGameManager.getTeam(ManhuntTeam.FROZEN).remove(speedrunner.getName());
+
                 freezeDelay = true;
                 speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-unfreeze-msg").replace("%hunter%", hunter.getName())));
                 hunter.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.unfreeze-msg").replace("%hunter%", hunter.getName()).replace("%speedrunner%", speedrunner.getName())));
-                manhuntGameManager.getTeam(Team.FROZEN).remove(speedrunner.getName());
+
+                //Wait 1 tick before stopping to prevent them from getting kicked.
                 Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.plugin, new Runnable() {
                     @Override
                     public void run() {
@@ -103,10 +121,11 @@ public class FreezeGUIListener  implements Listener {
 
     }
 
+
     @EventHandler
-    public void PlayerMove(PlayerMoveEvent event) {
+    public void FreezePlayer(PlayerMoveEvent event) {
         if (manhuntGameManager.getGameStatus()) {
-            if (manhuntGameManager.getTeam(Team.FROZEN).contains(event.getPlayer().getName())) {
+            if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(event.getPlayer().getName())) {
                 event.setCancelled(true);
             }
         }
@@ -114,11 +133,13 @@ public class FreezeGUIListener  implements Listener {
 
     @EventHandler
     public void PlayerKick(PlayerKickEvent event) {
+        //This prevents the player to be kicked for flying if they are floating in midair.
+
         if (!(Bukkit.getServer().getAllowFlight())) {
             if (manhuntMain.getConfig().getBoolean("abilities.freeze.prevent-kicking")) {
                 if (manhuntGameManager.getGameStatus()) {
                     if (freezeDelay == true) {
-                        if (event.getReason().equalsIgnoreCase("Flying is not enabled on this server")) {
+                        if (event.getReason().contains("flying")) {
                             event.setCancelled(true);
                             Bukkit.getServer().getLogger().log(Level.WARNING, manhuntMain.getConfig().get("plugin-prefix") + event.getPlayer().getName() + " would have been kicked for flying due to them being frozen. We have prevented this by preventing them from getting kicked. You can change this behavior in the, \"config.yml\" file.");
                         }

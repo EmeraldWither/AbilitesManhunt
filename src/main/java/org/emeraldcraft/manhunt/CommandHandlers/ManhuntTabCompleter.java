@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ManhuntTabCompleter implements TabCompleter {
-    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats");
+    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "testscoreboard");
     private static final List<String> players = new ArrayList<String>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
 
@@ -31,8 +31,7 @@ public class ManhuntTabCompleter implements TabCompleter {
             }
         }
         if(args.length >= 2) {
-            final List<String> blank = Arrays.asList("", "", "");
-            return StringUtil.copyPartialMatches(args[args.length - 1], blank, new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[args.length - 1], BLANK, new ArrayList<>());
         }
         return null;
     }

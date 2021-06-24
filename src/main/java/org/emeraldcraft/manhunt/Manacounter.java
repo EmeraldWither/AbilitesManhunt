@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.Mana;
+package org.emeraldcraft.manhunt;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -6,9 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
-import org.emeraldcraft.manhunt.ManhuntMain;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +25,8 @@ public class Manacounter{
 
     public Manacounter(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain) {
         this.manhuntGameManager = manhuntGameManager;
-        this.speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
-        this.hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        this.speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
         this.HasGameStarted = manhuntGameManager.getGameStatus();
         this.manhuntMain = manhuntMain;
     }
@@ -36,7 +35,7 @@ public class Manacounter{
         Mana.clear();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
-            if (manhuntGameManager.getTeam(Team.HUNTER).contains(player.getName())){
+            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())){
                 Mana.put(player.getName(), 0);
             }
         }
@@ -44,7 +43,7 @@ public class Manacounter{
             @Override
             public void run() {
                 for(Player player : Bukkit.getOnlinePlayers()) {
-                    if (manhuntGameManager.getTeam(Team.HUNTER).contains(player.getName())) {
+                    if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())) {
                         if (getManaList().containsKey(player.getName())) {
                             if (Mana.get(player.getName()) < 100) {
                                 Mana.put(player.getName(), (Mana.get(player.getName()) + manaAmount));

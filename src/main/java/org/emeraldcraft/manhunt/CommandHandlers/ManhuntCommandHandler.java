@@ -9,14 +9,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntScoreboardManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class ManhuntCommandHandler implements CommandExecutor {
@@ -33,9 +35,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
     public ManhuntCommandHandler(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntGameManager = manhuntGameManager;
         this.AbilitesManager = AbilitesManager;
-        this.speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
-        this.hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        this.deadSpeedrunner = manhuntGameManager.getTeam(Team.DEAD);
+        this.speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        this.deadSpeedrunner = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
         this.Mana = manacounter.getManaList();
@@ -72,7 +74,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 if (!(hunter.isEmpty())) {
                     if (!(speedrunner.isEmpty())) {
                         try {
-                            manhuntGameManager.startGame(sender, manhuntMain, manacounter, manaDelay);
+                            manhuntGameManager.startGame(sender, manhuntMain, manacounter, manaDelay, AbilitesManager);
                             return true;
                         }
                         catch (Exception e){
@@ -103,7 +105,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
                             if (!(speedrunner.contains(name))) {
 
-                                addTeam(Team.SPEEDRUNNER, name);
+                                addTeam(ManhuntTeam.SPEEDRUNNER, name);
 
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
                                 return true;
@@ -142,7 +144,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
                             if (!(hunter.contains(name))) {
 
-                                addTeam(Team.HUNTER, name);
+                                addTeam(ManhuntTeam.HUNTER, name);
 
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the hunters group! "));
                                 return true;
@@ -240,7 +242,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 Bukkit.broadcastMessage(prefix + ChatColor.DARK_GREEN + sender.getName() + ChatColor.GREEN + " successfully set the mana of " + ChatColor.DARK_GREEN + player.getName() + ChatColor.GREEN + " to " + ChatColor.DARK_GREEN + args[2] + ChatColor.GREEN + "!");
                             } catch (NumberFormatException e) {
                                 sender.sendMessage(ChatColor.DARK_RED + "Please input a integer!");
+                                return true;
                             }
+                            return true;
                         }
                         sender.sendMessage(ChatColor.DARK_RED + "That player is not a hunter!");
                         return false;
@@ -274,6 +278,15 @@ public class ManhuntCommandHandler implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt stats <player (optional)>");
             return false;
         }
+        else if (args[0].equalsIgnoreCase("testscoreboard")) {
+            if (sender instanceof Player) {
+                Player player = Bukkit.getPlayer(sender.getName());
+                UUID uuid = player.getUniqueId();
+                ManhuntScoreboardManager manhuntScoreboardManager = new ManhuntScoreboardManager(manhuntGameManager, AbilitesManager);
+                manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
+            }
+
+        }
 
         showHelp(sender);
 
@@ -281,30 +294,30 @@ public class ManhuntCommandHandler implements CommandExecutor {
     }
 
 
-    public void addTeam(Team team, String name){
-        if(team.equals(Team.HUNTER)){
+    public void addTeam(ManhuntTeam team, String name){
+        if(team.equals(ManhuntTeam.HUNTER)){
             hunter.add(name);
             if(speedrunner.contains(name)){
                 speedrunner.remove(name);
             }
         }
-        if(team.equals(Team.SPEEDRUNNER)){
+        if(team.equals(ManhuntTeam.SPEEDRUNNER)){
             speedrunner.add(name);
             if(hunter.contains(name)){
                 hunter.remove(name);
             }
         }
     }
-    public Team getTeam(String playerName){
+    public ManhuntTeam getTeam(String playerName){
         String name = Bukkit.getPlayer(playerName).getName();
 
         if(hunter.contains(name)){
-            return Team.HUNTER;
+            return ManhuntTeam.HUNTER;
         }
         if(speedrunner.contains(name)) {
-            return Team.SPEEDRUNNER;
+            return ManhuntTeam.SPEEDRUNNER;
         }
-        return Team.NONE;
+        return ManhuntTeam.NONE;
     }
 
     public void showHelp(CommandSender sender){
@@ -322,7 +335,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         "&e/manhunt reload: Reloads the configuration files.\n" +
                         "&e/manhunt forceend: Forcefully ends the game.\n" +
                         "&e/manhunt setmana <player> <mana>: Sets the mana of the player to the selected amount.\n" +
-                        "&e/manhunt stats <player (optional)>: Gets the selected players stats. If there is no player, it will pick the one who is sending the command.\n" +
+                        "&e/manhunt stats <player (optional)>: Gets the selected players stats. If there is no player, it will pick the one who is sending the command. (Note: The player must be online)\n" +
                         "&4--------------------------------"));
     }
     public void endGame(CommandSender sender) {
@@ -351,7 +364,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
             manacounter.clearMana();
             manhuntGameManager.setGameStatus(false);
             AbilitesManager.clearCooldown();
-            manhuntGameManager.getTeam(Team.FROZEN).clear();
+            manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
             for(org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
                 if(team.getName().equals("hunterTeam") || team.getName().equals("speedrunnerTeam")){
                     team.unregister();
@@ -395,6 +408,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
             }
             return;
         }
-        sender.sendMessage(ChatColor.RED + "Only a player can check their own stats! To see a players stats, type \"/manhunt stats <player>\"!");
+        sender.sendMessage(ChatColor.RED + "Only a player can check their own stats! To see a players stats, type \"/manhunt stats <player>\"! (Note: They must be online)");
     }
 }

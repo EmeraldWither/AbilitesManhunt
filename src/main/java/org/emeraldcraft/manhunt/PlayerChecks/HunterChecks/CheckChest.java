@@ -8,9 +8,9 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
-import org.emeraldcraft.manhunt.Enums.Team;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class CheckChest implements Listener{
     public CheckChest(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntGameManager = manhuntGameManager;
         this.manhuntMain = manhuntMain;
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);;
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);;
     }
 
     @EventHandler

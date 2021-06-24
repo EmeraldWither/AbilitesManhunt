@@ -3,8 +3,8 @@ package org.emeraldcraft.manhunt.PlayerChecks.HunterChecks;
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 public class PreventAdvancements implements Listener {
@@ -19,7 +19,7 @@ public class PreventAdvancements implements Listener {
     public void advancementEvent(PlayerAdvancementCriterionGrantEvent event){
         if(manhuntMain.getConfig().getBoolean("prevent-advancements")){
             if(manhuntGameManager.getGameStatus()){
-                if(manhuntGameManager.getTeam(Team.HUNTER).contains(event.getPlayer().getName())){
+                if(manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getName())){
                     event.setCancelled(true);
                 }
             }

@@ -1,6 +1,6 @@
 package org.emeraldcraft.manhunt.Enums;
 
-public enum Team {
+public enum ManhuntTeam {
         HUNTER,
         SPEEDRUNNER,
         DEAD,

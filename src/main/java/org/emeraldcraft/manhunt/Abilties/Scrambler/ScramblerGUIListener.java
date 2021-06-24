@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.*;
@@ -36,8 +36,8 @@ public class ScramblerGUIListener  implements Listener {
         this.manhuntGameManager = manhuntGameManager;
         this.manacounter = manacounter;
         scramblerCooldown = AbilitesManager.getCooldown(Ability.SCRAMBLE);
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 

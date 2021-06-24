@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
-import org.emeraldcraft.manhunt.Enums.Team;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -27,13 +27,13 @@ public class PlayerTPListener implements Listener {
         this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
         this.abilitesManager = abilitesManager;
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 
     @EventHandler
-    public void DetectLauncher(PlayerInteractEvent event) {
+    public void getPlayerTPItem(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Player player = event.getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.PLAYERTP)) {

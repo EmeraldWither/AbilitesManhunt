@@ -1,7 +1,8 @@
-package org.emeraldcraft.manhunt;
+package org.emeraldcraft.manhunt.Managers;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.io.File;
 import java.io.IOException;

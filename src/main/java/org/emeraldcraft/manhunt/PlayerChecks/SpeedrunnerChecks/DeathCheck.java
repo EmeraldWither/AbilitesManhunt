@@ -8,9 +8,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -33,9 +33,9 @@ public class DeathCheck implements Listener {
         this.manhuntGameManager = manhuntGameManager;
         this.manacounter = manacounter;
         this.AbilitesManager = AbilitesManager;
-        deadSpeedrunners = manhuntGameManager.getTeam(Team.DEAD);
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        deadSpeedrunners = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
     }
 
     @EventHandler
@@ -57,13 +57,12 @@ public class DeathCheck implements Listener {
                 event.getEntity().setAllowFlight(true);
                 event.getEntity().setFlying(true);
                 event.getEntity().setGlowing(false);
-                event.setShouldDropExperience(false);
                 if (speedrunner.size() == 0) {
                     String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
                     for (String hunter : hunter) {
                         Player players = Bukkit.getPlayer(hunter);
 
-                        //Add a win to the player
+                        //Add a win to the hunter
                         int wins = 0;
                         if(manhuntMain.data.getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
                             wins = manhuntMain.data.getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
@@ -130,9 +129,10 @@ public class DeathCheck implements Listener {
                     speedrunner.clear();
                     deadSpeedrunners.clear();
                     hunter.clear();
-                    manhuntGameManager.getTeam(Team.FROZEN).clear();
+                    manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
                     AbilitesManager.clearCooldown();
                     manhuntGameManager.setGameStatus(false);
+                    Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
                             team.unregister();
@@ -144,7 +144,7 @@ public class DeathCheck implements Listener {
                 Vector direction = event.getEntity().getLocation().getDirection();
                 deathLocation.setDirection(direction);
                 Player player = event.getEntity();
-                manhuntGameManager.deadSpeedrunnerTeam.addEntry(player.getName());
+               manhuntGameManager.deadSpeedrunnerTeam.addEntry(player.getName());
                 player.setScoreboard(manhuntGameManager.deadSpeedrunnerTeam.getScoreboard());
                 Bukkit.getScheduler().runTaskLater(manhuntMain.plugin, new Runnable() {
                     @Override

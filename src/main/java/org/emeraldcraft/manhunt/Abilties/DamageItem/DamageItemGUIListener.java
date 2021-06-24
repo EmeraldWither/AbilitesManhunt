@@ -13,10 +13,10 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
-import org.emeraldcraft.manhunt.Enums.Team;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -38,8 +38,8 @@ public class DamageItemGUIListener implements Listener {
     public DamageItemGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntGameManager = manhuntGameManager;
         this.AbilitesManager = AbilitesManager;
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
         this.damageCooldown = AbilitesManager.getCooldown(Ability.DAMAGEITEM);
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;

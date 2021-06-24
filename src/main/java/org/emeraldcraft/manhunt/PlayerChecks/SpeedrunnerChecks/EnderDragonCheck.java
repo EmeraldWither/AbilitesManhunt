@@ -11,9 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -32,9 +32,9 @@ public class EnderDragonCheck implements Listener {
         this.AbilitesManager = AbilitesManager;
         this.manhuntGameManager = manhuntGameManager;
         this.manacounter = manacounter;
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        deadSpeedrunners = manhuntGameManager.getTeam(Team.DEAD);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        deadSpeedrunners = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 
@@ -113,7 +113,7 @@ public class EnderDragonCheck implements Listener {
                     speedrunner.clear();
                     deadSpeedrunners.clear();
                     hunter.clear();
-                    manhuntGameManager.getTeam(Team.FROZEN).clear();
+                    manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
                     AbilitesManager.clearCooldown();
                     manhuntGameManager.setGameStatus(false);
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {

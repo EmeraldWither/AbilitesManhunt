@@ -3,23 +3,20 @@ package org.emeraldcraft.manhunt.PlayerChecks.HunterChecks;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
-import org.emeraldcraft.manhunt.ManhuntMain;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.List;
 
 public class PreventPickingUp implements Listener {
 
     private ManhuntGameManager manhuntGameManager;
-    private ManhuntMain manhuntMain;
     List<String> hunter;
     List<String> speedrunner;
-    public PreventPickingUp(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
-        this.manhuntMain = manhuntMain;
+    public PreventPickingUp(ManhuntGameManager manhuntGameManager){
         this.manhuntGameManager = manhuntGameManager;
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(Team.SPEEDRUNNER);;
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
     }
 
 

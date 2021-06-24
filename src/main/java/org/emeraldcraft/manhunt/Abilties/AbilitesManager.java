@@ -2,9 +2,9 @@ package org.emeraldcraft.manhunt.Abilties;
 
 import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.Enums.Ability;
-import org.emeraldcraft.manhunt.Enums.Team;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.ManHuntInventory;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class AbilitesManager {
 
     public Ability getHeldAbility(Player player) {
             if (manhuntGameManager.getGameStatus()) {
-                if (manhuntGameManager.getTeam(Team.HUNTER).contains(player.getName())) {
+                if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())) {
                     if (player.getInventory().getItemInMainHand() != null) {
                         if (player.getInventory().getItemInMainHand().isSimilar(manhuntInventory.getGravity())) {
                             return Ability.GRAVITY;

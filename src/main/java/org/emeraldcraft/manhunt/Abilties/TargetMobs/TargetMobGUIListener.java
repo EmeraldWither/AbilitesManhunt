@@ -12,9 +12,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
-import org.emeraldcraft.manhunt.Enums.Team;
-import org.emeraldcraft.manhunt.Mana.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Manacounter;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class TargetMobGUIListener  implements Listener {
         this.manacounter = manacounter;
         this.manhuntMain = manhuntMain;
         targetMobCooldown = AbilitesManager.getCooldown(Ability.TARGETMOB);
-        hunter = manhuntGameManager.getTeam(Team.HUNTER);
+        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
     }
 
 
