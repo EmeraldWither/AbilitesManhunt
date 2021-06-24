@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
@@ -37,19 +38,21 @@ public class LightningListener implements Listener {
 
     @EventHandler
     public void getLightningItem(PlayerInteractEvent event) {
-        if(AbilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.LIGHTNING)){
-            String name = event.getPlayer().getName();
-            if (manacounter.getManaList().get(name) >= 10) {
-                Player player = event.getPlayer();
+        if (AbilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.LIGHTNING)) {
+            if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+                String name = event.getPlayer().getName();
+                if (manacounter.getManaList().get(name) >= 10) {
+                    Player player = event.getPlayer();
 
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
-                inv.createInventory();
-                Inventory getInventory = inv.getInv();
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                    inv.createInventory();
+                    Inventory getInventory = inv.getInv();
 
-                player.openInventory(getInventory);
-                return;
-            }
+                    player.openInventory(getInventory);
+                    return;
+                }
                 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.mana-error-msg")));
+            }
         }
     }
 }

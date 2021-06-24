@@ -12,13 +12,11 @@ import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
-import org.emeraldcraft.manhunt.Managers.ManhuntScoreboardManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 
 public class ManhuntCommandHandler implements CommandExecutor {
@@ -224,10 +222,11 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if (manhuntGameManager.getGameStatus()) {
                 if (sender.hasPermission("manhunt.forceend")) {
                     endGame(sender);
+                    Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
                     return true;
                 }
             }
-            sender.sendMessage(ChatColor.RED + "There is no game in progress! You can start one with \"" + ChatColor.DARK_RED + "/manhunt start" + ChatColor.RED + "\".");
+            sender.sendMessage(prefix + ChatColor.RED + "There is no game in progress! You can start one with \"" + ChatColor.DARK_RED + "/manhunt start" + ChatColor.RED + "\".");
             return false;
         }
         else if(args[0].equalsIgnoreCase("setmana")) {
@@ -241,21 +240,21 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 manacounter.updateActionbar(player);
                                 Bukkit.broadcastMessage(prefix + ChatColor.DARK_GREEN + sender.getName() + ChatColor.GREEN + " successfully set the mana of " + ChatColor.DARK_GREEN + player.getName() + ChatColor.GREEN + " to " + ChatColor.DARK_GREEN + args[2] + ChatColor.GREEN + "!");
                             } catch (NumberFormatException e) {
-                                sender.sendMessage(ChatColor.DARK_RED + "Please input a integer!");
+                                sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a integer!");
                                 return true;
                             }
                             return true;
                         }
-                        sender.sendMessage(ChatColor.DARK_RED + "That player is not a hunter!");
+                        sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not a hunter!");
                         return false;
                     }
-                    sender.sendMessage(ChatColor.DARK_RED + "That player is not online!");
+                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                     return false;
                 }
-                sender.sendMessage(ChatColor.DARK_RED + "There is no game in progess! You can start one with /manhunt start");
+                sender.sendMessage(prefix + ChatColor.DARK_RED + "There is no game in progess! You can start one with /manhunt start");
                 return false;
             }
-            sender.sendMessage(ChatColor.DARK_RED + "Command Usage: /manhunt setmana <player> <amount>");
+            sender.sendMessage(prefix + ChatColor.DARK_RED + "Command Usage: /manhunt setmana <player> <amount>");
             return false;
         }
         else if(args[0].equalsIgnoreCase("stats")){
@@ -270,24 +269,34 @@ public class ManhuntCommandHandler implements CommandExecutor {
                     showStats(selectedPlayer, sender);
                     return true;
                 }
-                sender.sendMessage(ChatColor.DARK_RED + "That player is not online!");
+                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                 return false;
             }
 
-            sender.sendMessage(ChatColor.RED + "");
-            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt stats <player (optional)>");
+            sender.sendMessage(prefix + ChatColor.RED + "Command Usage: /manhunt stats <player (optional)>");
             return false;
         }
-        else if (args[0].equalsIgnoreCase("testscoreboard")) {
-            if (sender instanceof Player) {
-                Player player = Bukkit.getPlayer(sender.getName());
-                UUID uuid = player.getUniqueId();
-                ManhuntScoreboardManager manhuntScoreboardManager = new ManhuntScoreboardManager(manhuntGameManager, AbilitesManager);
-                manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
+        else if(args[0].equalsIgnoreCase("remove")){
+            if(args.length >= 2){
+                if(Bukkit.getPlayer(args[1]) != null) {
+                    Player selectedPlayer = Bukkit.getPlayer(args[1]);
+                    assert selectedPlayer != null;
+                    if(hunter.contains(selectedPlayer.getName())){
+                        hunter.remove(selectedPlayer.getName());
+                        sender.sendMessage(prefix + ChatColor.GREEN + "Success!");
+                    }
+                    if(speedrunner.contains(selectedPlayer.getName())){
+                        speedrunner.remove(selectedPlayer.getName());
+                        sender.sendMessage(prefix + ChatColor.GREEN + "Success!");
+                    }
+                    return true;
+                }
+                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                return false;
             }
-
+            sender.sendMessage(prefix + ChatColor.RED + "Command Usage: /manhunt remove <player>");
+            return false;
         }
-
         showHelp(sender);
 
         return false;
@@ -336,6 +345,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         "&e/manhunt forceend: Forcefully ends the game.\n" +
                         "&e/manhunt setmana <player> <mana>: Sets the mana of the player to the selected amount.\n" +
                         "&e/manhunt stats <player (optional)>: Gets the selected players stats. If there is no player, it will pick the one who is sending the command. (Note: The player must be online)\n" +
+                        "&e/manhunt remove <player> : Removes the player from any group. \n" +
                         "&4--------------------------------"));
     }
     public void endGame(CommandSender sender) {

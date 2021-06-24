@@ -82,15 +82,6 @@ public class FreezeGUIListener  implements Listener {
     }
 
     public void FreezePlayer(Player hunter, Player speedrunner, Integer time) {
-        //Add them to the frozen team scoreboard.
-        org.bukkit.scoreboard.Team frozenTeam = manhuntGameManager.getScoreboardTeam(ManhuntTeam.FROZEN);
-        org.bukkit.scoreboard.Team speedrunnerTeam = manhuntGameManager.getScoreboardTeam(ManhuntTeam.SPEEDRUNNER);
-
-        speedrunnerTeam.removeEntry(speedrunner.getName());
-        frozenTeam.addEntry(speedrunner.getName());
-
-        speedrunner.setScoreboard(Objects.requireNonNull(frozenTeam.getScoreboard()));
-
 
         Integer delay = time * 20;
         speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-freeze-msg").replace("%hunter%", hunter.getName()).replace("%time%", Integer.toString(time))));
@@ -98,18 +89,11 @@ public class FreezeGUIListener  implements Listener {
         Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.plugin, new Runnable() {
             @Override
             public void run() {
-
-                // Re-add them to the speedrunners scoreboard team
-                frozenTeam.removeEntry(speedrunner.getName());
-                speedrunnerTeam.addEntry(speedrunner.getName());
-                speedrunner.setScoreboard(Objects.requireNonNull(speedrunnerTeam.getScoreboard()));
                 manhuntGameManager.getTeam(ManhuntTeam.FROZEN).remove(speedrunner.getName());
-
                 freezeDelay = true;
                 speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-unfreeze-msg").replace("%hunter%", hunter.getName())));
                 hunter.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.unfreeze-msg").replace("%hunter%", hunter.getName()).replace("%speedrunner%", speedrunner.getName())));
 
-                //Wait 1 tick before stopping to prevent them from getting kicked.
                 Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.plugin, new Runnable() {
                     @Override
                     public void run() {

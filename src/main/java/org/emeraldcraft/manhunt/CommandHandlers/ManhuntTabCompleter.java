@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ManhuntTabCompleter implements TabCompleter {
-    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "testscoreboard");
+    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "remove");
     private static final List<String> players = new ArrayList<String>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
 
@@ -23,7 +23,7 @@ public class ManhuntTabCompleter implements TabCompleter {
             return StringUtil.copyPartialMatches(args[0], COMMANDS, new ArrayList<>());
         }
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("setmana") || args[0].equalsIgnoreCase("stats")) {
+            if (args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("setmana") || args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("remove")) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     players.add(player.getName());
                 }

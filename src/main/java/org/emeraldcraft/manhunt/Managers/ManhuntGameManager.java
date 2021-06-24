@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
@@ -16,7 +15,10 @@ import org.emeraldcraft.manhunt.ManHuntInventory;
 import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class ManhuntGameManager {
 
@@ -26,19 +28,10 @@ public class ManhuntGameManager {
     List<String> frozenPlayers = new ArrayList<>();
     private boolean hasGameStarted = false;
 
-    public HashMap<String, Integer> scoreboardID = new HashMap<>();
+    public HashMap<String, Integer> hunterScoreboardID = new HashMap<>();
+    public HashMap<String, Integer> speedrunnerScoreboardID = new HashMap<>();
 
-    ScoreboardManager manager = Bukkit.getScoreboardManager();
-    org.bukkit.scoreboard.Scoreboard hunterScoreboardTeam = manager.getNewScoreboard();
-    org.bukkit.scoreboard.Scoreboard speedrunnerScoreboardTeam = manager.getNewScoreboard();
-
-    public org.bukkit.scoreboard.Team speedrunnerTeam = speedrunnerScoreboardTeam.registerNewTeam("speedrunnerTeam");
-    public org.bukkit.scoreboard.Team deadSpeedrunnerTeam = speedrunnerScoreboardTeam.registerNewTeam("deadPlayersTeam");
-    public org.bukkit.scoreboard.Team frozenTeam = speedrunnerScoreboardTeam.registerNewTeam("frozenPlayerTeam");
-    public org.bukkit.scoreboard.Team hunterTeam = hunterScoreboardTeam.registerNewTeam("hunterTeam");
-
-
-     public List<String> getTeam(ManhuntTeam team) {
+    public List<String> getTeam(ManhuntTeam team) {
         if (team == ManhuntTeam.HUNTER) {
             return hunter;
         }
@@ -72,7 +65,7 @@ public class ManhuntGameManager {
             time = abilitesManager.getCooldown(pickAbility).get(player.getName());
             cooldown = ((time - System.currentTimeMillis()) / 1000);
             if (!(cooldown < 1)) {
-                return ChatColor.translateAlternateColorCodes('&', "&c" + cooldown + " seconds");
+                return ChatColor.translateAlternateColorCodes('&', "&4" + cooldown + " seconds");
             }
         }
         return ChatColor.translateAlternateColorCodes('&', "&aREADY");
@@ -86,10 +79,6 @@ public class ManhuntGameManager {
     public boolean startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay, AbilitesManager abilitesManager) {
         String prefix = manhuntMain.getConfig().getString("plugin-prefix");
         try {
-            // Teams Creation
-
-            // End Teams Creation
-
             new SpeedrunnerGUI(this, manhuntMain).createInventory();
             ManHuntInventory manHuntInventory = new ManHuntInventory();
             setGameStatus(true);
@@ -98,6 +87,9 @@ public class ManhuntGameManager {
 
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (getTeam(player.getName()).equals(ManhuntTeam.SPEEDRUNNER)) {
+                    ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, abilitesManager);
+                    speedrunnerScoreboardManager.showSpeedrunnerScoreboard(player.getUniqueId(), manhuntMain.plugin);
+                    speedrunnerScoreboardID.put(player.getName(), speedrunnerScoreboardManager.id);
                     player.spigot().respawn();
                     for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
@@ -124,8 +116,6 @@ public class ManhuntGameManager {
                     player.addPotionEffect(resistanceEffect);
                     player.addPotionEffect(speedEffect);
                     player.addPotionEffect(saturationEffect);
-                    speedrunnerTeam.addEntry(player.getName());
-                    player.setScoreboard(Objects.requireNonNull(getScoreboardTeam(ManhuntTeam.SPEEDRUNNER).getScoreboard()));
                     player.setGlowing(true);
                 }
             }
@@ -136,7 +126,7 @@ public class ManhuntGameManager {
                     ManhuntScoreboardManager manhuntScoreboardManager = new ManhuntScoreboardManager(this, abilitesManager);
                     manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
                     int id = manhuntScoreboardManager.id;
-                    scoreboardID.put(player.getName(), id);
+                    hunterScoreboardID.put(player.getName(), id);
 
                     player.spigot().respawn();
                     for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
@@ -166,8 +156,6 @@ public class ManhuntGameManager {
                     PotionEffect potionEffect = new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 2);
                     potionEffect.withParticles(false);
                     player.addPotionEffect(potionEffect);
-                   // hunterTeam.addEntry(player.getName());
-                    // player.setScoreboard(Objects.requireNonNull(getScoreboardTeam(ManhuntTeam.HUNTER).getScoreboard()));
                     player.setGlowing(true);
                 }
             }
@@ -188,22 +176,4 @@ public class ManhuntGameManager {
         }
         return false;
         }
-        public org.bukkit.scoreboard.Team getScoreboardTeam(ManhuntTeam team){
-        if(team == ManhuntTeam.FROZEN){
-            return frozenTeam;
-        }
-        if(team == ManhuntTeam.HUNTER){
-            return hunterTeam;
-        }
-        if(team == ManhuntTeam.SPEEDRUNNER){
-            return speedrunnerTeam;
-        }
-        if(team == ManhuntTeam.DEAD){
-            return deadSpeedrunnerTeam;
-        }
-        else {
-            throw new IllegalArgumentException("ManhuntTeam can only be HUNTER, SPEEDRUNNER, FROZEN, and DEAD");
-        }
-     }
-
 }

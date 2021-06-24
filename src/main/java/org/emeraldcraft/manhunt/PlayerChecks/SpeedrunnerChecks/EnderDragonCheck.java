@@ -115,6 +115,7 @@ public class EnderDragonCheck implements Listener {
                     hunter.clear();
                     manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
                     AbilitesManager.clearCooldown();
+                    Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
                     manhuntGameManager.setGameStatus(false);
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {

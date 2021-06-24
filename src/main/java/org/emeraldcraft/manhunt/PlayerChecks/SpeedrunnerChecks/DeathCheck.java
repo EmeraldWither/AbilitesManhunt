@@ -144,8 +144,6 @@ public class DeathCheck implements Listener {
                 Vector direction = event.getEntity().getLocation().getDirection();
                 deathLocation.setDirection(direction);
                 Player player = event.getEntity();
-               manhuntGameManager.deadSpeedrunnerTeam.addEntry(player.getName());
-                player.setScoreboard(manhuntGameManager.deadSpeedrunnerTeam.getScoreboard());
                 Bukkit.getScheduler().runTaskLater(manhuntMain.plugin, new Runnable() {
                     @Override
                     public void run() {

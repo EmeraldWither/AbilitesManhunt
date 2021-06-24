@@ -37,6 +37,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntScoreboardManager;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
+import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.GiveSpeedrunnerScoreboard;
 
 import java.util.List;
 import java.util.Objects;
@@ -90,6 +91,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FreezeListener(manhuntGameManager, this, manacounter, abilitesManager),this);
         getServer().getPluginManager().registerEvents(new PreventAdvancements(manhuntGameManager, this), this);
         getServer().getPluginManager().registerEvents(new GiveScoreboard(manhuntGameManager, manhuntScoreboardManager, this, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhuntGameManager, this, abilitesManager), this);
         this.saveDefaultConfig();
 
 

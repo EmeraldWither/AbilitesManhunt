@@ -27,7 +27,7 @@ public class GiveScoreboard implements Listener {
     public void PlayerLeave(PlayerQuitEvent event){
         if(manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getName())){
             if(manhuntGameManager.getGameStatus()){
-                Bukkit.getScheduler().cancelTask(manhuntGameManager.scoreboardID.get(event.getPlayer().getName()));
+                Bukkit.getScheduler().cancelTask(manhuntGameManager.hunterScoreboardID.get(event.getPlayer().getName()));
                 event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             }
         }
@@ -39,8 +39,8 @@ public class GiveScoreboard implements Listener {
             if(manhuntGameManager.getGameStatus()){
                 ManhuntScoreboardManager manhuntScoreboardManager = new ManhuntScoreboardManager(manhuntGameManager, abilitesManager);
                 manhuntScoreboardManager.showHunterScoreboard(event.getPlayer().getUniqueId(), main.plugin);
-                manhuntGameManager.scoreboardID.remove(event.getPlayer().getName());
-                manhuntGameManager.scoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
+                manhuntGameManager.hunterScoreboardID.remove(event.getPlayer().getName());
+                manhuntGameManager.hunterScoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
             }
         }
     }
