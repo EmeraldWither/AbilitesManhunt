@@ -81,6 +81,16 @@ public class ManhuntSpeedrunnerScoreboardManager {
         speedrunnerloc.setPrefix(ChatColor.DARK_AQUA + "X: " + player.getLocation().getBlockX() + ", Y: " + player.getLocation().getBlockY() + ", Z: " + player.getLocation().getBlockZ());
         obj.getScore(ChatColor.RED + "" + ChatColor.DARK_GRAY + "" + ChatColor.BLACK).setScore(10);
 
+        Team emptyHealthSpace = board.registerNewTeam("emptyHealthSpace");
+        emptyHealthSpace.addEntry(ChatColor.RED + "" + ChatColor.GOLD + "" + ChatColor.RED);
+        emptyHealthSpace.setPrefix(ChatColor.GRAY + "");
+        obj.getScore(ChatColor.RED + "" + ChatColor.GOLD + "" + ChatColor.RED).setScore(9);
+
+
+        Team healthText = board.registerNewTeam("healthText");
+        healthText.addEntry(ChatColor.GRAY + "" + ChatColor.RED + "" + ChatColor.DARK_PURPLE);
+        healthText.setPrefix(ChatColor.GOLD + "Your Health >> " + player.getHealth() + "/20!");
+        obj.getScore(ChatColor.GRAY + "" + ChatColor.RED + "" + ChatColor.DARK_PURPLE).setScore(8);
 
         Score creditspace = obj.getScore(ChatColor.RED + "");
         creditspace.setScore(2);
@@ -104,6 +114,7 @@ public class ManhuntSpeedrunnerScoreboardManager {
             if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player1.getName())) {
                 if (!board.getTeam("hunter").getEntries().contains(player1.getName()))
                     board.getTeam("hunter").addEntry(player1.getName());
+                board.getTeam("hunter").setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             }
             if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getName())) {
                 if (!board.getTeam("frozen").getEntries().contains(player1.getName())) {
@@ -127,8 +138,10 @@ public class ManhuntSpeedrunnerScoreboardManager {
 
         board.getTeam("aliveSpeedrunner").setPrefix(ChatColor.AQUA + "Speedrunners >> " + ChatColor.DARK_AQUA + manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).size() + "/" + totalPlayers);
         board.getTeam("aliveHunters").setPrefix(ChatColor.AQUA + "Hunters >> " + ChatColor.DARK_AQUA + manhuntGameManager.getTeam(ManhuntTeam.HUNTER).size());
-        board.getTeam("locText").setPrefix(ChatColor.GREEN + "Your Location");
+        board.getTeam("locText").setPrefix(ChatColor.AQUA + "Location >>");
         board.getTeam("speedLoc").setPrefix(ChatColor.DARK_AQUA + "X: " + player.getLocation().getBlockX() + ", Y: " + player.getLocation().getBlockY() + ", Z: " + player.getLocation().getBlockZ());
+        board.getTeam("healthText").setPrefix(ChatColor.AQUA + "Health >> " + ChatColor.DARK_AQUA + Math.round(player.getHealth()) + "/20");
+        board.getTeam("emptyHealthSpace").setPrefix("");
     }
 
 }
