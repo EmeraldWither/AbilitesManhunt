@@ -33,7 +33,7 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.GUIInventoryHolder;
 import org.emeraldcraft.manhunt.Managers.DataManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
-import org.emeraldcraft.manhunt.Managers.ManhuntScoreboardManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
@@ -50,7 +50,7 @@ public class ManhuntMain extends JavaPlugin {
     ManhuntGameManager manhuntGameManager;
     Manacounter manacounter;
     AbilitesManager abilitesManager;
-    ManhuntScoreboardManager manhuntScoreboardManager;
+    ManhuntHunterScoreboardManager manhuntScoreboardManager;
 
 
     @Override
@@ -59,7 +59,7 @@ public class ManhuntMain extends JavaPlugin {
         this.data = new DataManager(this);
         this.abilitesManager = new AbilitesManager(manhuntGameManager);
         this.manacounter = new Manacounter(manhuntGameManager,this);
-        this.manhuntScoreboardManager = new ManhuntScoreboardManager(manhuntGameManager, abilitesManager);
+        this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager);
 
         getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter, abilitesManager), this);
         getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
@@ -97,14 +97,14 @@ public class ManhuntMain extends JavaPlugin {
 
 
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhuntGameManager, this, manacounter, abilitesManager));
-        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter());
+        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhuntGameManager));
 
         getLogger().log(Level.INFO, "\n" +
                 "--------------------------------------------------------------\n" +
                 "|                            NOW ENABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.2.2 RELEASE                                  \n" +
+                "|                            v1.3 RELEASE                                  \n" +
                 "|                                                                        \n" +
                 "|                        BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
@@ -123,7 +123,7 @@ public class ManhuntMain extends JavaPlugin {
                 "|                            NOW DISABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.2.2 RELEASE                                  \n" +
+                "|                            v1.3 RELEASE                                  \n" +
                 "|                                                                        \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");

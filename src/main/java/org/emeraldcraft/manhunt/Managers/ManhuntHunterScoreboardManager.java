@@ -11,12 +11,12 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 
 import java.util.UUID;
 
-public class ManhuntScoreboardManager {
+public class ManhuntHunterScoreboardManager {
 
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
 
-    public ManhuntScoreboardManager(ManhuntGameManager manhuntGameManager, AbilitesManager abilitesManager) {
+    public ManhuntHunterScoreboardManager(ManhuntGameManager manhuntGameManager, AbilitesManager abilitesManager) {
         this.manhuntGameManager = manhuntGameManager;
         this.abilitesManager = abilitesManager;
     }

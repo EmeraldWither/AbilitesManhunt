@@ -221,8 +221,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("forceend")) {
             if (manhuntGameManager.getGameStatus()) {
                 if (sender.hasPermission("manhunt.forceend")) {
-                    endGame(sender);
                     Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
+                    endGame(sender);
                     return true;
                 }
             }
@@ -351,6 +351,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
     public void endGame(CommandSender sender) {
         if (manhuntGameManager.getGameStatus()) {
             for (Player players : Bukkit.getOnlinePlayers()) {
+                players.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                 players.setGlowing(false);
                 players.getInventory().clear();
                 players.setGameMode(GameMode.SURVIVAL);

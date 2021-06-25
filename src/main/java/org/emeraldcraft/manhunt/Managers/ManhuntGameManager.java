@@ -123,7 +123,7 @@ public class ManhuntGameManager {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (getTeam(player.getName()).equals(ManhuntTeam.HUNTER)) {
                     UUID uuid = player.getUniqueId();
-                    ManhuntScoreboardManager manhuntScoreboardManager = new ManhuntScoreboardManager(this, abilitesManager);
+                    ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager);
                     manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
                     int id = manhuntScoreboardManager.id;
                     hunterScoreboardID.put(player.getName(), id);

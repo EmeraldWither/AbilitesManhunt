@@ -31,13 +31,10 @@ public class ManhuntSpeedrunnerScoreboardManager {
     }
 
     public void setSpeedrunnerScoreboard(UUID uuid){
-
         Player player = Bukkit.getPlayer(uuid);
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective obj = board.registerNewObjective("ECManhunt-Hunter", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lMANHUNT"));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-
 
         //////////////////
         Team frozen = board.registerNewTeam("frozen");
@@ -56,9 +53,7 @@ public class ManhuntSpeedrunnerScoreboardManager {
         dead.setColor(ChatColor.DARK_GRAY);
         dead.setPrefix("[DEAD] ");
         //////////////////
-
-
-
+        
         Team aliveSpeedrunner = board.registerNewTeam("aliveSpeedrunner");
         aliveSpeedrunner.addEntry(ChatColor.BLACK + "" + ChatColor.WHITE);
         aliveSpeedrunner.setPrefix(ChatColor.AQUA + "Speedrunners >> " + ChatColor.DARK_AQUA + manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).size() + "/" + (manhuntGameManager.getTeam(ManhuntTeam.DEAD).size() + manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).size()));
@@ -69,22 +64,40 @@ public class ManhuntSpeedrunnerScoreboardManager {
         aliveHunters.setPrefix(ChatColor.AQUA + "Hunters >> " + ChatColor.DARK_AQUA + manhuntGameManager.getTeam(ManhuntTeam.HUNTER).size());
         obj.getScore(ChatColor.RED + "" + ChatColor.BLACK).setScore(13);
 
-        Score score12 = obj.getScore(ChatColor.GOLD + "what do i put here");
-        score12.setScore(12);
+
+        Team emptySpace = board.registerNewTeam("emptySpace");
+        emptySpace.addEntry(ChatColor.DARK_PURPLE + "" + ChatColor.GOLD + "" + ChatColor.BLACK);
+        emptySpace.setPrefix(ChatColor.GRAY + "");
+        obj.getScore(ChatColor.DARK_PURPLE + "" + ChatColor.GOLD + "" + ChatColor.BLACK).setScore(12);
+
+
+        Team locText = board.registerNewTeam("locText");
+        locText.addEntry(ChatColor.LIGHT_PURPLE + "" + ChatColor.GOLD + "" + ChatColor.DARK_PURPLE);
+        locText.setPrefix(ChatColor.GOLD + "Your Location");
+        obj.getScore(ChatColor.LIGHT_PURPLE + "" + ChatColor.GOLD + "" + ChatColor.DARK_PURPLE).setScore(11);
+
+        Team speedrunnerloc = board.registerNewTeam("speedLoc");
+        speedrunnerloc.addEntry(ChatColor.RED + "" + ChatColor.DARK_GRAY + "" + ChatColor.BLACK);
+        speedrunnerloc.setPrefix(ChatColor.DARK_AQUA + "X: " + player.getLocation().getBlockX() + ", Y: " + player.getLocation().getBlockY() + ", Z: " + player.getLocation().getBlockZ());
+        obj.getScore(ChatColor.RED + "" + ChatColor.DARK_GRAY + "" + ChatColor.BLACK).setScore(10);
+
 
         Score creditspace = obj.getScore(ChatColor.RED + "");
         creditspace.setScore(2);
+
         Team credit = board.registerNewTeam("credit");
         credit.addEntry(ChatColor.RED + "" + ChatColor.GOLD + "" + ChatColor.BLACK);
         credit.setPrefix(ChatColor.GRAY + "Made by EmeraldWither");
         obj.getScore(ChatColor.RED + "" + ChatColor.GOLD + "" + ChatColor.BLACK).setScore(1);
 
 
+        assert player != null;
         player.setScoreboard(board);
     }
 
     public void updateSpeedrunnerScoreBoard(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
+        assert player != null;
         Scoreboard board = player.getScoreboard();
 
         for (Player player1 : Bukkit.getOnlinePlayers()) {
@@ -114,6 +127,8 @@ public class ManhuntSpeedrunnerScoreboardManager {
 
         board.getTeam("aliveSpeedrunner").setPrefix(ChatColor.AQUA + "Speedrunners >> " + ChatColor.DARK_AQUA + manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).size() + "/" + totalPlayers);
         board.getTeam("aliveHunters").setPrefix(ChatColor.AQUA + "Hunters >> " + ChatColor.DARK_AQUA + manhuntGameManager.getTeam(ManhuntTeam.HUNTER).size());
+        board.getTeam("locText").setPrefix(ChatColor.GREEN + "Your Location");
+        board.getTeam("speedLoc").setPrefix(ChatColor.DARK_AQUA + "X: " + player.getLocation().getBlockX() + ", Y: " + player.getLocation().getBlockY() + ", Z: " + player.getLocation().getBlockZ());
     }
 
 }

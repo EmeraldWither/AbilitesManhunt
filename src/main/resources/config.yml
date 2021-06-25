@@ -1,7 +1,7 @@
 #                                                                           #
 #|------------------------------------------------------------------------| #
 #|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES         | #
-#|                             v1.2.2 RELEASE                               | #
+#|                             v1.3 RELEASE                               | #
 #|                                                                        | #
 #|                        BY: EMERALDWITHERYT                             | #
 #|------------------------------------------------------------------------| #
@@ -20,7 +20,6 @@ messages:
     - "&cLosses: &4%losses%"
     - "&cDeaths: &4%deaths%"
     - "&6&m&l---------------------------------------"
-
   # Placeholders
   # %time-left% : Gets the remaining time left on cooldown! Does NOT work with the mana-error-msg.
   cooldown-msg: "&4[Error] &cYou're currently on cooldown for the \"&4&l%ability%&c\" ability! You still have &4&l%time-left% &cseconds remaining!"
