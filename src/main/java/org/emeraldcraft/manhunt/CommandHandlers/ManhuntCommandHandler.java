@@ -3,6 +3,7 @@ package org.emeraldcraft.manhunt.CommandHandlers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class ManhuntCommandHandler implements CommandExecutor {
@@ -296,6 +298,57 @@ public class ManhuntCommandHandler implements CommandExecutor {
             }
             sender.sendMessage(prefix + ChatColor.RED + "Command Usage: /manhunt remove <player>");
             return false;
+        }
+        else if(args[0].equalsIgnoreCase("waypoint")){
+            if(sender instanceof Player) {
+                if (manhuntGameManager.getGameStatus()) {
+                    if (args.length >= 2) {
+                        if (manhuntGameManager.getTeam(sender.getName()).equals(ManhuntTeam.SPEEDRUNNER) || manhuntGameManager.getTeam(sender.getName()).equals(ManhuntTeam.FROZEN)) {
+                            if (args[1].equalsIgnoreCase("add")) {
+                                if (args.length >= 3) {
+                                    if (manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                        sender.sendMessage(ChatColor.RED + "You already have a waypoint!");
+                                        return false;
+                                    }
+                                    HashMap<UUID, HashMap<String, Location>> waypoints = manhuntGameManager.getWaypoints();
+                                    HashMap<String, Location> waypoint = new HashMap<>();
+                                    StringBuilder name = new StringBuilder(args[2]);
+                                    for (int arg = 3; arg < args.length; arg++) {
+                                        name.append(" ").append(args[arg]);
+                                    }
+                                    waypoint.put(name.toString(), ((Player) sender).getLocation());
+                                    waypoints.put(((Player) sender).getUniqueId(), waypoint);
+                                    sender.sendMessage(ChatColor.GREEN + "Successfully put a waypoint \"" + name + "\" at " + waypoint.get(name.toString()).getBlockX() + "," + waypoint.get(name.toString()).getBlockY() + "," + waypoint.get(name.toString()).getBlockZ());
+                                    return true;
+                                }
+                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint add <waypoint name> ");
+                                return false;
+                            }
+                            if (args[1].equalsIgnoreCase("remove")) {
+                                if (!manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                    sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint add <waypoint name> !");
+                                    return false;
+                                }
+                                HashMap<UUID, HashMap<String, Location>> waypoints = manhuntGameManager.getWaypoints();
+                                waypoints.remove(((Player) sender).getUniqueId());
+                                sender.sendMessage(ChatColor.GREEN + "Successfully removed waypoint. ");
+                                return true;
+                            }
+                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint add <waypoint name> ");
+                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
+                            return false;
+                        }
+                        sender.sendMessage(ChatColor.RED + "You must be an alive speedrunner to use this command!");
+                        return false;
+                    }
+                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint add <waypoint name> ");
+                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
+                    return false;
+                }
+                sender.sendMessage(ChatColor.RED + "There is no ongoing game in progress! Start a game with /manhunt startgame!");
+            }
+            sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
+            return true;
         }
         showHelp(sender);
 

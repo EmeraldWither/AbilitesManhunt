@@ -14,7 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ManhuntTabCompleter implements TabCompleter {
-    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "remove");
+    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "remove", "waypoint");
+    private static final List<String> SUBCOMMANDS = Arrays.asList("add", "remove");
+    private static final List<String> NAME = Arrays.asList("<name>");
     private static final List<String> players = new ArrayList<String>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
     private ManhuntGameManager manhuntGameManager;
@@ -29,7 +31,7 @@ public class ManhuntTabCompleter implements TabCompleter {
             return StringUtil.copyPartialMatches(args[0], COMMANDS, new ArrayList<>());
         }
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("setmana") || args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("remove")) {
+            if (args[0].equalsIgnoreCase("setmana") || args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("waypoint")) {
                 if (args[0].equalsIgnoreCase("setmana")) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         for(String name : manhuntGameManager.getTeam(ManhuntTeam.HUNTER)){
@@ -39,6 +41,9 @@ public class ManhuntTabCompleter implements TabCompleter {
                             }
                         }
                     }
+                }
+                else if(args[0].equalsIgnoreCase("waypoint")){
+                    return StringUtil.copyPartialMatches(args[1], SUBCOMMANDS, new ArrayList<>());
                 }
                 else {
                     for (Player player : Bukkit.getOnlinePlayers()) {
