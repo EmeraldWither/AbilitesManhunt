@@ -3,6 +3,7 @@ package org.emeraldcraft.manhunt.Managers;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -27,6 +28,9 @@ public class ManhuntGameManager {
     List<String> deadSpeedrunners = new ArrayList<>();
     List<String> frozenPlayers = new ArrayList<>();
     private boolean hasGameStarted = false;
+
+    //WAYPOINT
+    HashMap<UUID, HashMap<String, Location>> waypoints = new HashMap<>();
 
     public HashMap<String, Integer> hunterScoreboardID = new HashMap<>();
     public HashMap<String, Integer> speedrunnerScoreboardID = new HashMap<>();
@@ -87,7 +91,7 @@ public class ManhuntGameManager {
 
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (getTeam(player.getName()).equals(ManhuntTeam.SPEEDRUNNER)) {
-                    ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, abilitesManager);
+                    ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, manhuntMain);
                     speedrunnerScoreboardManager.showSpeedrunnerScoreboard(player.getUniqueId(), manhuntMain.plugin);
                     speedrunnerScoreboardID.put(player.getName(), speedrunnerScoreboardManager.id);
                     player.spigot().respawn();
@@ -122,11 +126,13 @@ public class ManhuntGameManager {
 
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (getTeam(player.getName()).equals(ManhuntTeam.HUNTER)) {
-                    UUID uuid = player.getUniqueId();
-                    ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager);
-                    manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
-                    int id = manhuntScoreboardManager.id;
-                    hunterScoreboardID.put(player.getName(), id);
+                    if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
+                        UUID uuid = player.getUniqueId();
+                        ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager, manhuntMain);
+                        manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
+                        int id = manhuntScoreboardManager.id;
+                        hunterScoreboardID.put(player.getName(), id);
+                    }
 
                     player.spigot().respawn();
                     for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
@@ -142,6 +148,17 @@ public class ManhuntGameManager {
                     manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 6);
                     manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 7);
                     manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
+
+                    ItemStack barrier = manHuntInventory.getBarrier();
+                    Inventory inv = player.getInventory();
+
+                    for (int i = 0; i < 36; i++) {
+                        if (inv.getItem(i) == null || inv.getItem(i).getType().equals(Material.AIR)) {
+                            inv.setItem(i, barrier);
+                        }
+                    }
+
+
                     player.setHealth(20);
                     player.setFoodLevel(20);
                     player.setGameMode(GameMode.SURVIVAL);
@@ -169,11 +186,13 @@ public class ManhuntGameManager {
         return true;
     }
         catch(Exception e){
-            sender.sendMessage(prefix + ChatColor.DARK_RED + "An internal error has occurred with the plugin! The start has been aborted");
-            sender.sendMessage(prefix + ChatColor.DARK_RED + "It is suggested that you report this to the plugin by posting the stacktrace!");
-            sender.sendMessage(prefix + ChatColor.DARK_RED + "It is suggested that you restart the server, and try again. ");
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cAn internal error has occurred with the plugin! The start has been aborted. It is suggested that you report this to the plugin by posting the stacktrace! The plugin will disable itself now."));
             e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(manhuntMain.plugin);
         }
         return false;
+        }
+        public HashMap<UUID, HashMap<String, Location>> getWaypoints(){
+        return waypoints;
         }
 }

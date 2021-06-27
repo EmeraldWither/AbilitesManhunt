@@ -39,7 +39,7 @@ public class PlayerTPGUIListener implements Listener {
     public void InventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getView().getPlayer();
         if (abilitesManager.getHeldAbility(player).equals(Ability.PLAYERTP)) {
-            if (event.getCurrentItem() != null) {
+            if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
                 SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                 Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
                 int height = manhuntMain.getConfig().getInt("abilities.playertp.height-above-player");

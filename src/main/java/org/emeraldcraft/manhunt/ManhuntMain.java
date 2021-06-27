@@ -30,7 +30,6 @@ import org.emeraldcraft.manhunt.Abilties.TargetMobs.TargetMobListener;
 import org.emeraldcraft.manhunt.CommandHandlers.ManhuntCommandHandler;
 import org.emeraldcraft.manhunt.CommandHandlers.ManhuntTabCompleter;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.GUI.GUIInventoryHolder;
 import org.emeraldcraft.manhunt.Managers.DataManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
@@ -59,7 +58,7 @@ public class ManhuntMain extends JavaPlugin {
         this.data = new DataManager(this);
         this.abilitesManager = new AbilitesManager(manhuntGameManager);
         this.manacounter = new Manacounter(manhuntGameManager,this);
-        this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager);
+        this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, this);
 
         getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter, abilitesManager), this);
         getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
@@ -131,9 +130,7 @@ public class ManhuntMain extends JavaPlugin {
 
         for(Player player : Bukkit.getOnlinePlayers()){
             if(player.getOpenInventory() != null) {
-                if (player.getOpenInventory().getTopInventory().getHolder() instanceof GUIInventoryHolder) {
-                    player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                }
+                player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
             }
             for(ItemStack item : player.getInventory().getStorageContents()){
                 ManHuntInventory inv = new ManHuntInventory();

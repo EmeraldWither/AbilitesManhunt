@@ -11,5 +11,6 @@ public enum Ability {
     PLAYERTP,
     TARGETMOB,
     FREEZER,
+    BARRIER,
     NONE
 }

@@ -43,7 +43,7 @@ public class TargetMobGUIListener  implements Listener {
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
-        if (event.getCurrentItem() != null) {
+        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.TARGETMOB)) {
                 if (targetMobCooldown.containsKey(player.getName())) {

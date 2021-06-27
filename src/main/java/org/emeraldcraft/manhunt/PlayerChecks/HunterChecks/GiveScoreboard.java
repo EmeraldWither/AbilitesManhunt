@@ -25,22 +25,26 @@ public class GiveScoreboard implements Listener {
 
     @EventHandler
     public void PlayerLeave(PlayerQuitEvent event){
-        if(manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getName())){
-            if(manhuntGameManager.getGameStatus()){
-                Bukkit.getScheduler().cancelTask(manhuntGameManager.hunterScoreboardID.get(event.getPlayer().getName()));
-                event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        if (main.getConfig().getBoolean("scoreboard.enabled")) {
+            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getName())) {
+                if (manhuntGameManager.getGameStatus()) {
+                    Bukkit.getScheduler().cancelTask(manhuntGameManager.hunterScoreboardID.get(event.getPlayer().getName()));
+                    event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+                }
             }
         }
     }
 
     @EventHandler
-    public void PlayerJoin(PlayerJoinEvent event){
-        if(manhuntGameManager.getTeam(event.getPlayer().getName()).equals(ManhuntTeam.HUNTER)){
-            if(manhuntGameManager.getGameStatus()){
-                ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager);
-                manhuntScoreboardManager.showHunterScoreboard(event.getPlayer().getUniqueId(), main.plugin);
-                manhuntGameManager.hunterScoreboardID.remove(event.getPlayer().getName());
-                manhuntGameManager.hunterScoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
+    public void PlayerJoin(PlayerJoinEvent event) {
+        if (main.getConfig().getBoolean("scoreboard.enabled")) {
+            if (manhuntGameManager.getTeam(event.getPlayer().getName()).equals(ManhuntTeam.HUNTER)) {
+                if (manhuntGameManager.getGameStatus()) {
+                    ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, main);
+                    manhuntScoreboardManager.showHunterScoreboard(event.getPlayer().getUniqueId(), main.plugin);
+                    manhuntGameManager.hunterScoreboardID.remove(event.getPlayer().getName());
+                    manhuntGameManager.hunterScoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
+                }
             }
         }
     }

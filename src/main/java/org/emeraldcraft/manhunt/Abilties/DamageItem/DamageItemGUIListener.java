@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
 import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
@@ -47,9 +46,8 @@ public class DamageItemGUIListener implements Listener {
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
-        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
         Player player = (Player) event.getView().getPlayer();
-        if (event.getCurrentItem() != null) {
+        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             if (AbilitesManager.getHeldAbility(player).equals(Ability.DAMAGEITEM)) {
                 if (damageCooldown.containsKey(player.getName())) {
                     if (damageCooldown.get(player.getName()) > System.currentTimeMillis()) {

@@ -8,6 +8,7 @@ import org.bukkit.scoreboard.*;
 import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.UUID;
 
@@ -15,10 +16,12 @@ public class ManhuntHunterScoreboardManager {
 
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
+    private ManhuntMain manhuntMain;
 
-    public ManhuntHunterScoreboardManager(ManhuntGameManager manhuntGameManager, AbilitesManager abilitesManager) {
+    public ManhuntHunterScoreboardManager(ManhuntGameManager manhuntGameManager, AbilitesManager abilitesManager, ManhuntMain manhuntMain) {
         this.manhuntGameManager = manhuntGameManager;
         this.abilitesManager = abilitesManager;
+        this.manhuntMain = manhuntMain;
     }
 
     public int id = 0;
@@ -39,24 +42,32 @@ public class ManhuntHunterScoreboardManager {
         Objective obj = board.registerNewObjective("ECManhunt-Hunter", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lMANHUNT"));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
+        String hunterColor = manhuntMain.getConfig().get("scoreboard.hunter-color").toString();
+        String speedrunnerColor = manhuntMain.getConfig().get("scoreboard.speedrunner-color").toString();
+        String deadColor = manhuntMain.getConfig().get("scoreboard.dead-color").toString();
+        String frozenColor = manhuntMain.getConfig().get("scoreboard.frozen-color").toString();
 
+        String hunterPrefix = manhuntMain.getConfig().getString("scoreboard.hunter-prefix");
+        String speedrunnerPrefix = manhuntMain.getConfig().getString("scoreboard.speedrunner-prefix");
+        String deadPrefix = manhuntMain.getConfig().getString("scoreboard.dead-prefix");
+        String frozenPrefix = manhuntMain.getConfig().getString("scoreboard.frozen-prefix");
 
         //////////////////
         Team frozen = board.registerNewTeam("frozen");
-        frozen.setColor(ChatColor.AQUA);
-        frozen.setPrefix("[FROZEN] ");
+        frozen.setColor(ChatColor.valueOf(frozenColor));
+        frozen.setPrefix(frozenPrefix);
 
         Team hunter = board.registerNewTeam("hunter");
-        hunter.setColor(ChatColor.RED);
-        hunter.setPrefix("[HUNTER] ");
+        hunter.setColor(ChatColor.valueOf(hunterColor));
+        hunter.setPrefix(hunterPrefix);
 
         Team speedrunner = board.registerNewTeam("speedrunner");
-        speedrunner.setColor(ChatColor.GREEN);
-        speedrunner.setPrefix("[SPEEDRUNNER] ");
+        speedrunner.setColor(ChatColor.valueOf(speedrunnerColor));
+        speedrunner.setPrefix(speedrunnerPrefix);
 
         Team dead = board.registerNewTeam("dead");
-        dead.setColor(ChatColor.DARK_GRAY);
-        dead.setPrefix("[DEAD] ");
+        dead.setColor(ChatColor.valueOf(deadColor));
+        dead.setPrefix(deadPrefix);
         //////////////////
 
 

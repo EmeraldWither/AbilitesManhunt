@@ -12,6 +12,30 @@ plugin-prefix: "&2[Abilities Manhunt] "
 mana-delay: 20
 mana-amount: 1
 config-reload-msg: "&aSuccessfully reloaded the configuration files!"
+scoreboard:
+  # If the scoreboard is enabled, it will enable the following options :
+  # Side Scoreboard
+  # Custom Glow Color (Configurable)
+  # Custom Prefix (Configurable)
+  #
+  # When enabling the scoreboard, it may conflict with other scoreboard plugins.
+  # Note using /manhunt reload WILL NOT update the scoreboard until the game is restarted.
+  #
+  enabled: true
+  # The color will decide what color the prefix is, as well as its glow color.
+  # A list of valid colors can be found here : https://hub.spigotmc.org/javadocs/spigot/org/bukkit/ChatColor.html
+  # You can only have 1 color.
+  # Note using a invalid color will cause the plugin to shut itself down.
+  hunter-color: RED
+  speedrunner-color: GREEN
+  dead-color: DARK_GRAY
+  frozen-color: AQUA
+  # The prefix that will show in the tab, and above the player.
+  hunter-prefix: "[HUNTER] "
+  speedrunner-prefix: "[SPEEDRUNNER] "
+  dead-prefix: "[DEAD] "
+  frozen-prefix: "[FROZEN] "
+
 messages:
   stats-msg:
     - "&6&m&l---------------------------------------"

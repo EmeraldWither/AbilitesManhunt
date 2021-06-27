@@ -44,7 +44,7 @@ public class RandomTPGUIListener implements Listener {
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
-        if (event.getCurrentItem() != null) {
+        if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.RANDOMTP)) {
                 if (randomTPCooldown.containsKey(player.getName())) {

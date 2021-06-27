@@ -201,6 +201,15 @@ public class ManHuntInventory {
 
         return freezer;
     }
+    public ItemStack getBarrier(){
+        ItemStack barrier = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+        ItemMeta meta = barrier.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setDisplayName(ChatColor.GRAY + "");
+        barrier.setItemMeta(meta);
+        return barrier;
+    }
     public void giveAbility(Ability ability, String name, Integer slot){
         Player hunter = Bukkit.getPlayer(name);
 
@@ -230,6 +239,9 @@ public class ManHuntInventory {
         }
         else if(ability.equals(Ability.TARGETMOB)){
             hunter.getInventory().setItem(slot,getMobTargeter());
+        }
+        else if(ability.equals(Ability.BARRIER)) {
+            hunter.getInventory().setItem(slot, getBarrier());
         }
     }
 }
