@@ -346,6 +346,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                     return false;
                 }
                 sender.sendMessage(ChatColor.RED + "There is no ongoing game in progress! Start a game with /manhunt startgame!");
+                return true;
             }
             sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
             return true;
