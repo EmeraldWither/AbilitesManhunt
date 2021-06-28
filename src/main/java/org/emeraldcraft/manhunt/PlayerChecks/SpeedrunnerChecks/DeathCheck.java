@@ -133,6 +133,7 @@ public class DeathCheck implements Listener {
                     AbilitesManager.clearCooldown();
                     manhuntGameManager.setGameStatus(false);
                     Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
+                    manhuntGameManager.getWaypoints().clear();
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
                             team.unregister();
