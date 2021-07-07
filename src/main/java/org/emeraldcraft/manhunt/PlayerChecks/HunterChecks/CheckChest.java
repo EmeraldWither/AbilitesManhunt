@@ -38,19 +38,22 @@ public class CheckChest implements Listener{
                 if (event.getInventory() != getInventory) {
                     event.setCancelled(true);
                 }
+                ((Player) event.getView().getBottomInventory().getHolder()).updateInventory();
             }
         }
 
     }
     @EventHandler
     public void ChestDragEvent(InventoryDragEvent event){
-        if(manhuntGameManager.getGameStatus()) {
-            if (hunter.contains(event.getView().getPlayer().getName())) {
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
-                Inventory getInventory = inv.getInv();
-
-                if (event.getInventory() != getInventory) {
-                    event.setCancelled(true);
+        if(event.getView().getBottomInventory().getHolder() instanceof Player) {
+            if (manhuntGameManager.getGameStatus()) {
+                if (hunter.contains(event.getView().getPlayer().getName())) {
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                    Inventory getInventory = inv.getInv();
+                    if (event.getInventory() != getInventory) {
+                        event.setCancelled(true);
+                    }
+                    ((Player) event.getView().getBottomInventory().getHolder()).updateInventory();
                 }
             }
         }
@@ -66,6 +69,8 @@ public class CheckChest implements Listener{
                     if (event.getSource() != getInventory) {
                         event.setCancelled(true);
                     }
+                    ((Player) event.getSource().getHolder()).updateInventory();
+
                 }
             }
         }

@@ -49,19 +49,19 @@ public class ManhuntSpeedrunnerScoreboardManager {
         
         
         //////////////////
-        Team frozen = board.registerNewTeam("frozen");
+        Team frozen = board.registerNewTeam("003frozen");
         frozen.setColor(ChatColor.valueOf(frozenColor));
         frozen.setPrefix(frozenPrefix);
 
-        Team hunter = board.registerNewTeam("hunter");
+        Team hunter = board.registerNewTeam("001hunter");
         hunter.setColor(ChatColor.valueOf(hunterColor));
         hunter.setPrefix(hunterPrefix);
 
-        Team speedrunner = board.registerNewTeam("speedrunner");
+        Team speedrunner = board.registerNewTeam("002speedrunner");
         speedrunner.setColor(ChatColor.valueOf(speedrunnerColor));
         speedrunner.setPrefix(speedrunnerPrefix);
 
-        Team dead = board.registerNewTeam("dead");
+        Team dead = board.registerNewTeam("004dead");
         dead.setColor(ChatColor.valueOf(deadColor));
         dead.setPrefix(deadPrefix);
         //////////////////
@@ -121,23 +121,23 @@ public class ManhuntSpeedrunnerScoreboardManager {
 
         for (Player player1 : Bukkit.getOnlinePlayers()) {
             if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player1.getName())) {
-                if (!board.getTeam("hunter").getEntries().contains(player1.getName()))
-                    board.getTeam("hunter").addEntry(player1.getName());
-                board.getTeam("hunter").setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+                if (!board.getTeam("001hunter").getEntries().contains(player1.getName()))
+                    board.getTeam("001hunter").addEntry(player1.getName());
+                board.getTeam("001hunter").setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             }
             if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getName())) {
-                if (!board.getTeam("frozen").getEntries().contains(player1.getName())) {
-                    board.getTeam("frozen").addEntry(player1.getName());
+                if (!board.getTeam("003frozen").getEntries().contains(player1.getName())) {
+                    board.getTeam("003frozen").addEntry(player1.getName());
                 }
             }
             if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player1.getName())) {
-                if (!board.getTeam("dead").getEntries().contains(player1.getName())) {
-                    board.getTeam("dead").addEntry(player1.getName());
+                if (!board.getTeam("004dead").getEntries().contains(player1.getName())) {
+                    board.getTeam("004dead").addEntry(player1.getName());
                 }
             }
             if(manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).contains(player1.getName()) && !manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getName()) ) {
-                if (!board.getTeam("speedrunner").getEntries().contains(player1.getName())) {
-                    board.getTeam("speedrunner").addEntry(player1.getName());
+                if (!board.getTeam("002speedrunner").getEntries().contains(player1.getName())) {
+                    board.getTeam("002speedrunner").addEntry(player1.getName());
                 }
             }
         }
@@ -168,7 +168,7 @@ public class ManhuntSpeedrunnerScoreboardManager {
 
                     Team waypoint = board.registerNewTeam("waypoint");
                     waypoint.addEntry(ChatColor.LIGHT_PURPLE + "" + ChatColor.BLUE + "" + ChatColor.DARK_AQUA);
-                    waypoint.setPrefix(ChatColor.AQUA + "Waypoint \"" + name + "\" ");
+                    waypoint.setPrefix(ChatColor.AQUA + "Waypoint \"" + name + "\"");
                     board.getObjective("ECManhunt-Hunter").getScore(ChatColor.LIGHT_PURPLE + "" + ChatColor.BLUE + "" + ChatColor.DARK_AQUA).setScore(6);
 
                     Team waypointLoc = board.registerNewTeam("waypointLoc");

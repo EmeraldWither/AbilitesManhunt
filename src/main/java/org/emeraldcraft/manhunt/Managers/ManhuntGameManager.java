@@ -89,92 +89,89 @@ public class ManhuntGameManager {
             String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
             String speedrunners = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
 
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                if (getTeam(player.getName()).equals(ManhuntTeam.SPEEDRUNNER)) {
-                    ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, manhuntMain);
-                    speedrunnerScoreboardManager.showSpeedrunnerScoreboard(player.getUniqueId(), manhuntMain.plugin);
-                    speedrunnerScoreboardID.put(player.getName(), speedrunnerScoreboardManager.id);
-                    player.spigot().respawn();
-                    for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
+            for (String speedrunner : speedrunner) {
+                Player player = Bukkit.getPlayer(speedrunner);
+                ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, manhuntMain);
+                speedrunnerScoreboardManager.showSpeedrunnerScoreboard(player.getUniqueId(), manhuntMain.getPlugin());
+                speedrunnerScoreboardID.put(player.getName(), speedrunnerScoreboardManager.id);
+                player.spigot().respawn();
+                for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
 
-                    }
-                    player.getInventory().clear();
-                    player.setHealth(20);
-                    player.setFoodLevel(20);
-                    player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
-                    player.setGameMode(GameMode.SURVIVAL);
-                    player.setAllowFlight(false);
-                    player.setFlying(false);
-                    player.setInvulnerable(false);
-                    for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-                        player.removePotionEffect(potionEffect.getType());
-                    }
-
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-                    PotionEffect regenEffect = new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0);
-                    PotionEffect resistanceEffect = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0);
-                    PotionEffect speedEffect = new PotionEffect(PotionEffectType.SPEED, 6000, 0);
-                    PotionEffect saturationEffect = new PotionEffect(PotionEffectType.SATURATION, 6000, 0);
-                    player.addPotionEffect(regenEffect);
-                    player.addPotionEffect(resistanceEffect);
-                    player.addPotionEffect(speedEffect);
-                    player.addPotionEffect(saturationEffect);
-                    player.setGlowing(true);
                 }
+                player.getInventory().clear();
+                player.setHealth(20);
+                player.setFoodLevel(20);
+                player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET));
+                player.setGameMode(GameMode.SURVIVAL);
+                player.setAllowFlight(false);
+                player.setFlying(false);
+                player.setInvulnerable(false);
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(potionEffect.getType());
+                }
+
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+                PotionEffect regenEffect = new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 0);
+                PotionEffect resistanceEffect = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0);
+                PotionEffect speedEffect = new PotionEffect(PotionEffectType.SPEED, 6000, 0);
+                PotionEffect saturationEffect = new PotionEffect(PotionEffectType.SATURATION, 6000, 0);
+                player.addPotionEffect(regenEffect);
+                player.addPotionEffect(resistanceEffect);
+                player.addPotionEffect(speedEffect);
+                player.addPotionEffect(saturationEffect);
+                player.setGlowing(true);
             }
-
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                if (getTeam(player.getName()).equals(ManhuntTeam.HUNTER)) {
-                    if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
-                        UUID uuid = player.getUniqueId();
-                        ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager, manhuntMain);
-                        manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.plugin);
-                        int id = manhuntScoreboardManager.id;
-                        hunterScoreboardID.put(player.getName(), id);
-                    }
-
-                    player.spigot().respawn();
-                    for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
-                    }
-                    player.getInventory().clear();
-                    manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
-                    manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
-                    manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
-                    manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 3);
-                    manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 4);
-                    manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 5);
-                    manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 6);
-                    manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 7);
-                    manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
-
-                    ItemStack barrier = manHuntInventory.getBarrier();
-                    Inventory inv = player.getInventory();
-
-                    for (int i = 0; i < 36; i++) {
-                        if (inv.getItem(i) == null || inv.getItem(i).getType().equals(Material.AIR)) {
-                            inv.setItem(i, barrier);
-                        }
-                    }
-
-
-                    player.setHealth(20);
-                    player.setFoodLevel(20);
-                    player.setGameMode(GameMode.SURVIVAL);
-                    player.setInvulnerable(true);
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                    player.setSaturation(10000);
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
-                    for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-                        player.removePotionEffect(potionEffect.getType());
-                    }
-                    PotionEffect potionEffect = new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 2);
-                    potionEffect.withParticles(false);
-                    player.addPotionEffect(potionEffect);
-                    player.setGlowing(true);
+            for (String hunter : hunter) {
+                Player player = Bukkit.getPlayer(hunter);
+                if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
+                    UUID uuid = player.getUniqueId();
+                    ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager, manhuntMain);
+                    manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.getPlugin());
+                    int id = manhuntScoreboardManager.id;
+                    hunterScoreboardID.put(player.getName(), id);
                 }
+                player.spigot().respawn();
+                for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
+                }
+                player.getInventory().clear();
+                player.setCollidable(false);
+                manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
+                manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
+                manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
+                manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 3);
+                manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 4);
+                manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 5);
+                manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 6);
+                manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 7);
+                manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
+
+                ItemStack barrier = manHuntInventory.getBarrier();
+                Inventory inv = player.getInventory();
+
+                for (int i = 0; i < 36; i++) {
+                    if (inv.getItem(i) == null || inv.getItem(i).getType().equals(Material.AIR)) {
+                        inv.setItem(i, barrier);
+                    }
+                }
+
+
+                player.setHealth(20);
+                player.setFoodLevel(20);
+                player.setGameMode(GameMode.SURVIVAL);
+                player.setInvulnerable(true);
+                player.setAllowFlight(true);
+                player.setFlying(true);
+                player.setSaturation(10000);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(potionEffect.getType());
+                }
+                PotionEffect potionEffect = new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 2);
+                potionEffect.withParticles(false);
+                player.addPotionEffect(potionEffect);
+                player.setGlowing(true);
             }
         if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY)) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
@@ -182,13 +179,13 @@ public class ManhuntGameManager {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
             return true;
         }
-        manacounter.startMana((JavaPlugin) manhuntMain.plugin, 0, manadelay);
+        manacounter.startMana((JavaPlugin) manhuntMain.getPlugin(), 0, manadelay);
         return true;
     }
         catch(Exception e){
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cAn internal error has occurred with the plugin! The start has been aborted. It is suggested that you report this to the plugin by posting the stacktrace! The plugin will disable itself now."));
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(manhuntMain.plugin);
+            Bukkit.getPluginManager().disablePlugin(manhuntMain.getPlugin());
         }
         return false;
         }

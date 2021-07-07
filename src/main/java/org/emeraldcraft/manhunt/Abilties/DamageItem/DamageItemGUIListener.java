@@ -20,6 +20,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class DamageItemGUIListener implements Listener {
 
@@ -60,7 +61,14 @@ public class DamageItemGUIListener implements Listener {
                 SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                 Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
                 int damageableItems = 0;
-                for (ItemStack item : selectedPlayer.getInventory().getContents()) {
+                Random rand = new Random();
+                ItemStack[] givenList = selectedPlayer.getInventory().getContents();
+
+                int numberOfElements = manhuntMain.getConfig().getInt("abilities.damageitem.amount");
+
+                for (int i = 0; i < numberOfElements; i++) {
+                    int randomIndex = rand.nextInt(givenList.length);
+                    ItemStack item = givenList[randomIndex];
                     if (item != null) {
                         if (item.getItemMeta() instanceof Damageable) {
                             int itemDurablity = item.getType().getMaxDurability() - ((Damageable) item.getItemMeta()).getDamage();

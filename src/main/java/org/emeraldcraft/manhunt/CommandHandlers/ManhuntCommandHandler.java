@@ -223,7 +223,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("forceend")) {
             if (manhuntGameManager.getGameStatus()) {
                 if (sender.hasPermission("manhunt.forceend")) {
-                    Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
+                    Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     endGame(sender);
                     return true;
                 }
@@ -304,7 +304,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 if (manhuntGameManager.getGameStatus()) {
                     if (args.length >= 2) {
                         if (manhuntGameManager.getTeam(sender.getName()).equals(ManhuntTeam.SPEEDRUNNER) || manhuntGameManager.getTeam(sender.getName()).equals(ManhuntTeam.FROZEN)) {
-                            if (args[1].equalsIgnoreCase("add")) {
+                            if (args[1].equalsIgnoreCase("create")) {
                                 if (args.length >= 3) {
                                     if (manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
                                         sender.sendMessage(ChatColor.RED + "You already have a waypoint!");
@@ -316,17 +316,23 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                     for (int arg = 3; arg < args.length; arg++) {
                                         name.append(" ").append(args[arg]);
                                     }
-                                    waypoint.put(name.toString(), ((Player) sender).getLocation());
-                                    waypoints.put(((Player) sender).getUniqueId(), waypoint);
-                                    sender.sendMessage(ChatColor.GREEN + "Successfully put a waypoint \"" + name + "\" at " + waypoint.get(name.toString()).getBlockX() + "," + waypoint.get(name.toString()).getBlockY() + "," + waypoint.get(name.toString()).getBlockZ());
-                                    return true;
+
+                                    if(!(name.length() > 50)) {
+                                        waypoint.put(name.toString(), ((Player) sender).getLocation());
+                                        waypoints.put(((Player) sender).getUniqueId(), waypoint);
+                                        sender.sendMessage(ChatColor.GREEN + "Successfully created waypoint \"" + name + "\" at the location " + ChatColor.DARK_GREEN + waypoint.get(name.toString()).getBlockX() + ", " + waypoint.get(name.toString()).getBlockY() + ", " + waypoint.get(name.toString()).getBlockZ());
+                                        return true;
+
+                                    }
+                                    sender.sendMessage(ChatColor.RED + "Your waypoint name cannot be longer than 51 characters!");
+                                    return false;
                                 }
-                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint add <waypoint name> ");
+                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
                                 return false;
                             }
                             if (args[1].equalsIgnoreCase("remove")) {
                                 if (!manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
-                                    sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint add <waypoint name> !");
+                                    sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
                                     return false;
                                 }
                                 HashMap<UUID, HashMap<String, Location>> waypoints = manhuntGameManager.getWaypoints();
@@ -334,18 +340,19 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 sender.sendMessage(ChatColor.GREEN + "Successfully removed waypoint. ");
                                 return true;
                             }
-                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint add <waypoint name> ");
+                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
                             sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
                             return false;
                         }
                         sender.sendMessage(ChatColor.RED + "You must be an alive speedrunner to use this command!");
                         return false;
                     }
-                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint add <waypoint name> ");
+                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
                     sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
                     return false;
                 }
-                sender.sendMessage(ChatColor.RED + "There is no ongoing game in progress! Start a game with /manhunt startgame!");
+                sender.sendMessage(ChatColor.RED + "There is no ongoing game in progress! Start a game with /manhunt start!");
+                return false;
             }
             sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
             return true;
@@ -399,6 +406,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         "&e/manhunt setmana <player> <mana>: Sets the mana of the player to the selected amount.\n" +
                         "&e/manhunt stats <player (optional)>: Gets the selected players stats. If there is no player, it will pick the one who is sending the command. (Note: The player must be online)\n" +
                         "&e/manhunt remove <player> : Removes the player from any group. \n" +
+                        "&e/manhunt waypoint create <name> : Creates a waypoint with a name.  \n" +
+                        "&e/manhunt waypoint remove : Deletes your waypoint. \n" +
                         "&4--------------------------------"));
     }
     public void endGame(CommandSender sender) {
@@ -429,6 +438,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
             manhuntGameManager.setGameStatus(false);
             AbilitesManager.clearCooldown();
             manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
+            manhuntGameManager.getWaypoints().clear();
             for(org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
                 if(team.getName().equals("hunterTeam") || team.getName().equals("speedrunnerTeam")){
                     team.unregister();

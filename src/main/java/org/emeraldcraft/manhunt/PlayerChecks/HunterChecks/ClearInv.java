@@ -127,6 +127,7 @@ public class ClearInv implements Listener {
 
     public void removeEffects(Player player){
         player.setGlowing(false);
+        player.setCollidable(true);
         player.getInventory().clear();
         player.setGameMode(GameMode.SURVIVAL);
         player.setInvulnerable(false);

@@ -11,6 +11,8 @@ plugin-prefix: "&2[Abilities Manhunt] "
 # mana-delay is how many ticks until it will give the mana-amount
 mana-delay: 20
 mana-amount: 1
+# "hunter-range" is how close the player has to come to the speedrunner to be pushed back.
+hunter-range: 4
 config-reload-msg: "&aSuccessfully reloaded the configuration files!"
 scoreboard:
   # If the scoreboard is enabled, it will enable the following options :
@@ -100,7 +102,7 @@ messages:
       - "&6---------------------------------------"
       - "                 &c&lDEFEAT"
       - ""
-      - "        &2YOU HAVE LOST THE GAME :("
+      - "        &4YOU HAVE LOST THE GAME :("
       - ""
       - "      &aWINNING TEAM: &2SPEEDRUNNERS"
       - "         &cLOSING TEAM: &4HUNTERS"
@@ -114,8 +116,8 @@ messages:
       - ""
       - "        &2YOU HAVE WON THE GAME!"
       - ""
-      - "      &aWINNING TEAM: &SPEEDRUNNERS"
-      - "         &cLOSING TEAM: &HUNTERS"
+      - "      &aWINNING TEAM: &2SPEEDRUNNERS"
+      - "         &cLOSING TEAM: &4HUNTERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
       - "        &7 Made by : EmeraldWither"
@@ -175,6 +177,8 @@ abilities:
     cooldown: 120
     msg: "&aDamaged &2%items% &aitem(s) in &2%speedrunner%&a's inventory!"
     speedrunner-msg: "&4%hunter% &chas damaged &4%items% &citem(s) in your inventory!"
+    # "amount:" is the maximum amount of items that will be damaged.
+    amount: 5
   playertp:
     height-above-player: 5
     msg: "&aTeleported you to &2%speedrunner%&a!"

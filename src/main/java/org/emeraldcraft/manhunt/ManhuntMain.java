@@ -37,6 +37,7 @@ import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.GiveSpeedrunnerScoreboard;
+import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.PushAwayHunter;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +45,6 @@ import java.util.logging.Level;
 
 public class ManhuntMain extends JavaPlugin {
 
-    public Plugin plugin = this;
     public DataManager data;
     ManhuntGameManager manhuntGameManager;
     Manacounter manacounter;
@@ -59,42 +59,8 @@ public class ManhuntMain extends JavaPlugin {
         this.abilitesManager = new AbilitesManager(manhuntGameManager);
         this.manacounter = new Manacounter(manhuntGameManager,this);
         this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, this);
-
-        getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new GravityListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPlacing(manhuntGameManager, this) ,this);
-        getServer().getPluginManager().registerEvents(new CheckChest(manhuntGameManager, this) ,this);
-        getServer().getPluginManager().registerEvents(new DeathCheck(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new LightningGuiListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new LauncherGUIListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new GravityGUIListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPickingUp(manhuntGameManager) ,this);
-        getServer().getPluginManager().registerEvents(new PreventAttacking(manhuntGameManager),this);
-        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(manhuntGameManager, this, manacounter,abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new ScramblerListener(manhuntGameManager, this, manacounter, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new EnderDragonCheck(manhuntGameManager, this, abilitesManager, manacounter),this);
-        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new RandomTPListener(manhuntGameManager, this, manacounter, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(manhuntGameManager, this, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new DamageItemListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new PlayerTPListener(manhuntGameManager, this, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new PreventHunger(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new TargetMobListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new ClearInv(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new FreezeListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new PreventAdvancements(manhuntGameManager, this), this);
-        getServer().getPluginManager().registerEvents(new GiveScoreboard(manhuntGameManager, manhuntScoreboardManager, this, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhuntGameManager, this, abilitesManager), this);
+        registerListeners();
         this.saveDefaultConfig();
-
-
-
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhuntGameManager, this, manacounter, abilitesManager));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhuntGameManager));
 
@@ -163,6 +129,7 @@ public class ManhuntMain extends JavaPlugin {
             }
             if(hunter.contains(player.getName())){
                 player.setGlowing(false);
+                player.setCollidable(true);
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
                 player.setInvulnerable(false);
@@ -189,6 +156,7 @@ public class ManhuntMain extends JavaPlugin {
             }
             if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player.getName())){
                 player.setGlowing(false);
+                player.setCollidable(true);
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
                 player.setInvulnerable(false);
@@ -202,8 +170,45 @@ public class ManhuntMain extends JavaPlugin {
 
     }
 
-    private Plugin getPlugin(){
-        Plugin plugin = this.getPlugin();
+    private void registerListeners(){
+        getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
+        getServer().getPluginManager().registerEvents(new GravityListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPlacing(manhuntGameManager, this) ,this);
+        getServer().getPluginManager().registerEvents(new CheckChest(manhuntGameManager, this) ,this);
+        getServer().getPluginManager().registerEvents(new DeathCheck(manhuntGameManager, this, manacounter, abilitesManager) ,this);
+        getServer().getPluginManager().registerEvents(new LightningGuiListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
+        getServer().getPluginManager().registerEvents(new LauncherGUIListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
+        getServer().getPluginManager().registerEvents(new GravityGUIListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPickingUp(manhuntGameManager) ,this);
+        getServer().getPluginManager().registerEvents(new PreventAttacking(manhuntGameManager),this);
+        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(manhuntGameManager, this, manacounter,abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new ScramblerListener(manhuntGameManager, this, manacounter, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new EnderDragonCheck(manhuntGameManager, this, abilitesManager, manacounter),this);
+        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new RandomTPListener(manhuntGameManager, this, manacounter, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(manhuntGameManager, this, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new DamageItemListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new PlayerTPListener(manhuntGameManager, this, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new PreventHunger(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new TargetMobListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new ClearInv(manhuntGameManager, this),this);
+        getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(manhuntGameManager, this, manacounter, abilitesManager),this);
+        getServer().getPluginManager().registerEvents(new PreventAdvancements(manhuntGameManager, this), this);
+        getServer().getPluginManager().registerEvents(new GiveScoreboard(manhuntGameManager, manhuntScoreboardManager, this, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhuntGameManager, this, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new PreventInteraction(manhuntGameManager), this);
+        getServer().getPluginManager().registerEvents(new PreventDamage(manhuntGameManager), this);
+        getServer().getPluginManager().registerEvents(new PreventGettingClose(manhuntGameManager, this), this);
+        getServer().getPluginManager().registerEvents(new PushAwayHunter(manhuntGameManager, this), this);
+    }
+    public Plugin getPlugin(){
+        Plugin plugin = this;
         return plugin;
     }
 

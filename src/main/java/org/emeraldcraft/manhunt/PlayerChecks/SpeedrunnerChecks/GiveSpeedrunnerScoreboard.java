@@ -36,7 +36,7 @@ public class GiveSpeedrunnerScoreboard implements Listener {
         if(manhuntGameManager.getTeam(event.getPlayer().getName()).equals(ManhuntTeam.SPEEDRUNNER)){
             if(manhuntGameManager.getGameStatus()){
                 ManhuntSpeedrunnerScoreboardManager manhuntScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(manhuntGameManager, main);
-                manhuntScoreboardManager.showSpeedrunnerScoreboard(event.getPlayer().getUniqueId(), main.plugin);
+                manhuntScoreboardManager.showSpeedrunnerScoreboard(event.getPlayer().getUniqueId(), main.getPlugin());
                 manhuntGameManager.speedrunnerScoreboardID.remove(event.getPlayer().getName());
                 manhuntGameManager.speedrunnerScoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
             }

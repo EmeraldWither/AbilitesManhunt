@@ -41,7 +41,7 @@ public class GiveScoreboard implements Listener {
             if (manhuntGameManager.getTeam(event.getPlayer().getName()).equals(ManhuntTeam.HUNTER)) {
                 if (manhuntGameManager.getGameStatus()) {
                     ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, main);
-                    manhuntScoreboardManager.showHunterScoreboard(event.getPlayer().getUniqueId(), main.plugin);
+                    manhuntScoreboardManager.showHunterScoreboard(event.getPlayer().getUniqueId(), main.getPlugin());
                     manhuntGameManager.hunterScoreboardID.remove(event.getPlayer().getName());
                     manhuntGameManager.hunterScoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
                 }

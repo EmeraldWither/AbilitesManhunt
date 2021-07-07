@@ -56,6 +56,7 @@ public class EnderDragonCheck implements Listener {
                             players.removePotionEffect(potionEffect.getType());
                         }
                         players.setGlowing(false);
+                        players.setCollidable(false);
                         players.getInventory().clear();
                         players.setGameMode(GameMode.SURVIVAL);
                         players.setInvulnerable(false);
@@ -115,7 +116,8 @@ public class EnderDragonCheck implements Listener {
                     hunter.clear();
                     manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
                     AbilitesManager.clearCooldown();
-                    Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
+                    Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
+                    manhuntGameManager.getWaypoints().clear();
                     manhuntGameManager.setGameStatus(false);
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {

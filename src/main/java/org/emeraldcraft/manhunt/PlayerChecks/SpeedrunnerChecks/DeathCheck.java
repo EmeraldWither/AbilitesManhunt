@@ -80,7 +80,7 @@ public class DeathCheck implements Listener {
                         for (PotionEffect potionEffect : players.getActivePotionEffects()) {
                             players.removePotionEffect(potionEffect.getType());
                         }
-                        players.setGlowing(false);
+                        players.setCollidable(false);                        players.setGlowing(false);
                         players.getInventory().clear();
                         players.setGameMode(GameMode.SURVIVAL);
                         players.setInvulnerable(false);
@@ -97,8 +97,6 @@ public class DeathCheck implements Listener {
                     }
                     for (String player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
-
-
                         //Add a loss
                         int losses = 0;
                         if(manhuntMain.data.getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
@@ -132,7 +130,7 @@ public class DeathCheck implements Listener {
                     manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
                     AbilitesManager.clearCooldown();
                     manhuntGameManager.setGameStatus(false);
-                    Bukkit.getScheduler().cancelTasks(manhuntMain.plugin);
+                    Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
                             team.unregister();
@@ -144,7 +142,7 @@ public class DeathCheck implements Listener {
                 Vector direction = event.getEntity().getLocation().getDirection();
                 deathLocation.setDirection(direction);
                 Player player = event.getEntity();
-                Bukkit.getScheduler().runTaskLater(manhuntMain.plugin, new Runnable() {
+                Bukkit.getScheduler().runTaskLater(manhuntMain.getPlugin(), new Runnable() {
                     @Override
                     public void run() {
                         player.spigot().respawn();

@@ -15,8 +15,7 @@ import java.util.List;
 
 public class ManhuntTabCompleter implements TabCompleter {
     private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "remove", "waypoint");
-    private static final List<String> SUBCOMMANDS = Arrays.asList("add", "remove");
-    private static final List<String> NAME = Arrays.asList("<name>");
+    private static final List<String> SUBCOMMANDS = Arrays.asList("create", "remove");
     private static final List<String> players = new ArrayList<String>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
     private ManhuntGameManager manhuntGameManager;

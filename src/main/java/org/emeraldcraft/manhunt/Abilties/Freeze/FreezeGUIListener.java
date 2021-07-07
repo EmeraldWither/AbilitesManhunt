@@ -29,7 +29,6 @@ public class FreezeGUIListener  implements Listener {
     String ability = "Freeze Player";
 
     private boolean freezeDelay;
-
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
     Map<String, Long> freezeCooldown;
@@ -86,15 +85,14 @@ public class FreezeGUIListener  implements Listener {
         Integer delay = time * 20;
         speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-freeze-msg").replace("%hunter%", hunter.getName()).replace("%time%", Integer.toString(time))));
         manhuntGameManager.getTeam(ManhuntTeam.FROZEN).add(speedrunner.getName());
-        Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.plugin, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.getPlugin(), new Runnable() {
             @Override
             public void run() {
                 manhuntGameManager.getTeam(ManhuntTeam.FROZEN).remove(speedrunner.getName());
                 freezeDelay = true;
                 speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-unfreeze-msg").replace("%hunter%", hunter.getName())));
                 hunter.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.unfreeze-msg").replace("%hunter%", hunter.getName()).replace("%speedrunner%", speedrunner.getName())));
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.plugin, new Runnable() {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.getPlugin(), new Runnable() {
                     @Override
                     public void run() {
                         freezeDelay = false;

@@ -1,5 +1,6 @@
 package org.emeraldcraft.manhunt.PlayerChecks.HunterChecks;
 
+import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +32,12 @@ public class PreventProjectileThrowing implements Listener {
                     event.setCancelled(true);
                 }
             }
+        }
+    }
+    @EventHandler
+    public void projectileCollide(ProjectileCollideEvent event){
+        if(hunter.contains(event.getCollidedWith().getName())){
+            event.setCancelled(true);
         }
     }
 }
