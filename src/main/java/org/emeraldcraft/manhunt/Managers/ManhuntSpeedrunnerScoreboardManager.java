@@ -120,23 +120,23 @@ public class ManhuntSpeedrunnerScoreboardManager {
         Scoreboard board = player.getScoreboard();
 
         for (Player player1 : Bukkit.getOnlinePlayers()) {
-            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player1.getName())) {
-                if (!board.getTeam("001hunter").getEntries().contains(player1.getName()))
+            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player1.getUniqueId())) {
+                if (!board.getTeam("001hunter").getEntries().contains(player1.getUniqueId()))
                     board.getTeam("001hunter").addEntry(player1.getName());
                 board.getTeam("001hunter").setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             }
-            if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getName())) {
-                if (!board.getTeam("003frozen").getEntries().contains(player1.getName())) {
+            if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getUniqueId())) {
+                if (!board.getTeam("003frozen").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("003frozen").addEntry(player1.getName());
                 }
             }
-            if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player1.getName())) {
-                if (!board.getTeam("004dead").getEntries().contains(player1.getName())) {
+            if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player1.getUniqueId())) {
+                if (!board.getTeam("004dead").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("004dead").addEntry(player1.getName());
                 }
             }
-            if(manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).contains(player1.getName()) && !manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getName()) ) {
-                if (!board.getTeam("002speedrunner").getEntries().contains(player1.getName())) {
+            if(manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).contains(player1.getUniqueId()) && !manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(player1.getUniqueId()) ) {
+                if (!board.getTeam("002speedrunner").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("002speedrunner").addEntry(player1.getName());
                 }
             }

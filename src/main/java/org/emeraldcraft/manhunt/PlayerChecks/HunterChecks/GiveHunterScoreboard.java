@@ -11,14 +11,12 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
-public class GiveScoreboard implements Listener {
-    private ManhuntHunterScoreboardManager manhuntScoreboardManager;
+public class GiveHunterScoreboard implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private ManhuntMain main;
     private AbilitesManager abilitesManager;
-    public GiveScoreboard(ManhuntGameManager manhuntGameManager, ManhuntHunterScoreboardManager manhuntScoreboardManager, ManhuntMain manhuntMain, AbilitesManager abilitesManager){
+    public GiveHunterScoreboard(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager abilitesManager){
         this.manhuntGameManager = manhuntGameManager;
-        this.manhuntScoreboardManager = manhuntScoreboardManager;
         main = manhuntMain;
         this.abilitesManager = abilitesManager;
     }
@@ -26,9 +24,9 @@ public class GiveScoreboard implements Listener {
     @EventHandler
     public void PlayerLeave(PlayerQuitEvent event){
         if (main.getConfig().getBoolean("scoreboard.enabled")) {
-            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getName())) {
+            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getUniqueId())) {
                 if (manhuntGameManager.getGameStatus()) {
-                    Bukkit.getScheduler().cancelTask(manhuntGameManager.hunterScoreboardID.get(event.getPlayer().getName()));
+                    Bukkit.getScheduler().cancelTask(manhuntGameManager.hunterScoreboardID.get(event.getPlayer().getUniqueId()));
                     event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                 }
             }
@@ -38,12 +36,12 @@ public class GiveScoreboard implements Listener {
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent event) {
         if (main.getConfig().getBoolean("scoreboard.enabled")) {
-            if (manhuntGameManager.getTeam(event.getPlayer().getName()).equals(ManhuntTeam.HUNTER)) {
+            if (manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.HUNTER)) {
                 if (manhuntGameManager.getGameStatus()) {
                     ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, main);
                     manhuntScoreboardManager.showHunterScoreboard(event.getPlayer().getUniqueId(), main.getPlugin());
-                    manhuntGameManager.hunterScoreboardID.remove(event.getPlayer().getName());
-                    manhuntGameManager.hunterScoreboardID.put(event.getPlayer().getName(), manhuntScoreboardManager.id);
+                    manhuntGameManager.hunterScoreboardID.remove(event.getPlayer().getUniqueId());
+                    manhuntGameManager.hunterScoreboardID.put(event.getPlayer().getUniqueId(), manhuntScoreboardManager.id);
                 }
             }
         }

@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LaunchAbility implements Listener {
 
@@ -23,8 +24,8 @@ public class LaunchAbility implements Listener {
     private Manacounter manacounter;
     private ManhuntMain manhuntMain;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public LaunchAbility(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -42,7 +43,7 @@ public class LaunchAbility implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (abilitesManager.getHeldAbility(player).equals(Ability.LAUNCHER)) {
                 if (speedrunner.toString() != null) {
-                    if (manacounter.getManaList().get(player.getName()) >= 20) {
+                    if (manacounter.getManaList().get(player.getUniqueId()) >= 20) {
                         SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                         inv.createInventory();
                         Inventory getInventory = inv.getInv();

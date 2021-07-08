@@ -41,6 +41,7 @@ import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.PushAwayHunter;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class ManhuntMain extends JavaPlugin {
@@ -79,8 +80,8 @@ public class ManhuntMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        List<String> speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
-        List<String> hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        List<UUID> speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        List<UUID> hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
 
 
         getLogger().log(Level.WARNING, "\n" +
@@ -127,7 +128,7 @@ public class ManhuntMain extends JavaPlugin {
                     }
                 }
             }
-            if(hunter.contains(player.getName())){
+            if(hunter.contains(player.getUniqueId())){
                 player.setGlowing(false);
                 player.setCollidable(true);
                 player.getInventory().clear();
@@ -141,7 +142,7 @@ public class ManhuntMain extends JavaPlugin {
                     player.removePotionEffect(potionEffect.getType());
                 }
             }
-            if(speedrunner.contains(player.getName())){
+            if(speedrunner.contains(player.getUniqueId())){
                 player.setGlowing(false);
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
@@ -154,7 +155,7 @@ public class ManhuntMain extends JavaPlugin {
                     player.removePotionEffect(potionEffect.getType());
                 }
             }
-            if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player.getName())){
+            if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player.getUniqueId())){
                 player.setGlowing(false);
                 player.setCollidable(true);
                 player.getInventory().clear();
@@ -200,8 +201,8 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
         getServer().getPluginManager().registerEvents(new FreezeListener(manhuntGameManager, this, manacounter, abilitesManager),this);
         getServer().getPluginManager().registerEvents(new PreventAdvancements(manhuntGameManager, this), this);
-        getServer().getPluginManager().registerEvents(new GiveScoreboard(manhuntGameManager, manhuntScoreboardManager, this, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhuntGameManager, this, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new GiveHunterScoreboard(manhuntGameManager, this, abilitesManager), this);
+        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhuntGameManager, this), this);
         getServer().getPluginManager().registerEvents(new PreventInteraction(manhuntGameManager), this);
         getServer().getPluginManager().registerEvents(new PreventDamage(manhuntGameManager), this);
         getServer().getPluginManager().registerEvents(new PreventGettingClose(manhuntGameManager, this), this);

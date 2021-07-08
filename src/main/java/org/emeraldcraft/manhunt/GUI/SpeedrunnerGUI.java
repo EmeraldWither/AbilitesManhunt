@@ -16,13 +16,14 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SpeedrunnerGUI {
 
     private ManhuntGameManager manhuntGameManager;
     private ManhuntMain manhuntMain;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public SpeedrunnerGUI(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
@@ -33,8 +34,8 @@ public class SpeedrunnerGUI {
 
         Inventory inv;
         inv = Bukkit.createInventory(null, 9, ChatColor.translateAlternateColorCodes('&', "&9&lSelect a Speedrunner: "));
-        for (String playerName : manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER)) {
-            Player player = Bukkit.getPlayer(playerName);
+        for (UUID playerUUID : manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER)) {
+            Player player = Bukkit.getPlayer(playerUUID);
             ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta im = (SkullMeta) skull.getItemMeta();
             List<String> il = new ArrayList<String>();

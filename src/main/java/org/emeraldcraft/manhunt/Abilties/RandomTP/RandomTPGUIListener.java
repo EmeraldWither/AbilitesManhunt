@@ -20,6 +20,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomTPGUIListener implements Listener {
@@ -29,9 +30,9 @@ public class RandomTPGUIListener implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
     private AbilitesManager abilitesManager;
-    Map<String, Long> randomTPCooldown;
-    List<String> hunter;
-    List<String> speedrunner;
+    Map<UUID, Long> randomTPCooldown;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public RandomTPGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
@@ -47,8 +48,8 @@ public class RandomTPGUIListener implements Listener {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.RANDOMTP)) {
-                if (randomTPCooldown.containsKey(player.getName())) {
-                    if (randomTPCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                if (randomTPCooldown.containsKey(player.getUniqueId())) {
+                    if (randomTPCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
@@ -59,7 +60,7 @@ public class RandomTPGUIListener implements Listener {
                 Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
                 assert selectedPlayer != null;
 
-                manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 80);
+                manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 80);
                 manacounter.updateActionbar(player);
 
 
@@ -70,7 +71,7 @@ public class RandomTPGUIListener implements Listener {
                 double distance = selectedPlayer.getLocation().distance(oldLoc);
 
                 Integer cooldown = manhuntMain.getConfig().getInt("abilities.randomtp.cooldown");
-                randomTPCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                randomTPCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (cooldown * 1000));
 
 
                 selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
@@ -97,7 +98,7 @@ public class RandomTPGUIListener implements Listener {
     public void clearCooldowns() {
         randomTPCooldown.clear();
     }
-    public Map<String, Long> getCooldowns(){
+    public Map<UUID, Long> getCooldowns(){
         return randomTPCooldown;
     }
 }

@@ -16,11 +16,12 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ClearInv implements Listener {
     private ManhuntGameManager manhuntGameManager;
-    List<String> speedrunner;
-    List<String> hunter;
+    List<UUID> speedrunner;
+    List<UUID> hunter;
 
     private ManhuntMain manhuntMain;
 
@@ -73,6 +74,7 @@ public class ClearInv implements Listener {
                             player.getInventory().remove(item);
                             removeEffects(player);
                         }
+                        return;
                     }
                 }
             }

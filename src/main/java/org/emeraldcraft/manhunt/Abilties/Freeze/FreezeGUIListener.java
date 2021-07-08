@@ -20,6 +20,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class FreezeGUIListener  implements Listener {
@@ -31,9 +32,9 @@ public class FreezeGUIListener  implements Listener {
     private boolean freezeDelay;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
-    Map<String, Long> freezeCooldown;
-    List<String> hunter;
-    List<String> speedrunner;
+    Map<UUID, Long> freezeCooldown;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public FreezeGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
         this.manhuntMain = manhuntMain;
         this.abilitesManager = AbilitesManager;
@@ -51,8 +52,8 @@ public class FreezeGUIListener  implements Listener {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.FREEZER)) {
-                if (freezeCooldown.containsKey(player.getName())) {
-                    if (freezeCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                if (freezeCooldown.containsKey(player.getUniqueId())) {
+                    if (freezeCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((freezeCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
@@ -67,9 +68,9 @@ public class FreezeGUIListener  implements Listener {
                 FreezePlayer(player, selectedPlayer, time);
 
                 Integer cooldown = manhuntMain.getConfig().getInt("abilities.freeze.cooldown");
-                freezeCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                freezeCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (cooldown * 1000));
 
-                manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 30);
+                manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 30);
                 manacounter.updateActionbar(player);
 
 
@@ -84,11 +85,11 @@ public class FreezeGUIListener  implements Listener {
 
         Integer delay = time * 20;
         speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-freeze-msg").replace("%hunter%", hunter.getName()).replace("%time%", Integer.toString(time))));
-        manhuntGameManager.getTeam(ManhuntTeam.FROZEN).add(speedrunner.getName());
+        manhuntGameManager.getTeam(ManhuntTeam.FROZEN).add(speedrunner.getUniqueId());
         Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.getPlugin(), new Runnable() {
             @Override
             public void run() {
-                manhuntGameManager.getTeam(ManhuntTeam.FROZEN).remove(speedrunner.getName());
+                manhuntGameManager.getTeam(ManhuntTeam.FROZEN).remove(speedrunner.getUniqueId());
                 freezeDelay = true;
                 speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-unfreeze-msg").replace("%hunter%", hunter.getName())));
                 hunter.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.unfreeze-msg").replace("%hunter%", hunter.getName()).replace("%speedrunner%", speedrunner.getName())));
@@ -107,7 +108,7 @@ public class FreezeGUIListener  implements Listener {
     @EventHandler
     public void FreezePlayer(PlayerMoveEvent event) {
         if (manhuntGameManager.getGameStatus()) {
-            if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(event.getPlayer().getName())) {
+            if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }
         }
@@ -120,7 +121,7 @@ public class FreezeGUIListener  implements Listener {
         if (!(Bukkit.getServer().getAllowFlight())) {
             if (manhuntMain.getConfig().getBoolean("abilities.freeze.prevent-kicking")) {
                 if (manhuntGameManager.getGameStatus()) {
-                    if (freezeDelay == true) {
+                    if (freezeDelay) {
                         if (event.getReason().contains("flying")) {
                             event.setCancelled(true);
                             Bukkit.getServer().getLogger().log(Level.WARNING, manhuntMain.getConfig().get("plugin-prefix") + event.getPlayer().getName() + " would have been kicked for flying due to them being frozen. We have prevented this by preventing them from getting kicked. You can change this behavior in the, \"config.yml\" file.");

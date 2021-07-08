@@ -8,13 +8,14 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PreventHunger implements Listener {
 
     private ManhuntMain manhuntMain;
     private ManhuntGameManager manhuntGameManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public PreventHunger(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
@@ -25,8 +26,8 @@ public class PreventHunger implements Listener {
     @EventHandler
     public void ItemPickupEvent(FoodLevelChangeEvent event){
         if(manhuntGameManager.getGameStatus()) {
-            String name = event.getEntity().getName();
-            if (hunter.contains(name)) {
+            UUID uuid = event.getEntity().getUniqueId();
+            if (hunter.contains(uuid)) {
                 event.setCancelled(true);
 
             }

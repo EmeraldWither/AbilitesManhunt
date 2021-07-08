@@ -15,27 +15,27 @@ import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.FROZEN;
+import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.SPEEDRUNNER;
 
 
 public class ManhuntCommandHandler implements CommandExecutor {
 
     private final ManhuntGameManager manhuntGameManager;
     private final AbilitesManager AbilitesManager;
-    List<String> speedrunner;
-    List<String> hunter;
-    List<String> deadSpeedrunner;
-    HashMap<String, Integer> Mana;
+    List<UUID> speedrunner;
+    List<UUID> hunter;
+    List<UUID> deadSpeedrunner;
+    HashMap<UUID, Integer> Mana;
     private final ManhuntMain manhuntMain;
     private Manacounter manacounter;
 
     public ManhuntCommandHandler(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntGameManager = manhuntGameManager;
         this.AbilitesManager = AbilitesManager;
-        this.speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.speedrunner = manhuntGameManager.getTeam(SPEEDRUNNER);
         this.hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
         this.deadSpeedrunner = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
         this.manhuntMain = manhuntMain;
@@ -101,11 +101,11 @@ public class ManhuntCommandHandler implements CommandExecutor {
                     if (Bukkit.getPlayer(args[1]) != null) {
                         if (Bukkit.getPlayer(args[1]).isOnline()) {
                             String arg = args[1];
-                            String name = Bukkit.getPlayer(arg).getName();
+                            UUID uuid = Bukkit.getPlayer(arg).getUniqueId();
+                            String name = Bukkit.getPlayer(uuid).getName();
 
-                            if (!(speedrunner.contains(name))) {
-
-                                addTeam(ManhuntTeam.SPEEDRUNNER, name);
+                            if (!(speedrunner.contains(uuid))) {
+                                addTeam(SPEEDRUNNER, Bukkit.getPlayer(arg).getUniqueId());
 
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
                                 return true;
@@ -144,7 +144,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
                             if (!(hunter.contains(name))) {
 
-                                addTeam(ManhuntTeam.HUNTER, name);
+                                addTeam(ManhuntTeam.HUNTER, Bukkit.getPlayer(arg).getUniqueId());
 
                                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the hunters group! "));
                                 return true;
@@ -173,8 +173,19 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("listgroups")) {
 
             CommandSender player = sender;
-            String speedrunnersList = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
-            String huntersList = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
+
+            List<String> speedrunnerList = new ArrayList<>();
+            List<String> hunterList = new ArrayList<>();
+
+            for(UUID uuid : speedrunner){
+                speedrunnerList.add(Bukkit.getPlayer(uuid).getName());
+            }
+            for(UUID uuid : hunter){
+                hunterList.add(Bukkit.getPlayer(uuid).getName());
+            }
+
+            String speedrunnersList = speedrunnerList.toString().replaceAll("]", "").replaceAll("\\[", "");
+            String huntersList = hunterList.toString().replaceAll("]", "").replaceAll("\\[", "");
 
             //
             // Check if Speedrunners list is Empty
@@ -235,10 +246,10 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if(args.length >= 3) {
                 if (manhuntGameManager.getGameStatus()) {
                     if (Bukkit.getPlayer(args[1]) != null) {
-                        if (hunter.contains(Bukkit.getPlayer(args[1]).getName())) {
+                        if (hunter.contains(Bukkit.getPlayer(args[1]).getUniqueId())) {
                             Player player = Bukkit.getPlayer(args[1]);
                             try {
-                                manacounter.getManaList().put(player.getName(), Integer.parseInt(args[2]));
+                                manacounter.getManaList().put(player.getUniqueId(), Integer.parseInt(args[2]));
                                 manacounter.updateActionbar(player);
                                 Bukkit.broadcastMessage(prefix + ChatColor.DARK_GREEN + sender.getName() + ChatColor.GREEN + " successfully set the mana of " + ChatColor.DARK_GREEN + player.getName() + ChatColor.GREEN + " to " + ChatColor.DARK_GREEN + args[2] + ChatColor.GREEN + "!");
                             } catch (NumberFormatException e) {
@@ -303,7 +314,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if(sender instanceof Player) {
                 if (manhuntGameManager.getGameStatus()) {
                     if (args.length >= 2) {
-                        if (manhuntGameManager.getTeam(sender.getName()).equals(ManhuntTeam.SPEEDRUNNER) || manhuntGameManager.getTeam(sender.getName()).equals(ManhuntTeam.FROZEN)) {
+                        sender.sendMessage(manhuntGameManager.getTeam(((Player) sender).getUniqueId()).toString());
+                        if (manhuntGameManager.getTeam(((Player) sender).getUniqueId()) == SPEEDRUNNER || manhuntGameManager.getTeam(((Player) sender).getUniqueId()) == FROZEN) {
                             if (args[1].equalsIgnoreCase("create")) {
                                 if (args.length >= 3) {
                                     if (manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
@@ -363,30 +375,20 @@ public class ManhuntCommandHandler implements CommandExecutor {
     }
 
 
-    public void addTeam(ManhuntTeam team, String name){
+    public void addTeam(ManhuntTeam team, UUID uuid){
         if(team.equals(ManhuntTeam.HUNTER)){
-            hunter.add(name);
-            if(speedrunner.contains(name)){
-                speedrunner.remove(name);
-            }
-        }
-        if(team.equals(ManhuntTeam.SPEEDRUNNER)){
-            speedrunner.add(name);
-            if(hunter.contains(name)){
-                hunter.remove(name);
-            }
-        }
-    }
-    public ManhuntTeam getTeam(String playerName){
-        String name = Bukkit.getPlayer(playerName).getName();
+            hunter.add(uuid);
 
-        if(hunter.contains(name)){
-            return ManhuntTeam.HUNTER;
+            if(speedrunner.contains(uuid)){
+                speedrunner.remove(uuid);
+            }
         }
-        if(speedrunner.contains(name)) {
-            return ManhuntTeam.SPEEDRUNNER;
+        if(team.equals(SPEEDRUNNER)){
+            speedrunner.add(uuid);
+            if(hunter.contains(uuid)){
+                hunter.remove(uuid);
+            }
         }
-        return ManhuntTeam.NONE;
     }
 
     public void showHelp(CommandSender sender){
@@ -437,7 +439,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
             manacounter.clearMana();
             manhuntGameManager.setGameStatus(false);
             AbilitesManager.clearCooldown();
-            manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
+            manhuntGameManager.getTeam(FROZEN).clear();
             manhuntGameManager.getWaypoints().clear();
             for(org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
                 if(team.getName().equals("hunterTeam") || team.getName().equals("speedrunnerTeam")){

@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ScramblerListener implements Listener {
 
@@ -23,8 +24,8 @@ public class ScramblerListener implements Listener {
     private Manacounter manacounter;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public ScramblerListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -38,13 +39,11 @@ public class ScramblerListener implements Listener {
 
     @EventHandler
     public void getScramblerItem(PlayerInteractEvent event) {
-        String name = event.getPlayer().getName();
+        UUID uuid = event.getPlayer().getUniqueId();
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (abilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.SCRAMBLE)) {
-                if (manacounter.getManaList().get(name) >= 50) {
-
+                if (manacounter.getManaList().get(uuid) >= 50) {
                     Player player = event.getPlayer();
-
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                     inv.createInventory();
                     Inventory getInventory = inv.getInv();

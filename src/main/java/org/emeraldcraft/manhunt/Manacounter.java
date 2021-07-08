@@ -11,15 +11,16 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class Manacounter{
 
     public int id = 0;
-    private HashMap<String, Integer> Mana = new HashMap<>();
+    private HashMap<UUID, Integer> Mana = new HashMap<>();
 
     private ManhuntGameManager manhuntGameManager;
-    List<String> speedrunner;
-    List<String> hunter;
+    List<UUID> speedrunner;
+    List<UUID> hunter;
     boolean HasGameStarted;
     private ManhuntMain manhuntMain;
 
@@ -35,21 +36,21 @@ public class Manacounter{
         Mana.clear();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
-            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())){
-                Mana.put(player.getName(), 0);
+            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())){
+                Mana.put(player.getUniqueId(), 0);
             }
         }
         id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
                 for(Player player : Bukkit.getOnlinePlayers()) {
-                    if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())) {
-                        if (getManaList().containsKey(player.getName())) {
-                            if (Mana.get(player.getName()) < 100) {
-                                Mana.put(player.getName(), (Mana.get(player.getName()) + manaAmount));
+                    if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
+                        if (getManaList().containsKey(player.getUniqueId())) {
+                            if (Mana.get(player.getUniqueId()) < 100) {
+                                Mana.put(player.getUniqueId(), (Mana.get(player.getUniqueId())) + manaAmount);
                                 updateActionbar(player);
                             }
-                            if (Mana.get(player.getName()) >= 100) {
+                            if (Mana.get(player.getUniqueId()) >= 100) {
                                 updateActionbar(player);
                             }
                         }
@@ -63,7 +64,7 @@ public class Manacounter{
         id = -1;
         Mana.clear();
     }
-    public HashMap<String, Integer> getManaList(){
+    public HashMap<UUID, Integer> getManaList(){
         return Mana;
     }
     public void clearMana(){
@@ -71,7 +72,7 @@ public class Manacounter{
     }
 
     public void updateActionbar(Player player){
-        player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&aYou currently have &2" + Mana.get(player.getName()) + "/100 &aMana!")));
+        player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&aYou currently have &2" + Mana.get(player.getUniqueId()) + "/100 &aMana!")));
     }
 
 

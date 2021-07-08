@@ -26,9 +26,9 @@ public class ScramblerGUIListener  implements Listener {
     private Manacounter manacounter;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
-    Map<String, Long> scramblerCooldown;
-    List<String> hunter;
-    List<String> speedrunner;
+    Map<UUID, Long> scramblerCooldown;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public ScramblerGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -47,7 +47,7 @@ public class ScramblerGUIListener  implements Listener {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.SCRAMBLE)) {
-                if (scramblerCooldown.containsKey(player.getName())) {
+                if (scramblerCooldown.containsKey(player.getUniqueId())) {
                     if (scramblerCooldown.get(player.getName()) > System.currentTimeMillis()) {
                         Integer timeLeft = (int) (System.currentTimeMillis() - scramblerCooldown.get(player.getName()));
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
@@ -64,7 +64,7 @@ public class ScramblerGUIListener  implements Listener {
                 selectedPlayer.getInventory().setStorageContents(oldInv);
 
                 Integer cooldown = manhuntMain.getConfig().getInt("abilities.scramble.cooldown");
-                scramblerCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                scramblerCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (cooldown * 1000));
 
                 int items = 0;
 
@@ -74,7 +74,7 @@ public class ScramblerGUIListener  implements Listener {
                     }
                 }
 
-                manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 50);
+                manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 50);
                 manacounter.updateActionbar(player);
 
 

@@ -17,7 +17,7 @@ public class PreventDamage implements Listener {
     @EventHandler
     public void damageEvent(EntityDamageEvent event){
         if(event.getEntity() instanceof Player){
-            if(manhuntGameManager.getTeam(event.getEntity().getName()).equals(ManhuntTeam.HUNTER)){
+            if(manhuntGameManager.getTeam(event.getEntity().getUniqueId()).equals(ManhuntTeam.HUNTER)){
                 event.setCancelled(true);
             }
         }

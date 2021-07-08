@@ -8,12 +8,13 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PreventAttacking implements Listener {
 
     private ManhuntGameManager manhuntGameManager;
 
-    List<String> hunter;
+    List<UUID> hunter;
     public PreventAttacking(ManhuntGameManager manhuntGameManager){
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);;
@@ -23,7 +24,7 @@ public class PreventAttacking implements Listener {
     public void PlayerAttack(EntityDamageByEntityEvent event){
         if(manhuntGameManager.getGameStatus()) {
             if (event.getDamager() instanceof Player) {
-                if (hunter.contains(((Player) event.getDamager()).getPlayer().getName())) {
+                if (hunter.contains(((Player) event.getDamager()).getPlayer().getUniqueId())) {
                     event.setCancelled(true);
                 }
             }

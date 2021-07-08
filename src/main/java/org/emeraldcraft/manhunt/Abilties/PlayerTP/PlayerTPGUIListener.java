@@ -16,14 +16,15 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerTPGUIListener implements Listener {
 
     private ManhuntMain manhuntMain;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public PlayerTPGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager abilitesManager) {
         this.manhuntMain = manhuntMain;

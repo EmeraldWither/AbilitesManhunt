@@ -8,12 +8,13 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PreventDroppingItems implements Listener {
 
     private ManhuntMain manhuntMain;
     private ManhuntGameManager manhuntGameManager;
-    List<String> hunter;
+    List<UUID> hunter;
     public PreventDroppingItems(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntGameManager = manhuntGameManager;
         this.manhuntMain = manhuntMain;
@@ -23,7 +24,7 @@ public class PreventDroppingItems implements Listener {
     @EventHandler
     public void HunterDropItem(PlayerDropItemEvent event) {
         if(manhuntGameManager.getGameStatus()) {
-            if (hunter.contains(event.getPlayer().getName())) {
+            if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
 
             }

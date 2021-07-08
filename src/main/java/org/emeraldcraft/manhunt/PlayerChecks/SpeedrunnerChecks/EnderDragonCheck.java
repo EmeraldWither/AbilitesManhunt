@@ -16,16 +16,18 @@ import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EnderDragonCheck implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private ManhuntMain manhuntMain;
     private org.emeraldcraft.manhunt.Abilties.AbilitesManager AbilitesManager;
     private Manacounter manacounter;
-    List<String> hunter;
-    List<String> speedrunner;
-    List<String> deadSpeedrunners;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
+    List<UUID> deadSpeedrunners;
 
     public EnderDragonCheck(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager AbilitesManager, Manacounter manacounter) {
         this.manhuntMain = manhuntMain;
@@ -43,8 +45,12 @@ public class EnderDragonCheck implements Listener {
         if(event.getEntity() instanceof EnderDragon){
             if (manhuntGameManager.getGameStatus()) {
                 if (speedrunner.size() >= 1) {
-                    String speedrunners = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
-                    for (String hunter : hunter) {
+                    List<String> speedrunnerList = new ArrayList<>();
+                    for(UUID uuid : hunter){
+                        speedrunnerList.add(Bukkit.getPlayer(uuid).getName());
+                    }
+                    String speedrunners = speedrunnerList.toString().replaceAll("]", "").replaceAll("\\[", "");
+                    for (UUID hunter : hunter) {
                         Player players = Bukkit.getPlayer(hunter);
                         players.setAllowFlight(false);
                         players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + speedrunners + "!", 20, 100, 20);
@@ -71,7 +77,7 @@ public class EnderDragonCheck implements Listener {
                         }
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
-                    for (String player : speedrunner) {
+                    for (UUID player : speedrunner) {
                         Player players = Bukkit.getPlayer(player);
                         players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + speedrunners + "!", 20, 100, 20);
                         for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
@@ -90,7 +96,7 @@ public class EnderDragonCheck implements Listener {
                         players.chat(ChatColor.GOLD + "GG!");
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
-                    for (String player : deadSpeedrunners) {
+                    for (UUID player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
                         players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + speedrunners + "!", 20, 100, 20);
                         for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {

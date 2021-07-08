@@ -13,7 +13,9 @@ import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DeathCheck implements Listener {
 
@@ -24,9 +26,9 @@ public class DeathCheck implements Listener {
     private AbilitesManager AbilitesManager;
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
-    List<String> hunter;
-    List<String> speedrunner;
-    List<String> deadSpeedrunners;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
+    List<UUID> deadSpeedrunners;
 
     public DeathCheck(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -41,7 +43,7 @@ public class DeathCheck implements Listener {
     @EventHandler
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
         if (manhuntGameManager.getGameStatus()) {
-            if (speedrunner.contains(event.getEntity().getName())) {
+            if (speedrunner.contains(event.getEntity().getUniqueId())) {
 
                 //Add a death to the player
                 int death = 0;
@@ -52,14 +54,20 @@ public class DeathCheck implements Listener {
                 manhuntMain.data.saveConfig();
                 //End Adding death
 
-                speedrunner.remove(event.getEntity().getName());
-                deadSpeedrunners.add(event.getEntity().getName());
+                speedrunner.remove(event.getEntity().getUniqueId());
+                deadSpeedrunners.add(event.getEntity().getUniqueId());
                 event.getEntity().setAllowFlight(true);
                 event.getEntity().setFlying(true);
                 event.getEntity().setGlowing(false);
                 if (speedrunner.size() == 0) {
-                    String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
-                    for (String hunter : hunter) {
+                    List<String> hunterList = new ArrayList<>();
+                    for(UUID uuid : hunter){
+                        hunterList.add(Bukkit.getPlayer(uuid).getName());
+                    }
+
+                    String hunters = hunterList.toString().replaceAll("]", "").replaceAll("\\[", "");
+
+                    for (UUID hunter : hunter) {
                         Player players = Bukkit.getPlayer(hunter);
 
                         //Add a win to the hunter
@@ -95,7 +103,7 @@ public class DeathCheck implements Listener {
                         }
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
-                    for (String player : deadSpeedrunners) {
+                    for (UUID player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
                         //Add a loss
                         int losses = 0;
@@ -105,6 +113,8 @@ public class DeathCheck implements Listener {
                         manhuntMain.data.getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".losses", (losses + 1));
                         manhuntMain.data.saveConfig();
                         //End adding loss
+
+
                         players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + hunters + "!", 20, 100, 20);
                         for (String msg : manhuntMain.getConfig().getStringList("messages.hunter-win-msg.speedrunners")) {
                             players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));

@@ -21,6 +21,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class DamageItemGUIListener implements Listener {
 
@@ -31,9 +32,9 @@ public class DamageItemGUIListener implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager AbilitesManager;
 
-    private Map<String, Long> damageCooldown;
-    List<String> hunter;
-    List<String> speedrunner;
+    private Map<UUID, Long> damageCooldown;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public DamageItemGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntGameManager = manhuntGameManager;
@@ -50,8 +51,8 @@ public class DamageItemGUIListener implements Listener {
         Player player = (Player) event.getView().getPlayer();
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             if (AbilitesManager.getHeldAbility(player).equals(Ability.DAMAGEITEM)) {
-                if (damageCooldown.containsKey(player.getName())) {
-                    if (damageCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                if (damageCooldown.containsKey(player.getUniqueId())) {
+                    if (damageCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(Reason.PLUGIN);
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((damageCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
@@ -81,9 +82,9 @@ public class DamageItemGUIListener implements Listener {
                     }
                 }
                 Integer cooldown = manhuntMain.getConfig().getInt("abilities.damageitem.cooldown");
-                damageCooldown.put(player.getName(), (System.currentTimeMillis() + (cooldown * 1000)));
+                damageCooldown.put(player.getUniqueId(), (System.currentTimeMillis() + (cooldown * 1000)));
 
-                manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 40);
+                manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 40);
                 manacounter.updateActionbar(player);
 
                 player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 100.0F, 0.0F);

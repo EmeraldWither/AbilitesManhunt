@@ -16,14 +16,15 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class FreezeListener implements Listener {
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public FreezeListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -39,8 +40,8 @@ public class FreezeListener implements Listener {
     public void DetectFreezeItem(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (abilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.FREEZER)) {
-                String name = event.getPlayer().getName();
-                if (manacounter.getManaList().get(name) >= 30) {
+                UUID uuid = event.getPlayer().getUniqueId();
+                if (manacounter.getManaList().get(uuid) >= 30) {
                     Player player = event.getPlayer();
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                     inv.createInventory();

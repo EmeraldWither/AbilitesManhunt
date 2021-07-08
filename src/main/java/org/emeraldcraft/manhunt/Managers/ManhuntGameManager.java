@@ -21,28 +21,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.DEAD;
+
 public class ManhuntGameManager {
 
-    List<String> hunter = new ArrayList<>();
-    List<String> speedrunner = new ArrayList<>();
-    List<String> deadSpeedrunners = new ArrayList<>();
-    List<String> frozenPlayers = new ArrayList<>();
+    List<UUID> hunter = new ArrayList<>();
+    List<UUID> speedrunner = new ArrayList<>();
+
+    List<UUID> deadSpeedrunners = new ArrayList<>();
+    List<UUID> frozenPlayers = new ArrayList<>();
     private boolean hasGameStarted = false;
 
     //WAYPOINT
     HashMap<UUID, HashMap<String, Location>> waypoints = new HashMap<>();
 
-    public HashMap<String, Integer> hunterScoreboardID = new HashMap<>();
-    public HashMap<String, Integer> speedrunnerScoreboardID = new HashMap<>();
+    public HashMap<UUID, Integer> hunterScoreboardID = new HashMap<>();
+    public HashMap<UUID, Integer> speedrunnerScoreboardID = new HashMap<>();
 
-    public List<String> getTeam(ManhuntTeam team) {
+    public List<UUID> getTeam(ManhuntTeam team) {
         if (team == ManhuntTeam.HUNTER) {
             return hunter;
         }
         if (team == ManhuntTeam.FROZEN) {
             return frozenPlayers;
         }
-        if (team == ManhuntTeam.DEAD) {
+        if (team == DEAD) {
                 return deadSpeedrunners;
         }
         if (team == ManhuntTeam.SPEEDRUNNER) {
@@ -50,14 +53,18 @@ public class ManhuntGameManager {
         }
         return null;
     }
-    public ManhuntTeam getTeam(String playerName){
-        String name = Bukkit.getPlayer(playerName).getName();
-
-        if(hunter.contains(name)){
+    public ManhuntTeam getTeam(UUID uuid){
+        if(hunter.contains(uuid)){
             return ManhuntTeam.HUNTER;
         }
-        if(speedrunner.contains(name)) {
+        if(speedrunner.contains(uuid)) {
             return ManhuntTeam.SPEEDRUNNER;
+        }
+        if(frozenPlayers.contains(uuid)){
+            return ManhuntTeam.FROZEN;
+        }
+        if(deadSpeedrunners.contains(uuid)){
+            return DEAD;
         }
         return ManhuntTeam.NONE;
     }
@@ -86,14 +93,23 @@ public class ManhuntGameManager {
             new SpeedrunnerGUI(this, manhuntMain).createInventory();
             ManHuntInventory manHuntInventory = new ManHuntInventory();
             setGameStatus(true);
-            String hunters = hunter.toString().replaceAll("]", "").replaceAll("\\[", "");
-            String speedrunners = speedrunner.toString().replaceAll("]", "").replaceAll("\\[", "");
 
-            for (String speedrunner : speedrunner) {
+            List<String> hunterList = new ArrayList<>();
+            List<String> speedrunnerList = new ArrayList<>();
+            for(UUID uuid : hunter){
+                hunterList.add(Bukkit.getPlayer(uuid).getName());
+            }
+            for(UUID uuid : speedrunner){
+                speedrunnerList.add(Bukkit.getPlayer(uuid).getName());
+            }
+            String hunters = hunterList.toString().replaceAll("]", "").replaceAll("\\[", "");
+            String speedrunners = speedrunnerList.toString().replaceAll("]", "").replaceAll("\\[", "");
+
+            for (UUID speedrunner : speedrunner) {
                 Player player = Bukkit.getPlayer(speedrunner);
                 ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, manhuntMain);
                 speedrunnerScoreboardManager.showSpeedrunnerScoreboard(player.getUniqueId(), manhuntMain.getPlugin());
-                speedrunnerScoreboardID.put(player.getName(), speedrunnerScoreboardManager.id);
+                speedrunnerScoreboardID.put(player.getUniqueId(), speedrunnerScoreboardManager.id);
                 player.spigot().respawn();
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
@@ -122,14 +138,15 @@ public class ManhuntGameManager {
                 player.addPotionEffect(saturationEffect);
                 player.setGlowing(true);
             }
-            for (String hunter : hunter) {
+            for (UUID hunter : hunter) {
                 Player player = Bukkit.getPlayer(hunter);
+
                 if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
                     UUID uuid = player.getUniqueId();
                     ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager, manhuntMain);
                     manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.getPlugin());
                     int id = manhuntScoreboardManager.id;
-                    hunterScoreboardID.put(player.getName(), id);
+                    hunterScoreboardID.put(player.getUniqueId(), id);
                 }
                 player.spigot().respawn();
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
@@ -190,6 +207,6 @@ public class ManhuntGameManager {
         return false;
         }
         public HashMap<UUID, HashMap<String, Location>> getWaypoints(){
-        return waypoints;
+            return waypoints;
         }
 }

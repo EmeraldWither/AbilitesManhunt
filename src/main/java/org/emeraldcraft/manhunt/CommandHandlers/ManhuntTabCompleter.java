@@ -12,6 +12,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ManhuntTabCompleter implements TabCompleter {
     private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "remove", "waypoint");
@@ -33,8 +34,8 @@ public class ManhuntTabCompleter implements TabCompleter {
             if (args[0].equalsIgnoreCase("setmana") || args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("waypoint")) {
                 if (args[0].equalsIgnoreCase("setmana")) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        for(String name : manhuntGameManager.getTeam(ManhuntTeam.HUNTER)){
-                            if(name.equalsIgnoreCase(player.getName())){
+                        for(UUID uuid : manhuntGameManager.getTeam(ManhuntTeam.HUNTER)){
+                            if(uuid.toString().equalsIgnoreCase(player.getUniqueId().toString())){
                                 players.add(player.getName());
 
                             }

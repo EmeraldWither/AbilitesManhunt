@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LightningListener implements Listener {
 
@@ -23,8 +24,8 @@ public class LightningListener implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
     private AbilitesManager AbilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public LightningListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
         this.manhuntMain = manhuntMain;
         this.AbilitesManager = AbilitesManager;
@@ -40,8 +41,8 @@ public class LightningListener implements Listener {
     public void getLightningItem(PlayerInteractEvent event) {
         if (AbilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.LIGHTNING)) {
             if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                String name = event.getPlayer().getName();
-                if (manacounter.getManaList().get(name) >= 10) {
+                UUID uuid = event.getPlayer().getUniqueId();
+                if (manacounter.getManaList().get(uuid) >= 10) {
                     Player player = event.getPlayer();
 
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);

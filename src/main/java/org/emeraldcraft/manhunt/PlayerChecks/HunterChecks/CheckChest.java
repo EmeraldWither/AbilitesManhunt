@@ -14,13 +14,14 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CheckChest implements Listener{
 
     private ManhuntGameManager manhuntGameManager;
     private ManhuntMain manhuntMain;
 
-    List<String> hunter;
+    List<UUID> hunter;
     public CheckChest(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntGameManager = manhuntGameManager;
         this.manhuntMain = manhuntMain;
@@ -29,7 +30,7 @@ public class CheckChest implements Listener{
 
     @EventHandler
     public void ChestClick(InventoryClickEvent event) {
-        if(hunter.contains(event.getView().getPlayer().getName())) {
+        if(hunter.contains(event.getView().getPlayer().getUniqueId())) {
             if(manhuntGameManager.getGameStatus()) {
 
                 SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
@@ -47,7 +48,7 @@ public class CheckChest implements Listener{
     public void ChestDragEvent(InventoryDragEvent event){
         if(event.getView().getBottomInventory().getHolder() instanceof Player) {
             if (manhuntGameManager.getGameStatus()) {
-                if (hunter.contains(event.getView().getPlayer().getName())) {
+                if (hunter.contains(event.getView().getPlayer().getUniqueId())) {
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                     Inventory getInventory = inv.getInv();
                     if (event.getInventory() != getInventory) {
@@ -78,7 +79,7 @@ public class CheckChest implements Listener{
     @EventHandler
     public void SwitchOffHand(PlayerSwapHandItemsEvent event) {
         if(manhuntGameManager.getGameStatus()) {
-            if (hunter.contains(event.getPlayer().getName())) {
+            if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }
         }

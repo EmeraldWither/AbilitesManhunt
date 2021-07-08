@@ -14,13 +14,14 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PreventPlacing implements Listener {
 
     private ManhuntGameManager manhuntGameManager;
     private ManhuntMain manhuntMain;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public PreventPlacing(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
         this.manhuntMain = manhuntMain;
         this.manhuntGameManager = manhuntGameManager;
@@ -30,7 +31,7 @@ public class PreventPlacing implements Listener {
     @EventHandler
     public void PlayerPlace (BlockPlaceEvent event){
         if(manhuntGameManager.getGameStatus()) {
-            if (hunter.contains(event.getPlayer().getName())) {
+            if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setBuild(false);
                 event.setCancelled(true);
 
@@ -43,7 +44,7 @@ public class PreventPlacing implements Listener {
             final Collection<Entity> entities = event.getBlock().getWorld().getNearbyEntities(event.getBlock().getLocation(), 1.0, 1, 1.0);
             for (final Entity entity : entities) {
                 if (entity instanceof Player) {
-                    if (hunter.contains(Objects.requireNonNull(((Player) entity).getPlayer()).getName())) {
+                    if (hunter.contains(Objects.requireNonNull(((Player) entity).getPlayer()).getUniqueId())) {
                         event.setBuildable(true);
                     }
                 }
@@ -54,7 +55,7 @@ public class PreventPlacing implements Listener {
     @EventHandler
     public void PlayerBreak (BlockBreakEvent event){
         if(manhuntGameManager.getGameStatus()) {
-                if (hunter.contains(event.getPlayer().getName())) {
+                if (hunter.contains(event.getPlayer().getUniqueId())) {
                     event.setCancelled(true);
                     event.setDropItems(false);
                     event.setExpToDrop(0);

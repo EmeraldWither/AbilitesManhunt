@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RandomTPListener implements Listener {
 
@@ -23,8 +24,8 @@ public class RandomTPListener implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public RandomTPListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -38,10 +39,10 @@ public class RandomTPListener implements Listener {
 
     @EventHandler
     public void getRandomTPItem(PlayerInteractEvent event) {
-        String name = event.getPlayer().getName();
+        UUID uuid = event.getPlayer().getUniqueId();
         if (abilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.RANDOMTP)) {
             if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                if (manacounter.getManaList().get(name) >= 80) {
+                if (manacounter.getManaList().get(uuid) >= 80) {
                     Player player = event.getPlayer();
 
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);

@@ -18,6 +18,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class LightningGuiListener implements Listener {
     String ability = "Strike Lightning";
@@ -26,9 +27,9 @@ public class LightningGuiListener implements Listener {
     private Manacounter manacounter;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
-    Map<String, Long> lightningCooldown;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
+    Map<UUID, Long> lightningCooldown;
 
     public LightningGuiListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -51,7 +52,7 @@ public class LightningGuiListener implements Listener {
                     Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
                     Integer cooldown = manhuntMain.getConfig().getInt("abilities.lightning.cooldown");
 
-                    if (lightningCooldown.containsKey(player.getName())) {
+                    if (lightningCooldown.containsKey(player.getUniqueId())) {
                         if (lightningCooldown.get(player.getName()) > System.currentTimeMillis()) {
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
@@ -59,11 +60,11 @@ public class LightningGuiListener implements Listener {
                         }
                     }
 
-                    manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 10);
+                    manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 10);
                     manacounter.updateActionbar(player);
 
 
-                    lightningCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                    lightningCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (cooldown * 1000));
                     selectedPlayer.getWorld().strikeLightning(selectedPlayer.getLocation());
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.lightning.msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));
                     selectedPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("abilities.lightning.speedrunner-msg").replace("%hunter%", player.getName()).replace("%speedrunner%", selectedPlayer.getName())));

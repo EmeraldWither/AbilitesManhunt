@@ -8,6 +8,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class AbilitesManager {
 
@@ -17,16 +18,16 @@ public class AbilitesManager {
     }
     private ManHuntInventory manhuntInventory = new ManHuntInventory();
 
-    private Map<String, Long> launcherCooldown = new HashMap<String, Long>();
-    private Map<String, Long> freezeCooldown = new HashMap<String, Long>();
-    private Map<String, Long> gravityCooldown = new HashMap<String, Long>();
-    private Map<String, Long> damageCooldown = new HashMap<String, Long>();
-    private Map<String, Long> randomTPCooldown = new HashMap<String, Long>();
-    private Map <String, Long> scramblerCooldown = new HashMap<String, Long>();
-    private Map<String, Long> lightningCooldown = new HashMap<String, Long>();
-    private Map<String, Long> targetMobsCooldown = new HashMap<String, Long>();
+    private Map<UUID, Long> launcherCooldown = new HashMap<>();
+    private Map<UUID, Long> freezeCooldown = new HashMap<>();
+    private Map<UUID, Long> gravityCooldown = new HashMap<>();
+    private Map<UUID, Long> damageCooldown = new HashMap<>();
+    private Map<UUID, Long> randomTPCooldown = new HashMap<>();
+    private Map <UUID, Long> scramblerCooldown = new HashMap<>();
+    private Map<UUID, Long> lightningCooldown = new HashMap<>();
+    private Map<UUID, Long> targetMobsCooldown = new HashMap<>();
 
-    public Map<String, Long> getCooldown(Ability ability){
+    public Map<UUID, Long> getCooldown(Ability ability){
         if(ability.equals(Ability.LAUNCHER)){
             return launcherCooldown;
         }
@@ -84,7 +85,7 @@ public class AbilitesManager {
 
     public Ability getHeldAbility(Player player) {
             if (manhuntGameManager.getGameStatus()) {
-                if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())) {
+                if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
                     if (player.getInventory().getItemInMainHand() != null) {
                         if (player.getInventory().getItemInMainHand().isSimilar(manhuntInventory.getGravity())) {
                             return Ability.GRAVITY;

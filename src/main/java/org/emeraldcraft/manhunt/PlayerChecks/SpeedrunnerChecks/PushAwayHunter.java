@@ -30,14 +30,14 @@ public class PushAwayHunter implements Listener {
     @EventHandler
     public void playerMoveEvent(PlayerMoveEvent event) {
         if (manhuntGameManager.getGameStatus())
-            if (manhuntGameManager.getTeam(event.getPlayer().getName()).equals(ManhuntTeam.SPEEDRUNNER)) {
+            if (manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)) {
                 Player player = event.getPlayer();
                 int x = main.getConfig().getInt("hunter-range");
                 Collection<Entity> entities = event.getPlayer().getNearbyEntities(x, x, x);
                 for (Entity entity : entities) {
                     if (entity instanceof Player) {
                         Player player2 = ((Player) entity).getPlayer();
-                        if (manhuntGameManager.getTeam(player2.getName()).equals(ManhuntTeam.HUNTER)) {
+                        if (manhuntGameManager.getTeam(player2.getUniqueId()).equals(ManhuntTeam.HUNTER)) {
                             knockBack(player2, event.getPlayer().getLocation());
                             if (msgcooldowns.containsKey(player2.getUniqueId())) {
                                 if (msgcooldowns.get(player2.getUniqueId()) > System.currentTimeMillis()) {

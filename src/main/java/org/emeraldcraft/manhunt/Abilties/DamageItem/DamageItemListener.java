@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DamageItemListener implements Listener {
 
@@ -23,8 +24,8 @@ public class DamageItemListener implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public DamageItemListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager abilitesManager){
         this.manhuntGameManager = manhuntGameManager;
         this.abilitesManager = abilitesManager;
@@ -36,10 +37,10 @@ public class DamageItemListener implements Listener {
     @EventHandler
     public void DetectDamageItem(PlayerInteractEvent event) {
         if(abilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.DAMAGEITEM)){
-            String name = event.getPlayer().getName();
-            if (hunter.contains(event.getPlayer().getName())) {
+            UUID uuid = event.getPlayer().getUniqueId();
+            if (hunter.contains(event.getPlayer().getUniqueId())) {
                 if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                    if (manacounter.getManaList().get(name) >= 40) {
+                    if (manacounter.getManaList().get(uuid) >= 40) {
                         Player player = event.getPlayer();
                         SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                         inv.createInventory();

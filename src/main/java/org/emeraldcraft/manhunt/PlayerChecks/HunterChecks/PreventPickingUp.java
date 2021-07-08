@@ -7,12 +7,13 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PreventPickingUp implements Listener {
 
     private ManhuntGameManager manhuntGameManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
     public PreventPickingUp(ManhuntGameManager manhuntGameManager){
         this.manhuntGameManager = manhuntGameManager;
         hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
@@ -23,7 +24,7 @@ public class PreventPickingUp implements Listener {
     @EventHandler
     public void ItemPickupEvent(PlayerAttemptPickupItemEvent event){
         if(manhuntGameManager.getGameStatus()) {
-            if (hunter.contains(event.getPlayer().getName())) {
+            if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
 
             }

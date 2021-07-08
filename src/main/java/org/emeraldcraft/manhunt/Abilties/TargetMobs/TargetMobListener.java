@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TargetMobListener implements Listener {
 
@@ -23,8 +24,8 @@ public class TargetMobListener implements Listener {
     private ManhuntGameManager manhuntGameManager;
     private Manacounter manacounter;
     private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
     public TargetMobListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
         this.manhuntMain = manhuntMain;
@@ -39,10 +40,10 @@ public class TargetMobListener implements Listener {
     @EventHandler
     public void getTargetMobItems(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        String name = event.getPlayer().getName();
+        UUID uuid = event.getPlayer().getUniqueId();
         if (abilitesManager.getHeldAbility(player).equals(Ability.TARGETMOB)) {
             if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                if (manacounter.getManaList().get(name) >= 100) {
+                if (manacounter.getManaList().get(uuid) >= 100) {
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                     inv.createInventory();
                     Inventory getInventory = inv.getInv();
