@@ -48,10 +48,10 @@ public class ScramblerGUIListener  implements Listener {
             Player player = (Player) event.getView().getPlayer();
             if (abilitesManager.getHeldAbility(player).equals(Ability.SCRAMBLE)) {
                 if (scramblerCooldown.containsKey(player.getUniqueId())) {
-                    if (scramblerCooldown.get(player.getName()) > System.currentTimeMillis()) {
-                        Integer timeLeft = (int) (System.currentTimeMillis() - scramblerCooldown.get(player.getName()));
+                    if (scramblerCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
+                        Integer timeLeft = (int) (System.currentTimeMillis() - scramblerCooldown.get(player.getUniqueId()));
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((scramblerCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((scramblerCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }

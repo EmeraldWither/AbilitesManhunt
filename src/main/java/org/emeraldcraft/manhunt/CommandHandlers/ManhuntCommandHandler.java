@@ -62,6 +62,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("help")) {
                 showHelp(sender);
+                return true;
             }
         }
 
@@ -70,60 +71,64 @@ public class ManhuntCommandHandler implements CommandExecutor {
         //
 
         if (args[0].equalsIgnoreCase("start")) {
-            if (!(manhuntGameManager.getGameStatus())) {
-                if (!(hunter.isEmpty())) {
-                    if (!(speedrunner.isEmpty())) {
-                        try {
-                            manhuntGameManager.startGame(sender, manhuntMain, manacounter, manaDelay, AbilitesManager);
-                            return true;
+            if (sender.hasPermission("abilitiesmanhunt.start") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                if (!(manhuntGameManager.hasGameStarted())) {
+                    if (!(hunter.isEmpty())) {
+                        if (!(speedrunner.isEmpty())) {
+                            try {
+                                manhuntGameManager.startGame(sender, manhuntMain, manacounter, manaDelay, AbilitesManager);
+                                return true;
+                            } catch (Exception e) {
+                                sender.sendMessage(prefix + ChatColor.DARK_RED + "An internal error has occurred! As such, the manhunt has been aborted.");
+                            }
                         }
-                        catch (Exception e){
-                            sender.sendMessage(prefix + ChatColor.DARK_RED + "An internal error has occurred! As such, the manhunt has been aborted.");
-                        }
+                        sender.sendMessage(ChatColor.DARK_RED + "There are no players in the speedrunners group!");
+                        return false;
                     }
-                    sender.sendMessage(ChatColor.DARK_RED + "There are no players in the speedrunners group!");
+                    sender.sendMessage(ChatColor.DARK_RED + "There are no players in the hunters group!");
                     return false;
-                    }
-                sender.sendMessage(ChatColor.DARK_RED + "There are no players in the hunters group!");
-                return false;
                 }
-            sender.sendMessage(ChatColor.RED + "There is already a game in progress! You can force end it with  \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
-            return false;
-            }//
+                sender.sendMessage(ChatColor.RED + "There is already a game in progress! You can force end it with  \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
+                return false;
+            }
+        }
+        //
         // Add Speedrunners
         //
 
         if (args[0].equalsIgnoreCase("speedrunner")) {
-            if (!(manhuntGameManager.getGameStatus())) {
+            if (sender.hasPermission("abilitiesmanhunt.addspeedrunner") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                if (!(manhuntGameManager.hasGameStarted())) {
+                    int argsLength = args.length;
+                    if (argsLength > 1) {
+                        if (Bukkit.getPlayer(args[1]) != null) {
+                            if (Bukkit.getPlayer(args[1]).isOnline()) {
+                                String arg = args[1];
+                                Player player = Bukkit.getPlayer(arg);
+                                UUID uuid = Bukkit.getPlayer(arg).getUniqueId();
+                                String name = Bukkit.getPlayer(uuid).getName();
+                                if (!(speedrunner.contains(uuid))) {
+                                    addTeam(SPEEDRUNNER, Bukkit.getPlayer(arg).getUniqueId());
 
-                int argsLength = args.length;
-                if (argsLength > 1) {
-                    if (Bukkit.getPlayer(args[1]) != null) {
-                        if (Bukkit.getPlayer(args[1]).isOnline()) {
-                            String arg = args[1];
-                            UUID uuid = Bukkit.getPlayer(arg).getUniqueId();
-                            String name = Bukkit.getPlayer(uuid).getName();
-
-                            if (!(speedrunner.contains(uuid))) {
-                                addTeam(SPEEDRUNNER, Bukkit.getPlayer(arg).getUniqueId());
-
-                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
-                                return true;
+                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
+                                    player.sendMessage(prefix + ChatColor.RED + "You have been added to the speedrunner team by " + sender);
+                                    return true;
+                                }
+                                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a speedrunner!");
+                                return false;
                             }
-                            sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a speedrunner!");
+                            sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                             return false;
                         }
                         sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                         return false;
                     }
-                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                    sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
                     return false;
                 }
-                sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
+                sender.sendMessage(ChatColor.RED + "There is a game in progress! You can force end it with  \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
                 return false;
             }
-            sender.sendMessage(ChatColor.RED + "There is a game in progress! You can force end it with  \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
-            return false;
         }
 
         //
@@ -132,39 +137,38 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
 
         if (args[0].equalsIgnoreCase("hunter")) {
+            if (sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.addhunter")) {
+                Integer argsLength = args.length;
+                if (!(manhuntGameManager.hasGameStarted())) {
+                    if (argsLength > 1) {
+                        if (Bukkit.getPlayer(args[1]) != null) {
+                            if (Bukkit.getPlayer(args[1]).isOnline()) {
+                                String arg = args[1];
+                                Player player = Bukkit.getPlayer(arg);
+                                if (!(hunter.contains(player.getUniqueId()))) {
+                                    addTeam(ManhuntTeam.HUNTER, Bukkit.getPlayer(arg).getUniqueId());
+                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + player.getName() + " to the hunters group! "));
+                                    player.sendMessage(prefix + ChatColor.RED + "You have been added to the speedrunner team by " + sender.getName());
 
-            Integer argsLength = args.length;
-            if (!(manhuntGameManager.getGameStatus())) {
-                if (argsLength > 1) {
-                    if (Bukkit.getPlayer(args[1]) != null) {
-                        if (Bukkit.getPlayer(args[1]).isOnline()) {
+                                    return true;
+                                }
+                                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a hunter!");
+                                return false;
 
-                            String arg = args[1];
-                            String name = Bukkit.getPlayer(arg).getName();
-
-                            if (!(hunter.contains(name))) {
-
-                                addTeam(ManhuntTeam.HUNTER, Bukkit.getPlayer(arg).getUniqueId());
-
-                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the hunters group! "));
-                                return true;
                             }
-                            sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a hunter!");
+                            sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                             return false;
 
                         }
                         sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                         return false;
-
                     }
-                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                    sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
                     return false;
                 }
-                sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a player name!");
+                sender.sendMessage(ChatColor.RED + "There is a game in progress! You can force end it with  \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
                 return false;
             }
-            sender.sendMessage(ChatColor.RED + "There is a game in progress! You can force end it with  \"" + ChatColor.DARK_RED + "/manhunt forceend" + ChatColor.RED + "\".");
-            return false;
         }
 
 
@@ -220,7 +224,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
 
         if (args[0].equalsIgnoreCase("reload")) {
-            if (sender.hasPermission("manhunt.reload") || sender.hasPermission("manhunt.admin")) {
+            if (sender.hasPermission("emeraldmanhunt.reload") || sender.hasPermission("manhunt.admin")) {
                 manhuntMain.reloadConfig();
                 prefix = manhuntMain.getConfig().getString("plugin-prefix");
                 String msg = manhuntMain.getConfig().getString("config-reload-msg");
@@ -232,8 +236,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase("forceend")) {
-            if (manhuntGameManager.getGameStatus()) {
-                if (sender.hasPermission("manhunt.forceend")) {
+            if (sender.hasPermission("abilitiesmanhunt.forceend") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                if (manhuntGameManager.hasGameStarted()) {
                     Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     endGame(sender);
                     return true;
@@ -243,32 +247,34 @@ public class ManhuntCommandHandler implements CommandExecutor {
             return false;
         }
         else if(args[0].equalsIgnoreCase("setmana")) {
-            if(args.length >= 3) {
-                if (manhuntGameManager.getGameStatus()) {
-                    if (Bukkit.getPlayer(args[1]) != null) {
-                        if (hunter.contains(Bukkit.getPlayer(args[1]).getUniqueId())) {
-                            Player player = Bukkit.getPlayer(args[1]);
-                            try {
-                                manacounter.getManaList().put(player.getUniqueId(), Integer.parseInt(args[2]));
-                                manacounter.updateActionbar(player);
-                                Bukkit.broadcastMessage(prefix + ChatColor.DARK_GREEN + sender.getName() + ChatColor.GREEN + " successfully set the mana of " + ChatColor.DARK_GREEN + player.getName() + ChatColor.GREEN + " to " + ChatColor.DARK_GREEN + args[2] + ChatColor.GREEN + "!");
-                            } catch (NumberFormatException e) {
-                                sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a integer!");
+            if (sender.hasPermission("abilitiesmanhunt.setmana") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                if (args.length >= 3) {
+                    if (manhuntGameManager.hasGameStarted()) {
+                        if (Bukkit.getPlayer(args[1]) != null) {
+                            if (hunter.contains(Bukkit.getPlayer(args[1]).getUniqueId())) {
+                                Player player = Bukkit.getPlayer(args[1]);
+                                try {
+                                    manacounter.getManaList().put(player.getUniqueId(), Integer.parseInt(args[2]));
+                                    manacounter.updateActionbar(player);
+                                    Bukkit.broadcastMessage(prefix + ChatColor.DARK_GREEN + sender.getName() + ChatColor.GREEN + " successfully set the mana of " + ChatColor.DARK_GREEN + player.getName() + ChatColor.GREEN + " to " + ChatColor.DARK_GREEN + args[2] + ChatColor.GREEN + "!");
+                                } catch (NumberFormatException e) {
+                                    sender.sendMessage(prefix + ChatColor.DARK_RED + "Please input a integer!");
+                                    return true;
+                                }
                                 return true;
                             }
-                            return true;
+                            sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not a hunter!");
+                            return false;
                         }
-                        sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not a hunter!");
+                        sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
                         return false;
                     }
-                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                    sender.sendMessage(prefix + ChatColor.DARK_RED + "There is no game in progess! You can start one with /manhunt start");
                     return false;
                 }
-                sender.sendMessage(prefix + ChatColor.DARK_RED + "There is no game in progess! You can start one with /manhunt start");
+                sender.sendMessage(prefix + ChatColor.DARK_RED + "Command Usage: /manhunt setmana <player> <amount>");
                 return false;
             }
-            sender.sendMessage(prefix + ChatColor.DARK_RED + "Command Usage: /manhunt setmana <player> <amount>");
-            return false;
         }
         else if(args[0].equalsIgnoreCase("stats")){
             if(args.length == 1){
@@ -289,32 +295,35 @@ public class ManhuntCommandHandler implements CommandExecutor {
             sender.sendMessage(prefix + ChatColor.RED + "Command Usage: /manhunt stats <player (optional)>");
             return false;
         }
-        else if(args[0].equalsIgnoreCase("remove")){
-            if(args.length >= 2){
-                if(Bukkit.getPlayer(args[1]) != null) {
-                    Player selectedPlayer = Bukkit.getPlayer(args[1]);
-                    assert selectedPlayer != null;
-                    if(hunter.contains(selectedPlayer.getName())){
-                        hunter.remove(selectedPlayer.getName());
-                        sender.sendMessage(prefix + ChatColor.GREEN + "Success!");
+        else if(args[0].equalsIgnoreCase("remove")) {
+            if (sender.hasPermission("abilitiesmanhunt.removeplayer") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                if (args.length >= 2) {
+                    if (Bukkit.getPlayer(args[1]) != null) {
+                        Player selectedPlayer = Bukkit.getPlayer(args[1]);
+                        assert selectedPlayer != null;
+                        if (hunter.contains(selectedPlayer.getUniqueId())) {
+                            hunter.remove(selectedPlayer.getUniqueId());
+                            sender.sendMessage(prefix + ChatColor.GREEN + selectedPlayer.getName() + " has been removed from the hunter team.");
+                            selectedPlayer.sendMessage(prefix + ChatColor.RED + "You have been removed from the hunter team. ");
+                        }
+                        if (speedrunner.contains(selectedPlayer.getUniqueId())) {
+                            speedrunner.remove(selectedPlayer.getUniqueId());
+                            sender.sendMessage(prefix + ChatColor.GREEN + selectedPlayer.getName() + " has been removed from the speedrunner team.");
+                            selectedPlayer.sendMessage(prefix + ChatColor.RED + "You have been removed from the speedrunner team. ");
+                        }
+                        return true;
                     }
-                    if(speedrunner.contains(selectedPlayer.getName())){
-                        speedrunner.remove(selectedPlayer.getName());
-                        sender.sendMessage(prefix + ChatColor.GREEN + "Success!");
-                    }
-                    return true;
+                    sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                    return false;
                 }
-                sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is not online!");
+                sender.sendMessage(prefix + ChatColor.RED + "Command Usage: /manhunt remove <player>");
                 return false;
             }
-            sender.sendMessage(prefix + ChatColor.RED + "Command Usage: /manhunt remove <player>");
-            return false;
         }
         else if(args[0].equalsIgnoreCase("waypoint")){
             if(sender instanceof Player) {
-                if (manhuntGameManager.getGameStatus()) {
+                if (manhuntGameManager.hasGameStarted()) {
                     if (args.length >= 2) {
-                        sender.sendMessage(manhuntGameManager.getTeam(((Player) sender).getUniqueId()).toString());
                         if (manhuntGameManager.getTeam(((Player) sender).getUniqueId()) == SPEEDRUNNER || manhuntGameManager.getTeam(((Player) sender).getUniqueId()) == FROZEN) {
                             if (args[1].equalsIgnoreCase("create")) {
                                 if (args.length >= 3) {
@@ -352,8 +361,30 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 sender.sendMessage(ChatColor.GREEN + "Successfully removed waypoint. ");
                                 return true;
                             }
+                            else if(args[1].equalsIgnoreCase("teleport") || args[1].equalsIgnoreCase("tp")){
+                                if(manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                    if(!(manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId()) >= 3)) {
+                                        HashMap<String, Location> location = manhuntGameManager.getWaypoints().get(((Player) sender).getUniqueId());
+                                        for(String locName : location.keySet()){
+                                            ((Player) sender).teleport(location.get(locName));
+                                            int teleports = manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId());
+                                            manhuntGameManager.getWaypointTeleports().put(((Player) sender).getUniqueId(), (teleports + 1));
+                                            teleports = manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId());
+
+                                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been teleported to the waypoint \"" + locName + "\"!"));
+                                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have " + teleports + "teleport(s) remaining."));
+                                            return true;
+                                        }
+                                    }
+                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have any teleports left."));
+                                    return false;
+                                }
+                                sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
+                                return false;
+                            }
                             sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
                             sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
+                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint teleport");
                             return false;
                         }
                         sender.sendMessage(ChatColor.RED + "You must be an alive speedrunner to use this command!");
@@ -390,30 +421,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
             }
         }
     }
-
-    public void showHelp(CommandSender sender){
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&4---------------------------------\n" +
-                        "&cMinecraft Manhunt, but it's with Special Abilities\n" +
-                        "&7By: EmeraldWitherYT\n" +
-                        "&f \n" +
-                        "&aCommand Usage: \n" +
-                        "&e/manhunt start : Starts the manhunt\n" +
-                        "&e/manhunt hunter <player> : Adds a player to the hunter group.\n" +
-                        "&e/manhunt speedrunner <player>: Adds a player to the speedrunner group. \n" +
-                        "&e/manhunt listgroups: Shows which players are in which groups.\n" +
-                        "&e/manhunt help: Shows this help page.\n" +
-                        "&e/manhunt reload: Reloads the configuration files.\n" +
-                        "&e/manhunt forceend: Forcefully ends the game.\n" +
-                        "&e/manhunt setmana <player> <mana>: Sets the mana of the player to the selected amount.\n" +
-                        "&e/manhunt stats <player (optional)>: Gets the selected players stats. If there is no player, it will pick the one who is sending the command. (Note: The player must be online)\n" +
-                        "&e/manhunt remove <player> : Removes the player from any group. \n" +
-                        "&e/manhunt waypoint create <name> : Creates a waypoint with a name.  \n" +
-                        "&e/manhunt waypoint remove : Deletes your waypoint. \n" +
-                        "&4--------------------------------"));
-    }
     public void endGame(CommandSender sender) {
-        if (manhuntGameManager.getGameStatus()) {
+        if (manhuntGameManager.hasGameStarted()) {
             for (Player players : Bukkit.getOnlinePlayers()) {
                 players.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                 players.setGlowing(false);
@@ -485,5 +494,68 @@ public class ManhuntCommandHandler implements CommandExecutor {
             return;
         }
         sender.sendMessage(ChatColor.RED + "Only a player can check their own stats! To see a players stats, type \"/manhunt stats <player>\"! (Note: They must be online)");
+    }
+
+    public void showHelp(CommandSender sender) {
+
+
+        //Send the general commands
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-----------------------------------\n" +
+                "        &cMinecraft Abilities Manhunt \n" +
+                "            &8By: EmeraldWither\n" +
+                "&6\n" +
+                "&7<required> (optional)\n" +
+                "&7Note: You can only see commands that\n" +
+                "&7you have permission to use\n" +
+                "&6\n" +
+                "&aGeneral Commands: &8(These can be used anytime)\n" +
+                "&e/manhunt help: &6Will display this help page\n" +
+                "&e/manhunt stats (player) : &6Will show the stats of a player.\n" +
+                "&e/manhunt listgroups : &6Will show the currently assigned teams"));
+
+        if (sender.hasPermission("abilitiesmanhunt.reload") || sender.hasPermission("abilitiesmanhunt.admin")) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt reload: &6Will reload the configuration files. \n"));
+        }
+
+        //Show pre-game commands
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6\n" +
+                "&aPre-Game Commands: "));
+        if (sender.hasPermission("abilitiesmanhunt.addspeedrunner") || sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.addhunter") || sender.hasPermission("abilitiesmanhunt.removeplayer") || sender.hasPermission("abilitiesmanhunt.start")) {
+            if (sender.hasPermission("abilitiesmanhunt.start") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt start: &6Will start the game\n"));
+
+            }
+            if (sender.hasPermission("abilitiesmanhunt.addhunter") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt hunter <player>: &6Will start the game\n"));
+
+            }
+            if (sender.hasPermission("abilitiesmanhunt.addspeedrunner") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt speedrunner <player>: &6Will start the game\n"));
+
+            }
+            if (sender.hasPermission("abilitiesmanhunt.removeplayer") || sender.hasPermission("abilitiesmanhunt.admin")) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt remove <player>: &6Will start the game\n"));
+            }
+        }
+        else{
+            sender.sendMessage(ChatColor.DARK_RED + "You do not have access to any pre-game commands.");
+        }
+
+        //Show ingame commands
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6\n" +
+                "&aIn-Game Commands: \n" +
+                "&e/manhunt waypoint create <waypoint name>: &6Will create a waypoint with the specified name\n" +
+                "&e/manhunt waypoint remove: &6Will remove your created waypoint.\n" +
+                "&e/manhunt waypoint teleport: &6Will teleport you to your waypoint.\n" +
+                "&8(You can only teleport to your waypoint 3 times)\n"));
+
+        if (sender.hasPermission("abilitiesmanhunt.forceend") || sender.hasPermission("abilitiesmanhunt.admin")) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt forceend: &6Will forceend the game\n"));
+        }
+        if (sender.hasPermission("abilitiesmanhunt.setmana") || sender.hasPermission("abilitiesmanhunt.admin")) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e/manhunt setmana <player> <amount>: &6Will set the mana of the player to the desired amount\n"));
+        }
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6----------------------------------"));
+
     }
 }

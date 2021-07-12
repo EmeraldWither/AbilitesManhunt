@@ -36,7 +36,7 @@ public class ClearInv implements Listener {
 
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent event) {
-        if(!manhuntGameManager.getGameStatus()) {
+        if(!manhuntGameManager.hasGameStarted()) {
             if (manhuntMain.getConfig().getBoolean("clear-items-on-join")) {
                 PlayerInventory playerInv = event.getPlayer().getInventory();
                 Player player = event.getPlayer();
@@ -83,7 +83,7 @@ public class ClearInv implements Listener {
 
     @EventHandler
     public void Disconnect(PlayerQuitEvent event) {
-        if(!manhuntGameManager.getGameStatus()) {
+        if(!manhuntGameManager.hasGameStarted()) {
             if (manhuntMain.getConfig().getBoolean("clear-items-on-leave")) {
                 PlayerInventory playerInv = event.getPlayer().getInventory();
                 Player player = event.getPlayer();

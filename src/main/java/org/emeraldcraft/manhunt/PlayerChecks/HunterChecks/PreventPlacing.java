@@ -30,7 +30,7 @@ public class PreventPlacing implements Listener {
     }
     @EventHandler
     public void PlayerPlace (BlockPlaceEvent event){
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
             if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setBuild(false);
                 event.setCancelled(true);
@@ -40,7 +40,7 @@ public class PreventPlacing implements Listener {
     }
     @EventHandler
     public void PlayerAllowPlace(BlockCanBuildEvent event) {
-        if (manhuntGameManager.getGameStatus()) {
+        if (manhuntGameManager.hasGameStarted()) {
             final Collection<Entity> entities = event.getBlock().getWorld().getNearbyEntities(event.getBlock().getLocation(), 1.0, 1, 1.0);
             for (final Entity entity : entities) {
                 if (entity instanceof Player) {
@@ -54,7 +54,7 @@ public class PreventPlacing implements Listener {
 
     @EventHandler
     public void PlayerBreak (BlockBreakEvent event){
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
                 if (hunter.contains(event.getPlayer().getUniqueId())) {
                     event.setCancelled(true);
                     event.setDropItems(false);

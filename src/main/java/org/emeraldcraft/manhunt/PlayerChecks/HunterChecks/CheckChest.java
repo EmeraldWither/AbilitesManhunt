@@ -31,7 +31,7 @@ public class CheckChest implements Listener{
     @EventHandler
     public void ChestClick(InventoryClickEvent event) {
         if(hunter.contains(event.getView().getPlayer().getUniqueId())) {
-            if(manhuntGameManager.getGameStatus()) {
+            if(manhuntGameManager.hasGameStarted()) {
 
                 SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                 Inventory getInventory = inv.getInv();
@@ -47,7 +47,7 @@ public class CheckChest implements Listener{
     @EventHandler
     public void ChestDragEvent(InventoryDragEvent event){
         if(event.getView().getBottomInventory().getHolder() instanceof Player) {
-            if (manhuntGameManager.getGameStatus()) {
+            if (manhuntGameManager.hasGameStarted()) {
                 if (hunter.contains(event.getView().getPlayer().getUniqueId())) {
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
                     Inventory getInventory = inv.getInv();
@@ -61,7 +61,7 @@ public class CheckChest implements Listener{
     }
     @EventHandler
     public void ChestMoveEvent(InventoryMoveItemEvent event){
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
             if (event.getSource().getHolder() instanceof Player) {
                 if (hunter.contains(((Player) event.getSource().getHolder()).getName())) {
                     SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
@@ -78,7 +78,7 @@ public class CheckChest implements Listener{
     }
     @EventHandler
     public void SwitchOffHand(PlayerSwapHandItemsEvent event) {
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
             if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }

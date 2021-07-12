@@ -28,7 +28,7 @@ public class PreventProjectileThrowing implements Listener {
     @EventHandler
     public void ProjectileToss(ProjectileLaunchEvent event){
         if(event.getEntity().getShooter() instanceof Player){
-            if(manhuntGameManager.getGameStatus()) {
+            if(manhuntGameManager.hasGameStarted()) {
                 if (hunter.contains(((Player) event.getEntity().getShooter()).getUniqueId())) {
                     event.setCancelled(true);
                 }

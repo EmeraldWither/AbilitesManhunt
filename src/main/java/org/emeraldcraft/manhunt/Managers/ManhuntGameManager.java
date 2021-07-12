@@ -33,7 +33,8 @@ public class ManhuntGameManager {
     private boolean hasGameStarted = false;
 
     //WAYPOINT
-    HashMap<UUID, HashMap<String, Location>> waypoints = new HashMap<>();
+    private HashMap<UUID, HashMap<String, Location>> waypoints = new HashMap<>();
+    private HashMap<UUID, Integer> waypointTeleports = new HashMap<>();
 
     public HashMap<UUID, Integer> hunterScoreboardID = new HashMap<>();
     public HashMap<UUID, Integer> speedrunnerScoreboardID = new HashMap<>();
@@ -72,8 +73,8 @@ public class ManhuntGameManager {
     public String getCooldown(Player player, Ability pickAbility, AbilitesManager abilitesManager){
         Long time;
         long cooldown;
-        if(abilitesManager.getCooldown(pickAbility).get(player.getName()) != null) {
-            time = abilitesManager.getCooldown(pickAbility).get(player.getName());
+        if(abilitesManager.getCooldown(pickAbility).get(player.getUniqueId()) != null) {
+            time = abilitesManager.getCooldown(pickAbility).get(player.getUniqueId());
             cooldown = ((time - System.currentTimeMillis()) / 1000);
             if (!(cooldown < 1)) {
                 return ChatColor.translateAlternateColorCodes('&', "&4" + cooldown + " seconds");
@@ -81,7 +82,7 @@ public class ManhuntGameManager {
         }
         return ChatColor.translateAlternateColorCodes('&', "&aREADY");
     }
-    public boolean getGameStatus(){
+    public boolean hasGameStarted(){
         return hasGameStarted;
     }
     public void setGameStatus(boolean b){
@@ -105,10 +106,11 @@ public class ManhuntGameManager {
             String hunters = hunterList.toString().replaceAll("]", "").replaceAll("\\[", "");
             String speedrunners = speedrunnerList.toString().replaceAll("]", "").replaceAll("\\[", "");
 
-            for (UUID speedrunner : speedrunner) {
-                Player player = Bukkit.getPlayer(speedrunner);
+            for (UUID speedrunnerUUID : speedrunner) {
+                Player player = Bukkit.getPlayer(speedrunnerUUID);
+                getWaypointTeleports().put(speedrunnerUUID, 0);
                 ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, manhuntMain);
-                speedrunnerScoreboardManager.showSpeedrunnerScoreboard(player.getUniqueId(), manhuntMain.getPlugin());
+                speedrunnerScoreboardManager.showSpeedrunnerScoreboard(speedrunnerUUID, manhuntMain.getPlugin());
                 speedrunnerScoreboardID.put(player.getUniqueId(), speedrunnerScoreboardManager.id);
                 player.spigot().respawn();
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
@@ -148,6 +150,7 @@ public class ManhuntGameManager {
                     int id = manhuntScoreboardManager.id;
                     hunterScoreboardID.put(player.getUniqueId(), id);
                 }
+                assert player != null;
                 player.spigot().respawn();
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
@@ -208,5 +211,8 @@ public class ManhuntGameManager {
         }
         public HashMap<UUID, HashMap<String, Location>> getWaypoints(){
             return waypoints;
+        }
+        public HashMap<UUID, Integer> getWaypointTeleports(){
+            return waypointTeleports;
         }
 }

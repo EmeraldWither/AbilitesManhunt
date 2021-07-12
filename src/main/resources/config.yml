@@ -197,8 +197,8 @@ abilities:
     msg: "&aNow scrambling &2%items% &aitem(s) in &2%speedrunner%s &ainventory!"
     speedrunner-msg: "&4%hunter% &chas scrambled &4%items% &citem(s) in your inventory!"
   freeze:
-    #Time is how long the speedrunner will be frozen for.
-    time: 5
+    # Time is how long the speedrunner will be frozen for.
+    time: 10
     cooldown: 80
     msg: "&aNow freezing &2%speedrunner% &afor &2%time% &aseconds!"
     unfreeze-msg: "&2%speedrunner% &ahas been unfrozen!"

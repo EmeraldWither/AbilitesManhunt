@@ -50,7 +50,7 @@ public class TargetMobGUIListener  implements Listener {
                 if (targetMobCooldown.containsKey(player.getUniqueId())) {
                     if (targetMobCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((targetMobCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((targetMobCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }

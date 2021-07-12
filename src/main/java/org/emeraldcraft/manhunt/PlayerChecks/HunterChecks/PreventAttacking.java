@@ -22,7 +22,7 @@ public class PreventAttacking implements Listener {
 
     @EventHandler
     public void PlayerAttack(EntityDamageByEntityEvent event){
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
             if (event.getDamager() instanceof Player) {
                 if (hunter.contains(((Player) event.getDamager()).getPlayer().getUniqueId())) {
                     event.setCancelled(true);

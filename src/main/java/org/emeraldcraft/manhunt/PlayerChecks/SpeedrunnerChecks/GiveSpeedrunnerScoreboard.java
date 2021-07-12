@@ -21,7 +21,7 @@ public class GiveSpeedrunnerScoreboard implements Listener {
     @EventHandler
     public void PlayerLeave(PlayerQuitEvent event){
         if(manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER).contains(event.getPlayer().getUniqueId())){
-            if(manhuntGameManager.getGameStatus()){
+            if(manhuntGameManager.hasGameStarted()){
                 Bukkit.getScheduler().cancelTask(manhuntGameManager.speedrunnerScoreboardID.get(event.getPlayer().getUniqueId()));
                 event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             }
@@ -31,7 +31,7 @@ public class GiveSpeedrunnerScoreboard implements Listener {
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent event){
         if(manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)){
-            if(manhuntGameManager.getGameStatus()){
+            if(manhuntGameManager.hasGameStarted()){
                 ManhuntSpeedrunnerScoreboardManager manhuntScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(manhuntGameManager, main);
                 manhuntScoreboardManager.showSpeedrunnerScoreboard(event.getPlayer().getUniqueId(), main.getPlugin());
                 manhuntGameManager.speedrunnerScoreboardID.remove(event.getPlayer().getUniqueId());

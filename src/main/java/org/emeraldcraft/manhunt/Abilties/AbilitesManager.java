@@ -84,7 +84,7 @@ public class AbilitesManager {
     }
 
     public Ability getHeldAbility(Player player) {
-            if (manhuntGameManager.getGameStatus()) {
+            if (manhuntGameManager.hasGameStarted()) {
                 if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
                     if (player.getInventory().getItemInMainHand() != null) {
                         if (player.getInventory().getItemInMainHand().isSimilar(manhuntInventory.getGravity())) {

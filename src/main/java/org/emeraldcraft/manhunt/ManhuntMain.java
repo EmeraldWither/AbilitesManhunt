@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -44,6 +45,8 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
+
 public class ManhuntMain extends JavaPlugin {
 
     public DataManager data;
@@ -55,6 +58,7 @@ public class ManhuntMain extends JavaPlugin {
 
     @Override
     public void onEnable(){
+        Long time = System.currentTimeMillis();
         manhuntGameManager = new ManhuntGameManager();
         this.data = new DataManager(this);
         this.abilitesManager = new AbilitesManager(manhuntGameManager);
@@ -65,7 +69,20 @@ public class ManhuntMain extends JavaPlugin {
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhuntGameManager, this, manacounter, abilitesManager));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhuntGameManager));
 
-        getLogger().log(Level.INFO, "\n" +
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.admin"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.setmana"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addhunter"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addspeedrunner"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.removeplayer"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.forceend"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
+        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
+
+
+
+
+
+        getLogger().log(INFO, "\n" +
                 "--------------------------------------------------------------\n" +
                 "|                            NOW ENABLING:                              \n" +
                 "|                                                                        \n" +
@@ -74,8 +91,7 @@ public class ManhuntMain extends JavaPlugin {
                 "|                                                                        \n" +
                 "|                        BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
-
-
+        getLogger().log(INFO, "The plugin started up in " + (System.currentTimeMillis() - time) + " ms!");
     }
 
     @Override

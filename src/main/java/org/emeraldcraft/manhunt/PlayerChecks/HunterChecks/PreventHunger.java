@@ -25,7 +25,7 @@ public class PreventHunger implements Listener {
 
     @EventHandler
     public void ItemPickupEvent(FoodLevelChangeEvent event){
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
             UUID uuid = event.getEntity().getUniqueId();
             if (hunter.contains(uuid)) {
                 event.setCancelled(true);

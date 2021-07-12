@@ -29,7 +29,7 @@ public class PushAwayHunter implements Listener {
 
     @EventHandler
     public void playerMoveEvent(PlayerMoveEvent event) {
-        if (manhuntGameManager.getGameStatus())
+        if (manhuntGameManager.hasGameStarted())
             if (manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)) {
                 Player player = event.getPlayer();
                 int x = main.getConfig().getInt("hunter-range");
@@ -63,7 +63,12 @@ public class PushAwayHunter implements Listener {
             return;
         }
         if(!(v.getX() == 0 && v.getY() == 0 && v.getZ() == 0)) {
-            player.setVelocity(v);
+            try {
+                player.setVelocity(v);
+            }
+            catch (IllegalArgumentException e){
+                return;
+            }
         }
     }
 }

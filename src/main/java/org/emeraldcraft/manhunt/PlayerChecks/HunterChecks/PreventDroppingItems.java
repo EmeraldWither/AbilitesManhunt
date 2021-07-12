@@ -23,7 +23,7 @@ public class PreventDroppingItems implements Listener {
 
     @EventHandler
     public void HunterDropItem(PlayerDropItemEvent event) {
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhuntGameManager.hasGameStarted()) {
             if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
 

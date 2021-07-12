@@ -28,7 +28,7 @@ public class PreventGettingClose implements Listener {
 
     @EventHandler
     public void playerMoveEvent(PlayerMoveEvent event) {
-        if (manhuntGameManager.getGameStatus())
+        if (manhuntGameManager.hasGameStarted())
             if (manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.HUNTER)) {
                 int x = main.getConfig().getInt("hunter-range");
                 Collection<Entity> entities = event.getPlayer().getNearbyEntities(x, x, x);

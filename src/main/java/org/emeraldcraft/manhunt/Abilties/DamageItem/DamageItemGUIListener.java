@@ -54,7 +54,7 @@ public class DamageItemGUIListener implements Listener {
                 if (damageCooldown.containsKey(player.getUniqueId())) {
                     if (damageCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((damageCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((damageCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }

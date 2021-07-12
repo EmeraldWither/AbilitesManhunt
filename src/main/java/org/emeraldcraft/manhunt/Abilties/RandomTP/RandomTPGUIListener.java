@@ -51,7 +51,7 @@ public class RandomTPGUIListener implements Listener {
                 if (randomTPCooldown.containsKey(player.getUniqueId())) {
                     if (randomTPCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }
@@ -66,7 +66,7 @@ public class RandomTPGUIListener implements Listener {
 
                 Integer radius = manhuntMain.getConfig().getInt("abilities.randomtp.tp-radius");
                 Location oldLoc = selectedPlayer.getLocation();
-                randomTP(selectedPlayer.getName(), player.getName(), radius);
+                randomTP(selectedPlayer.getUniqueId(), player.getUniqueId(), radius);
 
                 double distance = selectedPlayer.getLocation().distance(oldLoc);
 
@@ -83,7 +83,7 @@ public class RandomTPGUIListener implements Listener {
         }
     }
 
-    public void randomTP(String speedrunner, String hunter, int radius){
+    public void randomTP(UUID speedrunner, UUID hunter, int radius){
         Player selectedPlayer = Bukkit.getPlayer(speedrunner);
         Player player = Bukkit.getPlayer(hunter);
 
@@ -94,11 +94,5 @@ public class RandomTPGUIListener implements Listener {
 
         selectedPlayer.teleport(loc);
         player.teleport(selectedPlayer.getLocation().add(0, 5, 0));
-    }
-    public void clearCooldowns() {
-        randomTPCooldown.clear();
-    }
-    public Map<UUID, Long> getCooldowns(){
-        return randomTPCooldown;
     }
 }

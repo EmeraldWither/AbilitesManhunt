@@ -53,9 +53,9 @@ public class LightningGuiListener implements Listener {
                     Integer cooldown = manhuntMain.getConfig().getInt("abilities.lightning.cooldown");
 
                     if (lightningCooldown.containsKey(player.getUniqueId())) {
-                        if (lightningCooldown.get(player.getName()) > System.currentTimeMillis()) {
+                        if (lightningCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                             player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((lightningCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                             return;
                         }
                     }

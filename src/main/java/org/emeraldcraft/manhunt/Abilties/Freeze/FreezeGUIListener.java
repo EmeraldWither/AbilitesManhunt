@@ -55,7 +55,7 @@ public class FreezeGUIListener  implements Listener {
                 if (freezeCooldown.containsKey(player.getUniqueId())) {
                     if (freezeCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((freezeCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((freezeCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }
@@ -107,7 +107,7 @@ public class FreezeGUIListener  implements Listener {
 
     @EventHandler
     public void FreezePlayer(PlayerMoveEvent event) {
-        if (manhuntGameManager.getGameStatus()) {
+        if (manhuntGameManager.hasGameStarted()) {
             if (manhuntGameManager.getTeam(ManhuntTeam.FROZEN).contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }
@@ -120,7 +120,7 @@ public class FreezeGUIListener  implements Listener {
 
         if (!(Bukkit.getServer().getAllowFlight())) {
             if (manhuntMain.getConfig().getBoolean("abilities.freeze.prevent-kicking")) {
-                if (manhuntGameManager.getGameStatus()) {
+                if (manhuntGameManager.hasGameStarted()) {
                     if (freezeDelay) {
                         if (event.getReason().contains("flying")) {
                             event.setCancelled(true);

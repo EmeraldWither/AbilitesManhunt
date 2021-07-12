@@ -53,7 +53,7 @@ public class LauncherGUIListener  implements Listener {
                 if (launcherCooldown.containsKey(player.getUniqueId())) {
                     if (launcherCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((launcherCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((launcherCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }

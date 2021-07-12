@@ -43,7 +43,7 @@ public class EnderDragonCheck implements Listener {
     @EventHandler
     public void onEnderDragonDeath(EntityDeathEvent event){
         if(event.getEntity() instanceof EnderDragon){
-            if (manhuntGameManager.getGameStatus()) {
+            if (manhuntGameManager.hasGameStarted()) {
                 if (speedrunner.size() >= 1) {
                     List<String> speedrunnerList = new ArrayList<>();
                     for(UUID uuid : hunter){

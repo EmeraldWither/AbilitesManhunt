@@ -42,7 +42,7 @@ public class DeathCheck implements Listener {
 
     @EventHandler
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
-        if (manhuntGameManager.getGameStatus()) {
+        if (manhuntGameManager.hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getUniqueId())) {
 
                 //Add a death to the player

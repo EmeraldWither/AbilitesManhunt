@@ -85,9 +85,10 @@ public class ManhuntDeadScoreboardManager {
 
         Team deadText = board.registerNewTeam("deadText");
         deadText.addEntry(ChatColor.DARK_GRAY + "" + ChatColor.DARK_GREEN);
-        deadText.setPrefix(ChatColor.GRAY + "" + ChatColor.BOLD + "");
+        deadText.setPrefix(ChatColor.GREEN + "" + ChatColor.BOLD + "Type \"/manhunt leave\" to leave the game!");
         obj.getScore(ChatColor.DARK_GRAY + "" + ChatColor.DARK_GREEN).setScore(11);
 
+        assert player != null;
         player.setScoreboard(board);
     }
 

@@ -1,12 +1,12 @@
 # Minecraft Manhunt but the Hunter has Special Abilites
 ----------------------------------------------------------
-#### Version 1.3 has been released! You can check it out here : https://github.com/EmeraldWither/AbilitesManhunt/releases/tag/v1.3
+#### Version 1.3 has been released! You can check it out here : https://github.com/EmeraldWither/abilitiesmanhunt/releases/tag/v1.3
 
 ----------------------------------------------------------
 
 This is a plugin which takes a new take on Manhunt. With 8 abilities, it will elevate the manhunt genre. 
 
-~~You can see the planned features timeline here: https://github.com/EmeraldWither/AbilitesManhunt/projects/1~~
+~~You can see the planned features timeline here: https://github.com/EmeraldWither/abilitiesmanhunt/projects/1~~
 
 
 How to compile the plugin

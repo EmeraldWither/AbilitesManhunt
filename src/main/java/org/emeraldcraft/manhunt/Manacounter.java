@@ -28,7 +28,7 @@ public class Manacounter{
         this.manhuntGameManager = manhuntGameManager;
         this.speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
         this.hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        this.HasGameStarted = manhuntGameManager.getGameStatus();
+        this.HasGameStarted = manhuntGameManager.hasGameStarted();
         this.manhuntMain = manhuntMain;
     }
     public void startMana(JavaPlugin plugin, Integer delay, Integer repeat){
