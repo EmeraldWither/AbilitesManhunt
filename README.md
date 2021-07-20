@@ -1,6 +1,10 @@
 # Minecraft Manhunt but the Hunter has Special Abilites
+________________________________________________________
+#### Notice for Developers:
+This plugin WILL require Java 16 to compile and to run. Please ensure that you have this in your IDE.
+
 ----------------------------------------------------------
-#### Version 1.3 has been released! You can check it out here : https://github.com/EmeraldWither/abilitiesmanhunt/releases/tag/v1.3
+#### Version 1.2.2 has been released! You can check it out here : https://github.com/EmeraldWither/AbilitesManhunt/releases/tag/v1.2.2
 
 ----------------------------------------------------------
 
