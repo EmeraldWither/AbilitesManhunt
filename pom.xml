@@ -4,24 +4,44 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.YOUR_GITHUB_USERNAMEr</groupId>
+    <groupId>org.emeraldcraft.manhuntabilites</groupId>
     <artifactId>AbilityManHunt</artifactId>
-    <version>v1.2.2 RELEASE</version>
+    <version>v1.3 RELEASE</version>
+    <packaging>jar</packaging>
+    <name>AbilityManhunt</name>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <repositories>
         <repository>
-            <id>papermc</id>
+            <id>papermc-repo</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
     </repositories>
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -29,7 +49,7 @@
         <profile>
             <id>plugindir</id>
             <build>
-                <directory>YOUR DIRECTORY HERE WITH NO ""</directory>
+                <directory>Your plugins directory here</directory>
             </build>
         </profile>
     </profiles>
