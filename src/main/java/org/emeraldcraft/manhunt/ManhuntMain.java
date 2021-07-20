@@ -58,14 +58,13 @@ public class ManhuntMain extends JavaPlugin {
 
     @Override
     public void onEnable(){
-        Long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         manhuntGameManager = new ManhuntGameManager();
         this.data = new DataManager(this);
         this.abilitesManager = new AbilitesManager(manhuntGameManager);
         this.manacounter = new Manacounter(manhuntGameManager,this);
         this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, this);
         registerListeners();
-        this.saveDefaultConfig();
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhuntGameManager, this, manacounter, abilitesManager));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhuntGameManager));
 
@@ -77,7 +76,7 @@ public class ManhuntMain extends JavaPlugin {
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.forceend"));
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
-
+        this.saveDefaultConfig();
 
 
 
@@ -225,10 +224,12 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PushAwayHunter(manhuntGameManager, this), this);
     }
     public Plugin getPlugin(){
-        Plugin plugin = this;
-        return plugin;
+        return this;
     }
 
+    public DataManager getDataConfig() {
+        return data;
+    }
 }
 
 

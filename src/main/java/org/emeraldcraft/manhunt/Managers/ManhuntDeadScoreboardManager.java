@@ -51,10 +51,6 @@ public class ManhuntDeadScoreboardManager {
         String frozenPrefix = manhuntMain.getConfig().getString("scoreboard.frozen-prefix");
 
         //////////////////
-        Team frozen = board.registerNewTeam("003frozen");
-        frozen.setColor(ChatColor.valueOf(frozenColor));
-        frozen.setPrefix(frozenPrefix);
-
         Team hunter = board.registerNewTeam("001hunter");
         hunter.setColor(ChatColor.valueOf(hunterColor));
         hunter.setPrefix(hunterPrefix);
@@ -62,6 +58,11 @@ public class ManhuntDeadScoreboardManager {
         Team speedrunner = board.registerNewTeam("002speedrunner");
         speedrunner.setColor(ChatColor.valueOf(speedrunnerColor));
         speedrunner.setPrefix(speedrunnerPrefix);
+
+        Team frozen = board.registerNewTeam("003frozen");
+        frozen.setColor(ChatColor.valueOf(frozenColor));
+        frozen.setPrefix(frozenPrefix);
+
 
         Team dead = board.registerNewTeam("004dead");
         dead.setColor(ChatColor.valueOf(deadColor));

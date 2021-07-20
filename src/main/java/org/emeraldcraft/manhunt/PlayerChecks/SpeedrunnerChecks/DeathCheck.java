@@ -47,11 +47,11 @@ public class DeathCheck implements Listener {
 
                 //Add a death to the player
                 int death = 0;
-                if(manhuntMain.data.getConfig().contains("players." + event.getEntity().getUniqueId().toString() + ".deaths")){
-                    death = manhuntMain.data.getConfig().getInt("players." + event.getEntity().getUniqueId().toString() + ".deaths");
+                if(manhuntMain.getDataConfig().getConfig().contains("players." + event.getEntity().getUniqueId().toString() + ".deaths")){
+                    death = manhuntMain.getDataConfig().getConfig().getInt("players." + event.getEntity().getUniqueId().toString() + ".deaths");
                 }
-                manhuntMain.data.getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".deaths", (death + 1));
-                manhuntMain.data.saveConfig();
+                manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".deaths", (death + 1));
+                manhuntMain.getDataConfig().saveConfig();
                 //End Adding death
 
                 speedrunner.remove(event.getEntity().getUniqueId());
@@ -72,11 +72,11 @@ public class DeathCheck implements Listener {
 
                         //Add a win to the hunter
                         int wins = 0;
-                        if(manhuntMain.data.getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
-                            wins = manhuntMain.data.getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                        if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
+                            wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
                         }
-                        manhuntMain.data.getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
-                        manhuntMain.data.saveConfig();
+                        manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
+                        manhuntMain.getDataConfig().saveConfig();
                         //End adding win
 
 
@@ -107,11 +107,11 @@ public class DeathCheck implements Listener {
                         Player players = Bukkit.getPlayer(player);
                         //Add a loss
                         int losses = 0;
-                        if(manhuntMain.data.getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
-                            losses = manhuntMain.data.getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
+                        if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
+                            losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
                         }
-                        manhuntMain.data.getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".losses", (losses + 1));
-                        manhuntMain.data.saveConfig();
+                        manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".losses", (losses + 1));
+                        manhuntMain.getDataConfig().saveConfig();
                         //End adding loss
 
 

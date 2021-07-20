@@ -29,6 +29,8 @@ public class FreezeGUIListener  implements Listener {
 
     String ability = "Freeze Player";
 
+    int showFrozenID = 0;
+
     private boolean freezeDelay;
     private ManhuntGameManager manhuntGameManager;
     private AbilitesManager abilitesManager;
@@ -86,10 +88,15 @@ public class FreezeGUIListener  implements Listener {
         Integer delay = time * 20;
         speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-freeze-msg").replace("%hunter%", hunter.getName()).replace("%time%", Integer.toString(time))));
         manhuntGameManager.getTeam(ManhuntTeam.FROZEN).add(speedrunner.getUniqueId());
+        //speedrunner.sendMessage("MANHUNT [DEBUG] Max freeze ticks: " + speedrunner.getMaxFreezeTicks());
+
+        showFreezeEffect(speedrunner);
         Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.getPlugin(), new Runnable() {
             @Override
             public void run() {
+                stopShowFreezeEffect(speedrunner);
                 manhuntGameManager.getTeam(ManhuntTeam.FROZEN).remove(speedrunner.getUniqueId());
+                speedrunner.setFreezeTicks(1);
                 freezeDelay = true;
                 speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-unfreeze-msg").replace("%hunter%", hunter.getName())));
                 hunter.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.unfreeze-msg").replace("%hunter%", hunter.getName()).replace("%speedrunner%", speedrunner.getName())));
@@ -122,7 +129,7 @@ public class FreezeGUIListener  implements Listener {
             if (manhuntMain.getConfig().getBoolean("abilities.freeze.prevent-kicking")) {
                 if (manhuntGameManager.hasGameStarted()) {
                     if (freezeDelay) {
-                        if (event.getReason().contains("flying")) {
+                        if (event.getCause().equals(PlayerKickEvent.Cause.FLYING_PLAYER)) {
                             event.setCancelled(true);
                             Bukkit.getServer().getLogger().log(Level.WARNING, manhuntMain.getConfig().get("plugin-prefix") + event.getPlayer().getName() + " would have been kicked for flying due to them being frozen. We have prevented this by preventing them from getting kicked. You can change this behavior in the, \"config.yml\" file.");
                         }
@@ -130,5 +137,17 @@ public class FreezeGUIListener  implements Listener {
                 }
             }
         }
+    }
+    public void showFreezeEffect(Player player){
+        showFrozenID = Bukkit.getScheduler().scheduleSyncRepeatingTask(manhuntMain.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                player.setFreezeTicks(139);
+            }
+        },0, 1);
+    }
+    public void stopShowFreezeEffect(Player player){
+        player.setFreezeTicks(0);
+        Bukkit.getScheduler().cancelTask(showFrozenID);
     }
 }

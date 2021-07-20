@@ -15,7 +15,7 @@ public class ManhuntTabCompleter implements TabCompleter {
     private static final List<String> SUBCOMMANDS = Arrays.asList("create", "remove", "teleport", "tp");
     private static final List<String> players = new ArrayList<>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
-    private ManhuntGameManager manhuntGameManager;
+    private final ManhuntGameManager manhuntGameManager;
     public ManhuntTabCompleter(ManhuntGameManager manhuntGameManager){
      this.manhuntGameManager = manhuntGameManager;
     }

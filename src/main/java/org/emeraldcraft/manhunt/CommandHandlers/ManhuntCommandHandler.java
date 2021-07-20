@@ -111,7 +111,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                     addTeam(SPEEDRUNNER, Bukkit.getPlayer(arg).getUniqueId());
 
                                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + name + " to the speedrunners group! "));
-                                    player.sendMessage(prefix + ChatColor.RED + "You have been added to the speedrunner team by " + sender);
+                                    if(player.getName() != sender.getName()) {
+                                        player.sendMessage(prefix + ChatColor.RED + "You have been added to the speedrunner team by " + sender.getName());
+                                    }
                                     return true;
                                 }
                                 sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a speedrunner!");
@@ -148,8 +150,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 if (!(hunter.contains(player.getUniqueId()))) {
                                     addTeam(ManhuntTeam.HUNTER, Bukkit.getPlayer(arg).getUniqueId());
                                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2" + prefix + "&bYou have added " + player.getName() + " to the hunters group! "));
-                                    player.sendMessage(prefix + ChatColor.RED + "You have been added to the speedrunner team by " + sender.getName());
-
+                                    if(player.getName() != sender.getName()) {
+                                        player.sendMessage(prefix + ChatColor.RED + "You have been added to the hunter team by " + sender.getName());
+                                    }
                                     return true;
                                 }
                                 sender.sendMessage(prefix + ChatColor.DARK_RED + "That player is already a hunter!");
@@ -369,14 +372,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                             ((Player) sender).teleport(location.get(locName));
                                             int teleports = manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId());
                                             manhuntGameManager.getWaypointTeleports().put(((Player) sender).getUniqueId(), (teleports + 1));
-                                            teleports = manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId());
+                                            teleports = 3 - (manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId()));
 
                                             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been teleported to the waypoint \"" + locName + "\"!"));
-                                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have " + teleports + "teleport(s) remaining."));
+                                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have &2" + teleports + " &ateleport(s) remaining."));
                                             return true;
                                         }
                                     }
-                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have any teleports left."));
+                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have any teleports remaning."));
                                     return false;
                                 }
                                 sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
@@ -461,14 +464,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
         int losses = 0;
         int deaths = 0;
         int wins = 0;
-        if(manhuntMain.data.getConfig().contains("players." + player.getUniqueId().toString() + ".losses")){
-            losses = manhuntMain.data.getConfig().getInt("players." + player.getUniqueId().toString() + ".losses");
+        if(manhuntMain.getDataConfig().getConfig().contains("players." + player.getUniqueId().toString() + ".losses")){
+            losses = manhuntMain.getDataConfig().getConfig().getInt("players." + player.getUniqueId().toString() + ".losses");
         }
-        if(manhuntMain.data.getConfig().contains("players." + player.getUniqueId().toString() + ".deaths")){
-            deaths = manhuntMain.data.getConfig().getInt("players." + player.getUniqueId().toString() + ".deaths");
+        if(manhuntMain.getDataConfig().getConfig().contains("players." + player.getUniqueId().toString() + ".deaths")){
+            deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + player.getUniqueId().toString() + ".deaths");
         }
-        if(manhuntMain.data.getConfig().contains("players." + player.getUniqueId().toString() + ".wins")){
-            wins = manhuntMain.data.getConfig().getInt("players." + player.getUniqueId().toString() + ".wins");
+        if(manhuntMain.getDataConfig().getConfig().contains("players." + player.getUniqueId().toString() + ".wins")){
+            wins = manhuntMain.getDataConfig().getConfig().getInt("players." + player.getUniqueId().toString() + ".wins");
         }
         for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins)).replace("%losses%", Integer.toString(losses)).replace("%deaths%", Integer.toString(deaths)).replace("%player%", player.getName())));
@@ -479,14 +482,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
             int losses = 0;
             int deaths = 0;
             int wins = 0;
-            if (manhuntMain.data.getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".losses")) {
-                losses = manhuntMain.data.getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".losses");
+            if (manhuntMain.getDataConfig().getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".losses")) {
+                losses = manhuntMain.getDataConfig().getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".losses");
             }
-            if (manhuntMain.data.getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".deaths")) {
-                deaths = manhuntMain.data.getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".deaths");
+            if (manhuntMain.getDataConfig().getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".deaths")) {
+                deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".deaths");
             }
-            if (manhuntMain.data.getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".wins")) {
-                wins = manhuntMain.data.getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".wins");
+            if (manhuntMain.getDataConfig().getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".wins")) {
+                wins = manhuntMain.getDataConfig().getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".wins");
             }
             for (String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins)).replace("%losses%", Integer.toString(losses)).replace("%deaths%", Integer.toString(deaths)).replace("%player%", ((Player) sender).getPlayer().getName())));
@@ -507,6 +510,8 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 "&7<required> (optional)\n" +
                 "&7Note: You can only see commands that\n" +
                 "&7you have permission to use\n" +
+                "&6\n" +
+                "&6Plugin Prefix » " + manhuntMain.getConfig().getString("plugin-prefix") + "\n" +
                 "&6\n" +
                 "&aGeneral Commands: &8(These can be used anytime)\n" +
                 "&e/manhunt help: &6Will display this help page\n" +
