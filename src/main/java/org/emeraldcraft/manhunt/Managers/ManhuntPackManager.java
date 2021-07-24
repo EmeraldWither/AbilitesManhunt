@@ -4,10 +4,6 @@ import org.bukkit.entity.Player;
 
 public class ManhuntPackManager {
 
-    private ManhuntGameManager manhuntGameManager;
-    public ManhuntPackManager(ManhuntGameManager manhuntGameManager){
-        this.manhuntGameManager = manhuntGameManager;
-    }
     public void unloadPack(Player player){
         player.setResourcePack("https://www.dropbox.com/s/htpuyb8htv8wp6h/Blank_pack.zip?dl=1");
     }

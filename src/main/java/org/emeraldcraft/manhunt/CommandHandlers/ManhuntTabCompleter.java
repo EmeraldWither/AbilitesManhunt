@@ -29,6 +29,7 @@ public class ManhuntTabCompleter implements TabCompleter {
                 subCommands.add("listgroups");
                 subCommands.add("stats");
                 subCommands.add("help");
+                subCommands.add("resourcepack");
                 if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.forceend")){
                     subCommands.add("forceend");
                 }

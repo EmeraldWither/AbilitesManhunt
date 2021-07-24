@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
 import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.DEAD;
 
 public class ManhuntGameManager {
@@ -38,7 +37,7 @@ public class ManhuntGameManager {
 
     List<UUID> appliedPack = new ArrayList<>();
 
-    ManhuntPackManager manhuntPackManager = new ManhuntPackManager(this);
+    ManhuntPackManager manhuntPackManager = new ManhuntPackManager();
 
     private boolean hasGameStarted = false;
 
@@ -195,7 +194,6 @@ public class ManhuntGameManager {
                         "&c&m-------------------------------------------"));
 
                 player.getInventory().clear();
-                ;
                 manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
                 manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
                 manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
@@ -238,7 +236,7 @@ public class ManhuntGameManager {
                 TextComponent component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
                 // Add a click event to the component.
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + command));
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click here to apply the custom resoucepack!" ).color(DARK_GREEN).create()));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click here to apply the custom resourcepack!" ).color(net.md_5.bungee.api.ChatColor.GREEN).create()));
 
                 // Send it!
                 player.spigot().sendMessage(component);

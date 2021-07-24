@@ -404,9 +404,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
             return true;
         } else if (args[0].equalsIgnoreCase("resourcepack")) {
             if(sender instanceof Player){
-                manhuntGameManager.getPackManager().loadPack(((Player) sender).getPlayer());
-                manhuntGameManager.getAppliedPack().add(((Player) sender).getUniqueId());
-                return true;
+                if(hunter.contains(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
+                    manhuntGameManager.getPackManager().loadPack(((Player) sender).getPlayer());
+                    manhuntGameManager.getAppliedPack().add(((Player) sender).getUniqueId());
+                    return true;
+                }
+                sender.sendMessage(ChatColor.RED + "You must be a hunter to use this command!");
+                return false;
             }
         }
         showHelp(sender);
@@ -555,6 +560,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         //Show ingame commands
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6\n" +
                 "&aIn-Game Commands: \n" +
+                "&e/manhunt resourcepack: &6Will apply the hunter resourcepack!\n" +
                 "&e/manhunt waypoint create <waypoint name>: &6Will create a waypoint with the specified name\n" +
                 "&e/manhunt waypoint remove: &6Will remove your created waypoint.\n" +
                 "&e/manhunt waypoint teleport: &6Will teleport you to your waypoint.\n" +

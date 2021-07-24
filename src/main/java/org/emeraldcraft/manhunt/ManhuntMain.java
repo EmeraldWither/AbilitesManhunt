@@ -34,7 +34,6 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Managers.DataManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
-import org.emeraldcraft.manhunt.Managers.ResourcePackListener;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;

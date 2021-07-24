@@ -1,11 +1,10 @@
-package org.emeraldcraft.manhunt.Managers;
+package org.emeraldcraft.manhunt;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
-import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 
 public class ResourcePackListener implements Listener {
 
@@ -14,17 +13,6 @@ public class ResourcePackListener implements Listener {
         this.manhuntGameManager = manhuntGameManager;
     }
 
-    @EventHandler
-    public void onResourcePack(PlayerResourcePackStatusEvent event){
-        if(event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED){
-            if(manhuntGameManager.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER){
-                if(!manhuntGameManager.getAppliedPack().contains(event.getPlayer().getUniqueId())){
-                    manhuntGameManager.getAppliedPack().add(event.getPlayer().getUniqueId());
-                    event.getPlayer().sendMessage(ChatColor.GREEN + "Your resourcepack has loaded!");
-                }
-            }
-        }
-    }
     @EventHandler
     public void playerLeave(PlayerJoinEvent event){
         if(manhuntGameManager.getAppliedPack().contains(event.getPlayer().getUniqueId())){
