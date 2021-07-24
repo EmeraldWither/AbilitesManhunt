@@ -34,6 +34,7 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Managers.DataManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
+import org.emeraldcraft.manhunt.Managers.ResourcePackListener;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
@@ -145,7 +146,7 @@ public class ManhuntMain extends JavaPlugin {
             }
             if(hunter.contains(player.getUniqueId())){
                 player.setGlowing(false);
-                player.setCollidable(true);
+
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
                 player.setInvulnerable(false);
@@ -172,7 +173,7 @@ public class ManhuntMain extends JavaPlugin {
             }
             if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player.getUniqueId())){
                 player.setGlowing(false);
-                player.setCollidable(true);
+
                 player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
                 player.setInvulnerable(false);
@@ -222,6 +223,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PreventDamage(manhuntGameManager), this);
         getServer().getPluginManager().registerEvents(new PreventGettingClose(manhuntGameManager, this), this);
         getServer().getPluginManager().registerEvents(new PushAwayHunter(manhuntGameManager, this), this);
+        getServer().getPluginManager().registerEvents(new ResourcePackListener(manhuntGameManager), this);
     }
     public Plugin getPlugin(){
         return this;

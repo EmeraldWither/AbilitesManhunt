@@ -1,5 +1,9 @@
 package org.emeraldcraft.manhunt.Managers;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
 import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.DEAD;
 
 public class ManhuntGameManager {
@@ -30,6 +35,11 @@ public class ManhuntGameManager {
 
     List<UUID> deadSpeedrunners = new ArrayList<>();
     List<UUID> frozenPlayers = new ArrayList<>();
+
+    List<UUID> appliedPack = new ArrayList<>();
+
+    ManhuntPackManager manhuntPackManager = new ManhuntPackManager(this);
+
     private boolean hasGameStarted = false;
 
     //WAYPOINT
@@ -54,6 +64,14 @@ public class ManhuntGameManager {
         }
         return null;
     }
+    public ManhuntPackManager getPackManager(){
+        return manhuntPackManager;
+    }
+
+    public List<UUID> getAppliedPack() {
+        return appliedPack;
+    }
+
     public ManhuntTeam getTeam(UUID uuid){
         if(hunter.contains(uuid)){
             return ManhuntTeam.HUNTER;
@@ -115,8 +133,18 @@ public class ManhuntGameManager {
                 player.spigot().respawn();
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
-
                 }
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m-------------------------------------------\n" +
+                        "&c(!) Experimental Features Enabled (!)\n" +
+                        "\n" +
+                        "&4Feature Type: &c&lWaypoint Teleports\n" +
+                        "&4Feature Description: \n" +
+                        "&c&lThis feature will allow speedrunners to teleport\n" +
+                        "&c&lto their waypoint &43 &c&ltimes in a game! This feature\n" +
+                        "&c&lis enabled to test if it is balanced!\n" +
+                        "&c&m-------------------------------------------"));
+
+
                 player.getInventory().clear();
                 player.setHealth(20);
                 player.setFoodLevel(20);
@@ -139,6 +167,7 @@ public class ManhuntGameManager {
                 player.addPotionEffect(speedEffect);
                 player.addPotionEffect(saturationEffect);
                 player.setGlowing(true);
+
             }
             for (UUID hunter : hunter) {
                 Player player = Bukkit.getPlayer(hunter);
@@ -155,8 +184,18 @@ public class ManhuntGameManager {
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                 }
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m-------------------------------------------\n" +
+                        "&c(!) Experimental Features Enabled (!)\n" +
+                        "\n" +
+                        "&4Feature Type: &c&lWaypoint Teleports\n" +
+                        "&4Feature Description: \n" +
+                        "&c&lThis feature will allow speedrunners to teleport\n" +
+                        "&c&lto their waypoint &43 &c&ltimes in a game! This feature\n" +
+                        "&c&lis enabled to test if it is balanced!\n" +
+                        "&c&m-------------------------------------------"));
+
                 player.getInventory().clear();
-                player.setCollidable(false);
+                ;
                 manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
                 manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
                 manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
@@ -175,8 +214,7 @@ public class ManhuntGameManager {
                         inv.setItem(i, barrier);
                     }
                 }
-
-
+                player.setCollidable(false);
                 player.setHealth(20);
                 player.setFoodLevel(20);
                 player.setGameMode(GameMode.SURVIVAL);
@@ -192,12 +230,25 @@ public class ManhuntGameManager {
                 potionEffect.withParticles(false);
                 player.addPotionEffect(potionEffect);
                 player.setGlowing(true);
+
+                sender.sendMessage(ChatColor.GOLD + "" + "_______________________________________");
+                String message = "&2Click here to apply the custom resourcepack!";
+                String command = "manhunt resourcepack";
+
+                TextComponent component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
+                // Add a click event to the component.
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + command));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click here to apply the custom resoucepack!" ).color(DARK_GREEN).create()));
+
+                // Send it!
+                player.spigot().sendMessage(component);
+                sender.sendMessage(ChatColor.GOLD + "_______________________________________");
+
             }
         if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY)) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
-            return true;
         }
         manacounter.startMana((JavaPlugin) manhuntMain.getPlugin(), 0, manadelay);
         return true;

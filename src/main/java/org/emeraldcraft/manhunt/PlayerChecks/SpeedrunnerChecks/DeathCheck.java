@@ -88,19 +88,22 @@ public class DeathCheck implements Listener {
                         for (PotionEffect potionEffect : players.getActivePotionEffects()) {
                             players.removePotionEffect(potionEffect.getType());
                         }
-                        players.setCollidable(false);                        players.setGlowing(false);
+                        ;                        players.setGlowing(false);
                         players.getInventory().clear();
                         players.setGameMode(GameMode.SURVIVAL);
                         players.setInvulnerable(false);
                         players.closeInventory();
                         players.setFlying(false);
                         players.setAllowFlight(false);
+                        players.setCollidable(true);
                         players.chat(ChatColor.GOLD + "GG!");
                         for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                             if (team.hasEntry(players.getName())) {
                                 team.removeEntry(players.getName());
                             }
                         }
+                        manhuntGameManager.getPackManager().unloadPack(players);
+                        manhuntGameManager.getAppliedPack().clear();
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
                     for (UUID player : deadSpeedrunners) {

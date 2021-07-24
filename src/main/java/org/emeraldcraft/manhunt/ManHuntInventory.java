@@ -182,14 +182,11 @@ public class ManHuntInventory {
     }
     public ItemStack getFreezer(){
         List<String> lore = new ArrayList<String>();
-        ItemStack freezer = new ItemStack(Material.ICE, 1);
+        ItemStack freezer = new ItemStack(Material.PACKED_ICE, 1);
         ItemMeta meta = freezer.getItemMeta();
         lore.add(ChatColor.translateAlternateColorCodes('&', ""));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&bFreeze the speedrunner"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&bright where they are standing!"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&4Can cause the player to be"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&4kicked for flying!"));
         lore.add(ChatColor.translateAlternateColorCodes('&', ""));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&3(30 Mana)"));
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFreeze Player &2(30 Mana)"));

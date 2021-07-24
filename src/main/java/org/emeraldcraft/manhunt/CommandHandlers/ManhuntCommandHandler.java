@@ -402,6 +402,12 @@ public class ManhuntCommandHandler implements CommandExecutor {
             }
             sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
             return true;
+        } else if (args[0].equalsIgnoreCase("resourcepack")) {
+            if(sender instanceof Player){
+                manhuntGameManager.getPackManager().loadPack(((Player) sender).getPlayer());
+                manhuntGameManager.getAppliedPack().add(((Player) sender).getUniqueId());
+                return true;
+            }
         }
         showHelp(sender);
 
