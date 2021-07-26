@@ -11,11 +11,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -27,20 +27,20 @@ public class LauncherGUIListener  implements Listener {
     String ability = "Launcher";
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager abilitesManager;
+    private Manhunt manhunt;
+    private Abilites abilites;
     List<UUID> hunter;
     List<UUID> speedrunner;
     Map<UUID, Long> launcherCooldown;
 
-    public LauncherGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+    public LauncherGUIListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
         this.manhuntMain = manhuntMain;
-        this.abilitesManager = AbilitesManager;
+        this.abilites = Abilites;
         this.manacounter = manacounter;
-        this.manhuntGameManager = manhuntGameManager;
-        launcherCooldown = AbilitesManager.getCooldown(Ability.LAUNCHER);
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER); ;
+        this.manhunt = manhunt;
+        launcherCooldown = Abilites.getCooldown(Ability.LAUNCHER);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER); ;
     }
 
 
@@ -49,7 +49,7 @@ public class LauncherGUIListener  implements Listener {
     public void InventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.LAUNCHER)) {
+            if (abilites.getHeldAbility(player).equals(Ability.LAUNCHER)) {
                 if (launcherCooldown.containsKey(player.getUniqueId())) {
                     if (launcherCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);

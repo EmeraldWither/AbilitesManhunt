@@ -10,11 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -27,27 +27,27 @@ public class RandomTPGUIListener implements Listener {
 
     private ManhuntMain manhuntMain;
     String ability = "RandomTP";
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private Manacounter manacounter;
-    private AbilitesManager abilitesManager;
+    private Abilites abilites;
     Map<UUID, Long> randomTPCooldown;
     List<UUID> hunter;
     List<UUID> speedrunner;
-    public RandomTPGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
+    public RandomTPGUIListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites){
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
-        this.manhuntGameManager = manhuntGameManager;
-        this.abilitesManager = AbilitesManager;
-        this.randomTPCooldown = abilitesManager.getCooldown(Ability.RANDOMTP);
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
+        this.manhunt = manhunt;
+        this.abilites = Abilites;
+        this.randomTPCooldown = abilites.getCooldown(Ability.RANDOMTP);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);;
     }
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.RANDOMTP)) {
+            if (abilites.getHeldAbility(player).equals(Ability.RANDOMTP)) {
                 if (randomTPCooldown.containsKey(player.getUniqueId())) {
                     if (randomTPCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);

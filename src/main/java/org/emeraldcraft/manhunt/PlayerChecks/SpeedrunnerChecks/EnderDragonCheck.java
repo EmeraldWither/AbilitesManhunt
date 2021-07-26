@@ -10,10 +10,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.potion.PotionEffect;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
@@ -21,29 +21,29 @@ import java.util.List;
 import java.util.UUID;
 
 public class EnderDragonCheck implements Listener {
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private ManhuntMain manhuntMain;
-    private org.emeraldcraft.manhunt.Abilties.AbilitesManager AbilitesManager;
+    private Abilites Abilites;
     private Manacounter manacounter;
     List<UUID> hunter;
     List<UUID> speedrunner;
     List<UUID> deadSpeedrunners;
 
-    public EnderDragonCheck(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager AbilitesManager, Manacounter manacounter) {
+    public EnderDragonCheck(Manhunt manhunt, ManhuntMain manhuntMain, Abilites Abilites, Manacounter manacounter) {
         this.manhuntMain = manhuntMain;
-        this.AbilitesManager = AbilitesManager;
-        this.manhuntGameManager = manhuntGameManager;
+        this.Abilites = Abilites;
+        this.manhunt = manhunt;
         this.manacounter = manacounter;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        deadSpeedrunners = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        deadSpeedrunners = manhunt.getTeam(ManhuntTeam.DEAD);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 
     @EventHandler
     public void onEnderDragonDeath(EntityDeathEvent event){
         if(event.getEntity() instanceof EnderDragon){
-            if (manhuntGameManager.hasGameStarted()) {
+            if (manhunt.hasGameStarted()) {
                 if (speedrunner.size() >= 1) {
                     List<String> speedrunnerList = new ArrayList<>();
                     for(UUID uuid : hunter){
@@ -77,7 +77,7 @@ public class EnderDragonCheck implements Listener {
                             }
                         }
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
-                        manhuntGameManager.getPackManager().unloadPack(players);
+                        manhunt.getPackManager().unloadPack(players);
                     }
                     for (UUID player : speedrunner) {
                         Player players = Bukkit.getPlayer(player);
@@ -122,11 +122,11 @@ public class EnderDragonCheck implements Listener {
                     speedrunner.clear();
                     deadSpeedrunners.clear();
                     hunter.clear();
-                    manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
-                    AbilitesManager.clearCooldown();
+                    manhunt.getTeam(ManhuntTeam.FROZEN).clear();
+                    Abilites.clearCooldown();
                     Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
-                    manhuntGameManager.getWaypoints().clear();
-                    manhuntGameManager.setGameStatus(false);
+                    manhunt.getWaypoints().clear();
+                    manhunt.setGameStatus(false);
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
                             team.unregister();

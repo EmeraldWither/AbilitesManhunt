@@ -12,23 +12,23 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.ManHuntInventory;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 import java.util.UUID;
 
 public class ClearInv implements Listener {
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     List<UUID> speedrunner;
     List<UUID> hunter;
 
     private ManhuntMain manhuntMain;
 
-    public ClearInv(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain) {
-        this.manhuntGameManager = manhuntGameManager;
-        this.speedrunner = this.manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
-        this.hunter = this.manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+    public ClearInv(Manhunt manhunt, ManhuntMain manhuntMain) {
+        this.manhunt = manhunt;
+        this.speedrunner = this.manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.hunter = this.manhunt.getTeam(ManhuntTeam.HUNTER);
         this.manhuntMain = manhuntMain;
     }
 
@@ -36,7 +36,7 @@ public class ClearInv implements Listener {
 
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent event) {
-        if(!manhuntGameManager.hasGameStarted()) {
+        if(!manhunt.hasGameStarted()) {
             if (manhuntMain.getConfig().getBoolean("clear-items-on-join")) {
                 PlayerInventory playerInv = event.getPlayer().getInventory();
                 Player player = event.getPlayer();
@@ -83,7 +83,7 @@ public class ClearInv implements Listener {
 
     @EventHandler
     public void Disconnect(PlayerQuitEvent event) {
-        if(!manhuntGameManager.hasGameStarted()) {
+        if(!manhunt.hasGameStarted()) {
             if (manhuntMain.getConfig().getBoolean("clear-items-on-leave")) {
                 PlayerInventory playerInv = event.getPlayer().getInventory();
                 Player player = event.getPlayer();

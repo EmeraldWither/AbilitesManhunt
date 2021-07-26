@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.Collection;
@@ -18,19 +18,19 @@ import java.util.UUID;
 
 public class PreventPlacing implements Listener {
 
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private ManhuntMain manhuntMain;
     List<UUID> hunter;
     List<UUID> speedrunner;
-    public PreventPlacing(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
+    public PreventPlacing(Manhunt manhunt, ManhuntMain manhuntMain){
         this.manhuntMain = manhuntMain;
-        this.manhuntGameManager = manhuntGameManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
+        this.manhunt = manhunt;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);;
     }
     @EventHandler
     public void PlayerPlace (BlockPlaceEvent event){
-        if(manhuntGameManager.hasGameStarted()) {
+        if(manhunt.hasGameStarted()) {
             if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setBuild(false);
                 event.setCancelled(true);
@@ -40,7 +40,7 @@ public class PreventPlacing implements Listener {
     }
     @EventHandler
     public void PlayerAllowPlace(BlockCanBuildEvent event) {
-        if (manhuntGameManager.hasGameStarted()) {
+        if (manhunt.hasGameStarted()) {
             final Collection<Entity> entities = event.getBlock().getWorld().getNearbyEntities(event.getBlock().getLocation(), 1.0, 1, 1.0);
             for (final Entity entity : entities) {
                 if (entity instanceof Player) {
@@ -54,7 +54,7 @@ public class PreventPlacing implements Listener {
 
     @EventHandler
     public void PlayerBreak (BlockBreakEvent event){
-        if(manhuntGameManager.hasGameStarted()) {
+        if(manhunt.hasGameStarted()) {
                 if (hunter.contains(event.getPlayer().getUniqueId())) {
                     event.setCancelled(true);
                     event.setDropItems(false);

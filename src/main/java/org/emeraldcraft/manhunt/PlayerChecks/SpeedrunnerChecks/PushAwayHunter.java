@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.Collection;
@@ -17,11 +17,11 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PushAwayHunter implements Listener {
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private ManhuntMain main;
 
-    public PushAwayHunter(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain) {
-        this.manhuntGameManager = manhuntGameManager;
+    public PushAwayHunter(Manhunt manhunt, ManhuntMain manhuntMain) {
+        this.manhunt = manhunt;
         this.main = manhuntMain;
     }
 
@@ -29,15 +29,15 @@ public class PushAwayHunter implements Listener {
 
     @EventHandler
     public void playerMoveEvent(PlayerMoveEvent event) {
-        if (manhuntGameManager.hasGameStarted())
-            if (manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)) {
+        if (manhunt.hasGameStarted())
+            if (manhunt.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)) {
                 Player player = event.getPlayer();
                 int x = main.getConfig().getInt("hunter-range");
                 Collection<Entity> entities = event.getPlayer().getNearbyEntities(x, x, x);
                 for (Entity entity : entities) {
                     if (entity instanceof Player) {
                         Player player2 = ((Player) entity).getPlayer();
-                        if (manhuntGameManager.getTeam(player2.getUniqueId()).equals(ManhuntTeam.HUNTER)) {
+                        if (manhunt.getTeam(player2.getUniqueId()).equals(ManhuntTeam.HUNTER)) {
                             knockBack(player2, event.getPlayer().getLocation());
                             if (msgcooldowns.containsKey(player2.getUniqueId())) {
                                 if (msgcooldowns.get(player2.getUniqueId()) > System.currentTimeMillis()) {

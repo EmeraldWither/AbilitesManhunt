@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -18,22 +18,22 @@ import java.util.UUID;
 
 public class CheckChest implements Listener{
 
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private ManhuntMain manhuntMain;
 
     List<UUID> hunter;
-    public CheckChest(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
-        this.manhuntGameManager = manhuntGameManager;
+    public CheckChest(Manhunt manhunt, ManhuntMain manhuntMain){
+        this.manhunt = manhunt;
         this.manhuntMain = manhuntMain;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);;
     }
 
     @EventHandler
     public void ChestClick(InventoryClickEvent event) {
         if(hunter.contains(event.getView().getPlayer().getUniqueId())) {
-            if(manhuntGameManager.hasGameStarted()) {
+            if(manhunt.hasGameStarted()) {
 
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
                 Inventory getInventory = inv.getInv();
 
                 if (event.getInventory() != getInventory) {
@@ -47,9 +47,9 @@ public class CheckChest implements Listener{
     @EventHandler
     public void ChestDragEvent(InventoryDragEvent event){
         if(event.getView().getBottomInventory().getHolder() instanceof Player) {
-            if (manhuntGameManager.hasGameStarted()) {
+            if (manhunt.hasGameStarted()) {
                 if (hunter.contains(event.getView().getPlayer().getUniqueId())) {
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
                     Inventory getInventory = inv.getInv();
                     if (event.getInventory() != getInventory) {
                         event.setCancelled(true);
@@ -61,10 +61,10 @@ public class CheckChest implements Listener{
     }
     @EventHandler
     public void ChestMoveEvent(InventoryMoveItemEvent event){
-        if(manhuntGameManager.hasGameStarted()) {
+        if(manhunt.hasGameStarted()) {
             if (event.getSource().getHolder() instanceof Player) {
                 if (hunter.contains(((Player) event.getSource().getHolder()).getName())) {
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
                     Inventory getInventory = inv.getInv();
 
                     if (event.getSource() != getInventory) {
@@ -78,7 +78,7 @@ public class CheckChest implements Listener{
     }
     @EventHandler
     public void SwitchOffHand(PlayerSwapHandItemsEvent event) {
-        if(manhuntGameManager.hasGameStarted()) {
+        if(manhunt.hasGameStarted()) {
             if (hunter.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }

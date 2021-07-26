@@ -9,11 +9,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.*;
@@ -24,20 +24,20 @@ public class ScramblerGUIListener  implements Listener {
 
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager abilitesManager;
+    private Manhunt manhunt;
+    private Abilites abilites;
     Map<UUID, Long> scramblerCooldown;
     List<UUID> hunter;
     List<UUID> speedrunner;
 
-    public ScramblerGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+    public ScramblerGUIListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
         this.manhuntMain = manhuntMain;
-        this.abilitesManager = AbilitesManager;
-        this.manhuntGameManager = manhuntGameManager;
+        this.abilites = Abilites;
+        this.manhunt = manhunt;
         this.manacounter = manacounter;
-        scramblerCooldown = AbilitesManager.getCooldown(Ability.SCRAMBLE);
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        scramblerCooldown = Abilites.getCooldown(Ability.SCRAMBLE);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 
@@ -46,7 +46,7 @@ public class ScramblerGUIListener  implements Listener {
     public void InventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.SCRAMBLE)) {
+            if (abilites.getHeldAbility(player).equals(Ability.SCRAMBLE)) {
                 if (scramblerCooldown.containsKey(player.getUniqueId())) {
                     if (scramblerCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         Integer timeLeft = (int) (System.currentTimeMillis() - scramblerCooldown.get(player.getUniqueId()));

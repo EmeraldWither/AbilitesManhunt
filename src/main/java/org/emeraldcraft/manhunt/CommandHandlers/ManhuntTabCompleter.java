@@ -7,7 +7,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 
 import java.util.*;
 
@@ -15,9 +15,9 @@ public class ManhuntTabCompleter implements TabCompleter {
     private static final List<String> SUBCOMMANDS = Arrays.asList("create", "remove", "teleport", "tp");
     private static final List<String> players = new ArrayList<>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
-    private final ManhuntGameManager manhuntGameManager;
-    public ManhuntTabCompleter(ManhuntGameManager manhuntGameManager){
-     this.manhuntGameManager = manhuntGameManager;
+    private final Manhunt manhunt;
+    public ManhuntTabCompleter(Manhunt manhunt){
+     this.manhunt = manhunt;
     }
 
 
@@ -25,7 +25,7 @@ public class ManhuntTabCompleter implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
             List<String> subCommands = new ArrayList<>();
-            if(manhuntGameManager.hasGameStarted()){
+            if(manhunt.hasGameStarted()){
                 subCommands.add("listgroups");
                 subCommands.add("stats");
                 subCommands.add("help");
@@ -39,7 +39,7 @@ public class ManhuntTabCompleter implements TabCompleter {
                 if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.reload")){
                     subCommands.add("reload");
                 }
-                if(sender instanceof Player && manhuntGameManager.getTeam(((Player) sender).getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)){
+                if(sender instanceof Player && manhunt.getTeam(((Player) sender).getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)){
                     subCommands.add("waypoint");
                 }
             }
@@ -63,10 +63,10 @@ public class ManhuntTabCompleter implements TabCompleter {
             return StringUtil.copyPartialMatches(args[0], subCommands , new ArrayList<>());
         }
         if (args.length == 2) {
-            if(manhuntGameManager.hasGameStarted()){
+            if(manhunt.hasGameStarted()){
                 if (args[0].equalsIgnoreCase("setmana") ||  args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("waypoint")) {
                     if (args[0].equalsIgnoreCase("setmana")) {
-                        for(UUID uuid : manhuntGameManager.getTeam(ManhuntTeam.HUNTER)){
+                        for(UUID uuid : manhunt.getTeam(ManhuntTeam.HUNTER)){
                             players.add(Objects.requireNonNull(Bukkit.getPlayer(uuid)).getName());
                         }
                     }

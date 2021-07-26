@@ -7,10 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
@@ -23,26 +23,26 @@ public class DeathCheck implements Listener {
     // Also called when the hunters win.
 
     private ManhuntMain manhuntMain;
-    private AbilitesManager AbilitesManager;
-    private ManhuntGameManager manhuntGameManager;
+    private Abilites Abilites;
+    private Manhunt manhunt;
     private Manacounter manacounter;
     List<UUID> hunter;
     List<UUID> speedrunner;
     List<UUID> deadSpeedrunners;
 
-    public DeathCheck(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+    public DeathCheck(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
         this.manhuntMain = manhuntMain;
-        this.manhuntGameManager = manhuntGameManager;
+        this.manhunt = manhunt;
         this.manacounter = manacounter;
-        this.AbilitesManager = AbilitesManager;
-        deadSpeedrunners = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.Abilites = Abilites;
+        deadSpeedrunners = manhunt.getTeam(ManhuntTeam.DEAD);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
     }
 
     @EventHandler
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
-        if (manhuntGameManager.hasGameStarted()) {
+        if (manhunt.hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getUniqueId())) {
 
                 //Add a death to the player
@@ -102,8 +102,8 @@ public class DeathCheck implements Listener {
                                 team.removeEntry(players.getName());
                             }
                         }
-                        manhuntGameManager.getPackManager().unloadPack(players);
-                        manhuntGameManager.getAppliedPack().clear();
+                        manhunt.getPackManager().unloadPack(players);
+                        manhunt.getAppliedPack().clear();
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
                     for (UUID player : deadSpeedrunners) {
@@ -140,9 +140,9 @@ public class DeathCheck implements Listener {
                     speedrunner.clear();
                     deadSpeedrunners.clear();
                     hunter.clear();
-                    manhuntGameManager.getTeam(ManhuntTeam.FROZEN).clear();
-                    AbilitesManager.clearCooldown();
-                    manhuntGameManager.setGameStatus(false);
+                    manhunt.getTeam(ManhuntTeam.FROZEN).clear();
+                    Abilites.clearCooldown();
+                    manhunt.setGameStatus(false);
                     Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {

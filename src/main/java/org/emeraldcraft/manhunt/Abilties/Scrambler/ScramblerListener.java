@@ -7,12 +7,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -22,18 +22,18 @@ public class ScramblerListener implements Listener {
 
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager abilitesManager;
+    private Manhunt manhunt;
+    private Abilites abilites;
     List<UUID> hunter;
     List<UUID> speedrunner;
 
-    public ScramblerListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+    public ScramblerListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
-        this.manhuntGameManager = manhuntGameManager;
-        this.abilitesManager = AbilitesManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.manhunt = manhunt;
+        this.abilites = Abilites;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 
@@ -41,10 +41,10 @@ public class ScramblerListener implements Listener {
     public void getScramblerItem(PlayerInteractEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (abilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.SCRAMBLE)) {
+            if (abilites.getHeldAbility(event.getPlayer()).equals(Ability.SCRAMBLE)) {
                 if (manacounter.getManaList().get(uuid) >= 50) {
                     Player player = event.getPlayer();
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
                     inv.createInventory();
                     Inventory getInventory = inv.getInv();
 

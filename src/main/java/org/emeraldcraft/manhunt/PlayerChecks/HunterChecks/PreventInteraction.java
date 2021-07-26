@@ -5,19 +5,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 
 public class PreventInteraction implements Listener {
 
-    private ManhuntGameManager manhuntGameManager;
-    public PreventInteraction(ManhuntGameManager manhuntGameManager){
-        this.manhuntGameManager = manhuntGameManager;
+    private Manhunt manhunt;
+    public PreventInteraction(Manhunt manhunt){
+        this.manhunt = manhunt;
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event){
-        if(manhuntGameManager.hasGameStarted()){
-            if(manhuntGameManager.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.HUNTER)){
+        if(manhunt.hasGameStarted()){
+            if(manhunt.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.HUNTER)){
                 event.setCancelled(true);
                 if(event.getClickedBlock() != null) {
                     event.getClickedBlock().getState();

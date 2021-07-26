@@ -10,11 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -27,18 +27,18 @@ public class TargetMobGUIListener  implements Listener {
 
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager abilitesManager;
+    private Manhunt manhunt;
+    private Abilites abilites;
     Map<UUID, Long> targetMobCooldown;
     List<UUID> hunter;
 
-    public TargetMobGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
-        this.manhuntGameManager = manhuntGameManager;
-        this.abilitesManager = AbilitesManager;
+    public TargetMobGUIListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
+        this.manhunt = manhunt;
+        this.abilites = Abilites;
         this.manacounter = manacounter;
         this.manhuntMain = manhuntMain;
-        targetMobCooldown = AbilitesManager.getCooldown(Ability.TARGETMOB);
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        targetMobCooldown = Abilites.getCooldown(Ability.TARGETMOB);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
     }
 
 
@@ -46,7 +46,7 @@ public class TargetMobGUIListener  implements Listener {
     public void InventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.TARGETMOB)) {
+            if (abilites.getHeldAbility(player).equals(Ability.TARGETMOB)) {
                 if (targetMobCooldown.containsKey(player.getUniqueId())) {
                     if (targetMobCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);

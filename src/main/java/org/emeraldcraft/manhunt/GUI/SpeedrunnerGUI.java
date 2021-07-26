@@ -11,8 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
-import org.emeraldcraft.manhunt.ManhuntMain;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +19,19 @@ import java.util.UUID;
 
 public class SpeedrunnerGUI {
 
-    private ManhuntGameManager manhuntGameManager;
-    private ManhuntMain manhuntMain;
+    private Manhunt manhunt;
     List<UUID> hunter;
     List<UUID> speedrunner;
-    public SpeedrunnerGUI(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain){
-        this.manhuntMain = manhuntMain;
-        this.manhuntGameManager = manhuntGameManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
+    public SpeedrunnerGUI(Manhunt manhunt){
+        this.manhunt = manhunt;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);;
     }
     public Inventory createInventory() {
 
         Inventory inv;
         inv = Bukkit.createInventory(null, 9, ChatColor.translateAlternateColorCodes('&', "&9&lSelect a Speedrunner: "));
-        for (UUID playerUUID : manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER)) {
+        for (UUID playerUUID : manhunt.getTeam(ManhuntTeam.SPEEDRUNNER)) {
             Player player = Bukkit.getPlayer(playerUUID);
             ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta im = (SkullMeta) skull.getItemMeta();

@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,17 +18,17 @@ public class Manacounter{
     public int id = 0;
     private HashMap<UUID, Integer> Mana = new HashMap<>();
 
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     List<UUID> speedrunner;
     List<UUID> hunter;
     boolean HasGameStarted;
     private ManhuntMain manhuntMain;
 
-    public Manacounter(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain) {
-        this.manhuntGameManager = manhuntGameManager;
-        this.speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
-        this.hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        this.HasGameStarted = manhuntGameManager.hasGameStarted();
+    public Manacounter(Manhunt manhunt, ManhuntMain manhuntMain) {
+        this.manhunt = manhunt;
+        this.speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        this.HasGameStarted = manhunt.hasGameStarted();
         this.manhuntMain = manhuntMain;
     }
     public void startMana(JavaPlugin plugin, Integer delay, Integer repeat){
@@ -36,7 +36,7 @@ public class Manacounter{
         Mana.clear();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
-            if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())){
+            if (manhunt.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())){
                 Mana.put(player.getUniqueId(), 0);
             }
         }
@@ -44,7 +44,7 @@ public class Manacounter{
             @Override
             public void run() {
                 for(Player player : Bukkit.getOnlinePlayers()) {
-                    if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
+                    if (manhunt.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
                         if (getManaList().containsKey(player.getUniqueId())) {
                             if (Mana.get(player.getUniqueId()) < 100) {
                                 Mana.put(player.getUniqueId(), (Mana.get(player.getUniqueId())) + manaAmount);

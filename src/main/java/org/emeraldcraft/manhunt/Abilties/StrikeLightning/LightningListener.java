@@ -7,12 +7,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -21,31 +21,31 @@ import java.util.UUID;
 public class LightningListener implements Listener {
 
     private ManhuntMain manhuntMain;
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private Manacounter manacounter;
-    private AbilitesManager AbilitesManager;
+    private Abilites Abilites;
     List<UUID> hunter;
     List<UUID> speedrunner;
-    public LightningListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
+    public LightningListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites){
         this.manhuntMain = manhuntMain;
-        this.AbilitesManager = AbilitesManager;
+        this.Abilites = Abilites;
         this.manacounter = manacounter;
-        this.manhuntGameManager = manhuntGameManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
+        this.manhunt = manhunt;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);;
     }
 
 
 
     @EventHandler
     public void getLightningItem(PlayerInteractEvent event) {
-        if (AbilitesManager.getHeldAbility(event.getPlayer()).equals(Ability.LIGHTNING)) {
+        if (Abilites.getHeldAbility(event.getPlayer()).equals(Ability.LIGHTNING)) {
             if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 UUID uuid = event.getPlayer().getUniqueId();
                 if (manacounter.getManaList().get(uuid) >= 10) {
                     Player player = event.getPlayer();
 
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
                     inv.createInventory();
                     Inventory getInventory = inv.getInv();
 

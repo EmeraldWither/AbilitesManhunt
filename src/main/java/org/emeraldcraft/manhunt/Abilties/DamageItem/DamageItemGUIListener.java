@@ -11,11 +11,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent.Reason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -29,19 +29,19 @@ public class DamageItemGUIListener implements Listener {
 
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager AbilitesManager;
+    private Manhunt manhunt;
+    private Abilites Abilites;
 
     private Map<UUID, Long> damageCooldown;
     List<UUID> hunter;
     List<UUID> speedrunner;
 
-    public DamageItemGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
-        this.manhuntGameManager = manhuntGameManager;
-        this.AbilitesManager = AbilitesManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
-        this.damageCooldown = AbilitesManager.getCooldown(Ability.DAMAGEITEM);
+    public DamageItemGUIListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
+        this.manhunt = manhunt;
+        this.Abilites = Abilites;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.damageCooldown = Abilites.getCooldown(Ability.DAMAGEITEM);
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
     }
@@ -50,7 +50,7 @@ public class DamageItemGUIListener implements Listener {
     public void InventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getView().getPlayer();
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
-            if (AbilitesManager.getHeldAbility(player).equals(Ability.DAMAGEITEM)) {
+            if (Abilites.getHeldAbility(player).equals(Ability.DAMAGEITEM)) {
                 if (damageCooldown.containsKey(player.getUniqueId())) {
                     if (damageCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(Reason.PLUGIN);

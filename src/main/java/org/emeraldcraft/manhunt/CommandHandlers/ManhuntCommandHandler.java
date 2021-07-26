@@ -9,10 +9,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.*;
@@ -23,8 +23,8 @@ import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.SPEEDRUNNER;
 
 public class ManhuntCommandHandler implements CommandExecutor {
 
-    private final ManhuntGameManager manhuntGameManager;
-    private final AbilitesManager AbilitesManager;
+    private final Manhunt manhunt;
+    private final Abilites Abilites;
     List<UUID> speedrunner;
     List<UUID> hunter;
     List<UUID> deadSpeedrunner;
@@ -32,12 +32,12 @@ public class ManhuntCommandHandler implements CommandExecutor {
     private final ManhuntMain manhuntMain;
     private Manacounter manacounter;
 
-    public ManhuntCommandHandler(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
-        this.manhuntGameManager = manhuntGameManager;
-        this.AbilitesManager = AbilitesManager;
-        this.speedrunner = manhuntGameManager.getTeam(SPEEDRUNNER);
-        this.hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        this.deadSpeedrunner = manhuntGameManager.getTeam(ManhuntTeam.DEAD);
+    public ManhuntCommandHandler(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
+        this.manhunt = manhunt;
+        this.Abilites = Abilites;
+        this.speedrunner = manhunt.getTeam(SPEEDRUNNER);
+        this.hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        this.deadSpeedrunner = manhunt.getTeam(ManhuntTeam.DEAD);
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
         this.Mana = manacounter.getManaList();
@@ -72,11 +72,11 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("start")) {
             if (sender.hasPermission("abilitiesmanhunt.start") || sender.hasPermission("abilitiesmanhunt.admin")) {
-                if (!(manhuntGameManager.hasGameStarted())) {
+                if (!(manhunt.hasGameStarted())) {
                     if (!(hunter.isEmpty())) {
                         if (!(speedrunner.isEmpty())) {
                             try {
-                                manhuntGameManager.startGame(sender, manhuntMain, manacounter, manaDelay, AbilitesManager);
+                                manhunt.startGame(sender, manhuntMain, manacounter, manaDelay, Abilites);
                                 return true;
                             } catch (Exception e) {
                                 sender.sendMessage(prefix + ChatColor.DARK_RED + "An internal error has occurred! As such, the manhunt has been aborted.");
@@ -98,7 +98,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("speedrunner")) {
             if (sender.hasPermission("abilitiesmanhunt.addspeedrunner") || sender.hasPermission("abilitiesmanhunt.admin")) {
-                if (!(manhuntGameManager.hasGameStarted())) {
+                if (!(manhunt.hasGameStarted())) {
                     int argsLength = args.length;
                     if (argsLength > 1) {
                         if (Bukkit.getPlayer(args[1]) != null) {
@@ -141,7 +141,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("hunter")) {
             if (sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.addhunter")) {
                 Integer argsLength = args.length;
-                if (!(manhuntGameManager.hasGameStarted())) {
+                if (!(manhunt.hasGameStarted())) {
                     if (argsLength > 1) {
                         if (Bukkit.getPlayer(args[1]) != null) {
                             if (Bukkit.getPlayer(args[1]).isOnline()) {
@@ -240,7 +240,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("forceend")) {
             if (sender.hasPermission("abilitiesmanhunt.forceend") || sender.hasPermission("abilitiesmanhunt.admin")) {
-                if (manhuntGameManager.hasGameStarted()) {
+                if (manhunt.hasGameStarted()) {
                     Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     endGame(sender);
                     return true;
@@ -252,7 +252,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         else if(args[0].equalsIgnoreCase("setmana")) {
             if (sender.hasPermission("abilitiesmanhunt.setmana") || sender.hasPermission("abilitiesmanhunt.admin")) {
                 if (args.length >= 3) {
-                    if (manhuntGameManager.hasGameStarted()) {
+                    if (manhunt.hasGameStarted()) {
                         if (Bukkit.getPlayer(args[1]) != null) {
                             if (hunter.contains(Bukkit.getPlayer(args[1]).getUniqueId())) {
                                 Player player = Bukkit.getPlayer(args[1]);
@@ -325,16 +325,16 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
         else if(args[0].equalsIgnoreCase("waypoint")){
             if(sender instanceof Player) {
-                if (manhuntGameManager.hasGameStarted()) {
+                if (manhunt.hasGameStarted()) {
                     if (args.length >= 2) {
-                        if (manhuntGameManager.getTeam(((Player) sender).getUniqueId()) == SPEEDRUNNER || manhuntGameManager.getTeam(((Player) sender).getUniqueId()) == FROZEN) {
+                        if (manhunt.getTeam(((Player) sender).getUniqueId()) == SPEEDRUNNER || manhunt.getTeam(((Player) sender).getUniqueId()) == FROZEN) {
                             if (args[1].equalsIgnoreCase("create")) {
                                 if (args.length >= 3) {
-                                    if (manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                    if (manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
                                         sender.sendMessage(ChatColor.RED + "You already have a waypoint!");
                                         return false;
                                     }
-                                    HashMap<UUID, HashMap<String, Location>> waypoints = manhuntGameManager.getWaypoints();
+                                    HashMap<UUID, HashMap<String, Location>> waypoints = manhunt.getWaypoints();
                                     HashMap<String, Location> waypoint = new HashMap<>();
                                     StringBuilder name = new StringBuilder(args[2]);
                                     for (int arg = 3; arg < args.length; arg++) {
@@ -355,24 +355,24 @@ public class ManhuntCommandHandler implements CommandExecutor {
                                 return false;
                             }
                             if (args[1].equalsIgnoreCase("remove")) {
-                                if (!manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                if (!manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
                                     sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
                                     return false;
                                 }
-                                HashMap<UUID, HashMap<String, Location>> waypoints = manhuntGameManager.getWaypoints();
+                                HashMap<UUID, HashMap<String, Location>> waypoints = manhunt.getWaypoints();
                                 waypoints.remove(((Player) sender).getUniqueId());
                                 sender.sendMessage(ChatColor.GREEN + "Successfully removed waypoint. ");
                                 return true;
                             }
                             else if(args[1].equalsIgnoreCase("teleport") || args[1].equalsIgnoreCase("tp")){
-                                if(manhuntGameManager.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
-                                    if(!(manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId()) >= 3)) {
-                                        HashMap<String, Location> location = manhuntGameManager.getWaypoints().get(((Player) sender).getUniqueId());
+                                if(manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                    if(!(manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId()) >= 3)) {
+                                        HashMap<String, Location> location = manhunt.getWaypoints().get(((Player) sender).getUniqueId());
                                         for(String locName : location.keySet()){
                                             ((Player) sender).teleport(location.get(locName));
-                                            int teleports = manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId());
-                                            manhuntGameManager.getWaypointTeleports().put(((Player) sender).getUniqueId(), (teleports + 1));
-                                            teleports = 3 - (manhuntGameManager.getWaypointTeleports().get(((Player) sender).getUniqueId()));
+                                            int teleports = manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId());
+                                            manhunt.getWaypointTeleports().put(((Player) sender).getUniqueId(), (teleports + 1));
+                                            teleports = 3 - (manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId()));
 
                                             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been teleported to the waypoint \"" + locName + "\"!"));
                                             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have &2" + teleports + " &ateleport(s) remaining."));
@@ -404,13 +404,17 @@ public class ManhuntCommandHandler implements CommandExecutor {
             return true;
         } else if (args[0].equalsIgnoreCase("resourcepack")) {
             if(sender instanceof Player){
-                if(hunter.contains(((Player) sender).getUniqueId())) {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
-                    manhuntGameManager.getPackManager().loadPack(((Player) sender).getPlayer());
-                    manhuntGameManager.getAppliedPack().add(((Player) sender).getUniqueId());
-                    return true;
+                if(manhunt.hasGameStarted()) {
+                    if (hunter.contains(((Player) sender).getUniqueId())) {
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
+                        manhunt.getPackManager().loadPack(((Player) sender).getPlayer());
+                        manhunt.getAppliedPack().add(((Player) sender).getUniqueId());
+                        return true;
+                    }
+                    sender.sendMessage(ChatColor.RED + "You must be a hunter to use this command!");
+                    return false;
                 }
-                sender.sendMessage(ChatColor.RED + "You must be a hunter to use this command!");
+                sender.sendMessage(ChatColor.RED + "There is no game in progress!");
                 return false;
             }
         }
@@ -436,7 +440,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
     }
     public void endGame(CommandSender sender) {
-        if (manhuntGameManager.hasGameStarted()) {
+        if (manhunt.hasGameStarted()) {
             for (Player players : Bukkit.getOnlinePlayers()) {
                 players.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                 players.setGlowing(false);
@@ -460,10 +464,10 @@ public class ManhuntCommandHandler implements CommandExecutor {
             deadSpeedrunner.clear();
             manacounter.cancelMana();
             manacounter.clearMana();
-            manhuntGameManager.setGameStatus(false);
-            AbilitesManager.clearCooldown();
-            manhuntGameManager.getTeam(FROZEN).clear();
-            manhuntGameManager.getWaypoints().clear();
+            manhunt.setGameStatus(false);
+            Abilites.clearCooldown();
+            manhunt.getTeam(FROZEN).clear();
+            manhunt.getWaypoints().clear();
             for(org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()){
                 if(team.getName().equals("hunterTeam") || team.getName().equals("speedrunnerTeam")){
                     team.unregister();

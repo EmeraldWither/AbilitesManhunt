@@ -1,20 +1,21 @@
 package org.emeraldcraft.manhunt.Abilties;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.ManHuntInventory;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AbilitesManager {
+public class Abilites {
 
-    private ManhuntGameManager manhuntGameManager;
-    public AbilitesManager(ManhuntGameManager manhuntGameManager){
-        this.manhuntGameManager = manhuntGameManager;
+    private Manhunt manhunt;
+    public Abilites(Manhunt manhunt){
+        this.manhunt = manhunt;
     }
     private ManHuntInventory manhuntInventory = new ManHuntInventory();
 
@@ -55,38 +56,10 @@ public class AbilitesManager {
         return null;
     }
 
-    public void clearCooldown(Ability ability){
-        if(ability.equals(Ability.LAUNCHER)){
-            launcherCooldown.clear();
-        }
-        if(ability.equals(Ability.FREEZER)){
-            freezeCooldown.clear();
-        }
-        if(ability.equals(Ability.GRAVITY)){
-            gravityCooldown.clear();
-        }
-        if(ability.equals(Ability.DAMAGEITEM)){
-            damageCooldown.clear();
-        }
-        if(ability.equals(Ability.RANDOMTP)){
-            randomTPCooldown.clear();
-        }
-        if(ability.equals(Ability.SCRAMBLE)){
-            scramblerCooldown.clear();
-        }
-        if(ability.equals(Ability.LIGHTNING)){
-            lightningCooldown.clear();
-        }
-        if(ability.equals(Ability.TARGETMOB)){
-            targetMobsCooldown.clear();
-        }
-
-    }
-
     public Ability getHeldAbility(Player player) {
-            if (manhuntGameManager.hasGameStarted()) {
-                if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
-                    if (player.getInventory().getItemInMainHand() != null) {
+            if (manhunt.hasGameStarted()) {
+                if (manhunt.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
+                    if (player.getInventory().getItemInMainHand().getType() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR) {
                         if (player.getInventory().getItemInMainHand().isSimilar(manhuntInventory.getGravity())) {
                             return Ability.GRAVITY;
                         }

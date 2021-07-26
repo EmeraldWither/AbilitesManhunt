@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.DEAD;
 
-public class ManhuntGameManager {
+public class Manhunt {
 
     List<UUID> hunter = new ArrayList<>();
     List<UUID> speedrunner = new ArrayList<>();
@@ -87,11 +87,11 @@ public class ManhuntGameManager {
         return ManhuntTeam.NONE;
     }
 
-    public String getCooldown(Player player, Ability pickAbility, AbilitesManager abilitesManager){
+    public String getCooldown(Player player, Ability pickAbility, Abilites abilites){
         Long time;
         long cooldown;
-        if(abilitesManager.getCooldown(pickAbility).get(player.getUniqueId()) != null) {
-            time = abilitesManager.getCooldown(pickAbility).get(player.getUniqueId());
+        if(abilites.getCooldown(pickAbility).get(player.getUniqueId()) != null) {
+            time = abilites.getCooldown(pickAbility).get(player.getUniqueId());
             cooldown = ((time - System.currentTimeMillis()) / 1000);
             if (!(cooldown < 1)) {
                 return ChatColor.translateAlternateColorCodes('&', "&4" + cooldown + " seconds");
@@ -105,10 +105,10 @@ public class ManhuntGameManager {
     public void setGameStatus(boolean b){
         hasGameStarted = b;
     }
-    public boolean startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay, AbilitesManager abilitesManager) {
+    public boolean startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay, Abilites abilites) {
         String prefix = manhuntMain.getConfig().getString("plugin-prefix");
         try {
-            new SpeedrunnerGUI(this, manhuntMain).createInventory();
+            new SpeedrunnerGUI(this).createInventory();
             ManHuntInventory manHuntInventory = new ManHuntInventory();
             setGameStatus(true);
 
@@ -173,7 +173,7 @@ public class ManhuntGameManager {
 
                 if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
                     UUID uuid = player.getUniqueId();
-                    ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilitesManager, manhuntMain);
+                    ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilites, manhuntMain);
                     manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.getPlugin());
                     int id = manhuntScoreboardManager.id;
                     hunterScoreboardID.put(player.getUniqueId(), id);

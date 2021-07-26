@@ -8,12 +8,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.ManHuntInventory;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -25,20 +25,20 @@ public class LightningGuiListener implements Listener {
 
     private ManhuntMain manhuntMain;
     private Manacounter manacounter;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager abilitesManager;
+    private Manhunt manhunt;
+    private Abilites abilites;
     List<UUID> hunter;
     List<UUID> speedrunner;
     Map<UUID, Long> lightningCooldown;
 
-    public LightningGuiListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager) {
+    public LightningGuiListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
         this.manhuntMain = manhuntMain;
-        this.manhuntGameManager = manhuntGameManager;
+        this.manhunt = manhunt;
         this.manacounter = manacounter;
-        this.abilitesManager = AbilitesManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
-        lightningCooldown = abilitesManager.getCooldown(Ability.LIGHTNING);
+        this.abilites = Abilites;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
+        lightningCooldown = abilites.getCooldown(Ability.LIGHTNING);
     }
 
 
@@ -46,7 +46,7 @@ public class LightningGuiListener implements Listener {
     public void InventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.LIGHTNING)) {
+            if (abilites.getHeldAbility(player).equals(Ability.LIGHTNING)) {
                 if (player.getInventory().getItemInMainHand().isSimilar(new ManHuntInventory().getLightning())) {
                     SkullMeta skull = (SkullMeta) event.getCurrentItem().getItemMeta();
                     Player selectedPlayer = Bukkit.getPlayer(skull.getOwner());
