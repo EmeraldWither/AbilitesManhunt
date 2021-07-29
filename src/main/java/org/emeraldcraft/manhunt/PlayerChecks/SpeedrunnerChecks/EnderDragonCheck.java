@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.logging.Level.INFO;
+
 public class EnderDragonCheck implements Listener {
     private Manhunt manhunt;
     private ManhuntMain manhuntMain;
@@ -45,6 +47,7 @@ public class EnderDragonCheck implements Listener {
         if(event.getEntity() instanceof EnderDragon){
             if (manhunt.hasGameStarted()) {
                 if (speedrunner.size() >= 1) {
+                    Bukkit.getLogger().log(INFO, "[MANHUNT] The game has ended.");
                     List<String> speedrunnerList = new ArrayList<>();
                     for(UUID uuid : hunter){
                         speedrunnerList.add(Bukkit.getPlayer(uuid).getName());
@@ -77,7 +80,9 @@ public class EnderDragonCheck implements Listener {
                             }
                         }
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
-                        manhunt.getPackManager().unloadPack(players);
+                        if(manhunt.getAppliedPack().contains(players.getUniqueId())) {
+                            manhunt.getPackManager().unloadPack(players);
+                        }
                     }
                     for (UUID player : speedrunner) {
                         Player players = Bukkit.getPlayer(player);
@@ -127,11 +132,13 @@ public class EnderDragonCheck implements Listener {
                     Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     manhunt.getWaypoints().clear();
                     manhunt.setGameStatus(false);
+                    manhunt.getAppliedPack().clear();
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
                             team.unregister();
                         }
                     }
+                    Bukkit.getLogger().log(INFO, "[MANHUNT] The game has ended.");
                     return;
                 }
             }

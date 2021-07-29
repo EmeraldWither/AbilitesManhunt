@@ -60,7 +60,7 @@ public class ManhuntMain extends JavaPlugin {
         this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhunt, abilites, this);
         registerListeners();
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhunt, this, manacounter, abilites));
-        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhunt));
+        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhunt, this));
 
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.admin"));
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.setmana"));

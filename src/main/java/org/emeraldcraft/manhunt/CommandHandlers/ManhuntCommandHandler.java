@@ -323,86 +323,90 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 return false;
             }
         }
-        else if(args[0].equalsIgnoreCase("waypoint")){
-            if(sender instanceof Player) {
-                if (manhunt.hasGameStarted()) {
-                    if (args.length >= 2) {
-                        if (manhunt.getTeam(((Player) sender).getUniqueId()) == SPEEDRUNNER || manhunt.getTeam(((Player) sender).getUniqueId()) == FROZEN) {
-                            if (args[1].equalsIgnoreCase("create")) {
-                                if (args.length >= 3) {
-                                    if (manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
-                                        sender.sendMessage(ChatColor.RED + "You already have a waypoint!");
+        else if(args[0].equalsIgnoreCase("waypoint")) {
+            if (manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
+                if (sender instanceof Player) {
+                    if (manhunt.hasGameStarted()) {
+                        if (args.length >= 2) {
+                            if (manhunt.getTeam(((Player) sender).getUniqueId()) == SPEEDRUNNER || manhunt.getTeam(((Player) sender).getUniqueId()) == FROZEN) {
+                                if (args[1].equalsIgnoreCase("create")) {
+                                    if (args.length >= 3) {
+                                        if (manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                            sender.sendMessage(ChatColor.RED + "You already have a waypoint!");
+                                            return false;
+                                        }
+                                        HashMap<UUID, HashMap<String, Location>> waypoints = manhunt.getWaypoints();
+                                        HashMap<String, Location> waypoint = new HashMap<>();
+                                        StringBuilder name = new StringBuilder(args[2]);
+                                        for (int arg = 3; arg < args.length; arg++) {
+                                            name.append(" ").append(args[arg]);
+                                        }
+
+                                        if (!(name.length() > 50)) {
+                                            waypoint.put(name.toString(), ((Player) sender).getLocation());
+                                            waypoints.put(((Player) sender).getUniqueId(), waypoint);
+                                            sender.sendMessage(ChatColor.GREEN + "Successfully created waypoint \"" + name + "\" at the location " + ChatColor.DARK_GREEN + waypoint.get(name.toString()).getBlockX() + ", " + waypoint.get(name.toString()).getBlockY() + ", " + waypoint.get(name.toString()).getBlockZ());
+                                            return true;
+
+                                        }
+                                        sender.sendMessage(ChatColor.RED + "Your waypoint name cannot be longer than 51 characters!");
+                                        return false;
+                                    }
+                                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
+                                    return false;
+                                }
+                                if (args[1].equalsIgnoreCase("remove")) {
+                                    if (!manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                        sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
                                         return false;
                                     }
                                     HashMap<UUID, HashMap<String, Location>> waypoints = manhunt.getWaypoints();
-                                    HashMap<String, Location> waypoint = new HashMap<>();
-                                    StringBuilder name = new StringBuilder(args[2]);
-                                    for (int arg = 3; arg < args.length; arg++) {
-                                        name.append(" ").append(args[arg]);
-                                    }
+                                    waypoints.remove(((Player) sender).getUniqueId());
+                                    sender.sendMessage(ChatColor.GREEN + "Successfully removed waypoint. ");
+                                    return true;
+                                } else if (args[1].equalsIgnoreCase("teleport") || args[1].equalsIgnoreCase("tp")) {
+                                    if (manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
+                                        if (!(manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId()) >= 3)) {
+                                            HashMap<String, Location> location = manhunt.getWaypoints().get(((Player) sender).getUniqueId());
+                                            for (String locName : location.keySet()) {
+                                                ((Player) sender).teleport(location.get(locName));
+                                                int teleports = manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId());
+                                                manhunt.getWaypointTeleports().put(((Player) sender).getUniqueId(), (teleports + 1));
+                                                teleports = 3 - (manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId()));
 
-                                    if(!(name.length() > 50)) {
-                                        waypoint.put(name.toString(), ((Player) sender).getLocation());
-                                        waypoints.put(((Player) sender).getUniqueId(), waypoint);
-                                        sender.sendMessage(ChatColor.GREEN + "Successfully created waypoint \"" + name + "\" at the location " + ChatColor.DARK_GREEN + waypoint.get(name.toString()).getBlockX() + ", " + waypoint.get(name.toString()).getBlockY() + ", " + waypoint.get(name.toString()).getBlockZ());
-                                        return true;
-
+                                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been teleported to the waypoint \"" + locName + "\"!"));
+                                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have &2" + teleports + " &ateleport(s) remaining."));
+                                                return true;
+                                            }
+                                        }
+                                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have any teleports remaning."));
+                                        return false;
                                     }
-                                    sender.sendMessage(ChatColor.RED + "Your waypoint name cannot be longer than 51 characters!");
-                                    return false;
-                                }
-                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
-                                return false;
-                            }
-                            if (args[1].equalsIgnoreCase("remove")) {
-                                if (!manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
                                     sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
                                     return false;
                                 }
-                                HashMap<UUID, HashMap<String, Location>> waypoints = manhunt.getWaypoints();
-                                waypoints.remove(((Player) sender).getUniqueId());
-                                sender.sendMessage(ChatColor.GREEN + "Successfully removed waypoint. ");
-                                return true;
-                            }
-                            else if(args[1].equalsIgnoreCase("teleport") || args[1].equalsIgnoreCase("tp")){
-                                if(manhunt.getWaypoints().containsKey(((Player) sender).getUniqueId())) {
-                                    if(!(manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId()) >= 3)) {
-                                        HashMap<String, Location> location = manhunt.getWaypoints().get(((Player) sender).getUniqueId());
-                                        for(String locName : location.keySet()){
-                                            ((Player) sender).teleport(location.get(locName));
-                                            int teleports = manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId());
-                                            manhunt.getWaypointTeleports().put(((Player) sender).getUniqueId(), (teleports + 1));
-                                            teleports = 3 - (manhunt.getWaypointTeleports().get(((Player) sender).getUniqueId()));
-
-                                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been teleported to the waypoint \"" + locName + "\"!"));
-                                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have &2" + teleports + " &ateleport(s) remaining."));
-                                            return true;
-                                        }
-                                    }
-                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have any teleports remaning."));
-                                    return false;
-                                }
-                                sender.sendMessage(ChatColor.RED + "You do not have a waypoint! You can make one with /manhunt waypoint create <waypoint name> !");
+                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
+                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
+                                sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint teleport");
                                 return false;
                             }
-                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
-                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
-                            sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint teleport");
+                            sender.sendMessage(ChatColor.RED + "You must be an alive speedrunner to use this command!");
                             return false;
                         }
-                        sender.sendMessage(ChatColor.RED + "You must be an alive speedrunner to use this command!");
+                        sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
+                        sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
                         return false;
                     }
-                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint create <waypoint name> ");
-                    sender.sendMessage(ChatColor.RED + "Command Usage: /manhunt waypoint remove");
+                    sender.sendMessage(ChatColor.RED + "There is no ongoing game in progress! Start a game with /manhunt start!");
                     return false;
                 }
-                sender.sendMessage(ChatColor.RED + "There is no ongoing game in progress! Start a game with /manhunt start!");
-                return false;
+                sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
+                return true;
             }
-            sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
+            sender.sendMessage(ChatColor.RED + "This feature is not enabled!");
             return true;
-        } else if (args[0].equalsIgnoreCase("resourcepack")) {
+        }
+        else if (args[0].equalsIgnoreCase("resourcepack")) {
             if(sender instanceof Player){
                 if(manhunt.hasGameStarted()) {
                     if (hunter.contains(((Player) sender).getUniqueId())) {
@@ -454,13 +458,16 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 for(PotionEffect potionEffect: players.getActivePotionEffects()){
                     players.removePotionEffect(potionEffect.getType());
                 }
-
+                if(manhunt.getAppliedPack().contains(players.getUniqueId())) {
+                    manhunt.getPackManager().unloadPack(players);
+                }
             }
             for (String msg : manhuntMain.getConfig().getStringList("messages.force-end-msg")) {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%player%", sender.getName())));
             }
             speedrunner.clear();
             hunter.clear();
+            manhunt.getAppliedPack().clear();
             deadSpeedrunner.clear();
             manacounter.cancelMana();
             manacounter.clearMana();

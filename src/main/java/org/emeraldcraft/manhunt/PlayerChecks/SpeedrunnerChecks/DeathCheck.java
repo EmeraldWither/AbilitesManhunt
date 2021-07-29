@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.logging.Level.INFO;
+
 public class DeathCheck implements Listener {
 
     // This class is called whenever a speedrunner dies.
@@ -44,7 +46,6 @@ public class DeathCheck implements Listener {
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
         if (manhunt.hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getUniqueId())) {
-
                 //Add a death to the player
                 int death = 0;
                 if(manhuntMain.getDataConfig().getConfig().contains("players." + event.getEntity().getUniqueId().toString() + ".deaths")){
@@ -59,7 +60,11 @@ public class DeathCheck implements Listener {
                 event.getEntity().setAllowFlight(true);
                 event.getEntity().setFlying(true);
                 event.getEntity().setGlowing(false);
+
                 if (speedrunner.size() == 0) {
+                    // If the game was lost
+
+                    Bukkit.getLogger().log(INFO, "[MANHUNT] The game has ended.");
                     List<String> hunterList = new ArrayList<>();
                     for(UUID uuid : hunter){
                         hunterList.add(Bukkit.getPlayer(uuid).getName());
@@ -102,7 +107,9 @@ public class DeathCheck implements Listener {
                                 team.removeEntry(players.getName());
                             }
                         }
-                        manhunt.getPackManager().unloadPack(players);
+                        if(manhunt.getAppliedPack().contains(players.getUniqueId())) {
+                            manhunt.getPackManager().unloadPack(players);
+                        }
                         manhunt.getAppliedPack().clear();
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
@@ -137,6 +144,7 @@ public class DeathCheck implements Listener {
                     }
                     manacounter.clearMana();
                     manacounter.cancelMana();
+                    manhunt.getAppliedPack().clear();
                     speedrunner.clear();
                     deadSpeedrunners.clear();
                     hunter.clear();

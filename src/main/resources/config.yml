@@ -215,3 +215,15 @@ abilities:
 clear-items-on-join: true
 clear-items-on-leave: true
 prevent-advancements: true
+
+
+# Experimental Features.
+
+# These experimental features will not
+# break the plugin, just add new features
+# which could not be balanced.
+
+# Features require the game to be restarted.
+experimental-features:
+  waypoint-teleport: false
+

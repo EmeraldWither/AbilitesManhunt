@@ -8,16 +8,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manhunt;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.*;
 
 public class ManhuntTabCompleter implements TabCompleter {
-    private static final List<String> SUBCOMMANDS = Arrays.asList("create", "remove", "teleport", "tp");
+    private static final List<String> SUBCOMMANDS = new ArrayList<>();
     private static final List<String> players = new ArrayList<>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
     private final Manhunt manhunt;
-    public ManhuntTabCompleter(Manhunt manhunt){
+    private ManhuntMain manhuntMain;
+    public ManhuntTabCompleter(Manhunt manhunt, ManhuntMain manhuntMain){
      this.manhunt = manhunt;
+     this.manhuntMain = manhuntMain;
     }
 
 
@@ -76,6 +79,12 @@ public class ManhuntTabCompleter implements TabCompleter {
                         }
                     }
                     else if(args[0].equalsIgnoreCase("waypoint")){
+                        SUBCOMMANDS.add("create");
+                        SUBCOMMANDS.add("remove");
+                        if(manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")){
+                            SUBCOMMANDS.add("teleport");
+                            SUBCOMMANDS.add("tp");
+                        }
                         return StringUtil.copyPartialMatches(args[1], SUBCOMMANDS, new ArrayList<>());
                     }
                     return StringUtil.copyPartialMatches(args[1], players, new ArrayList<>());

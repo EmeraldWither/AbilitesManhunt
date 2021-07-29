@@ -134,15 +134,16 @@ public class Manhunt {
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                 }
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m-------------------------------------------\n" +
-                        "&c(!) Experimental Features Enabled (!)\n" +
-                        "\n" +
-                        "&4Feature Type: &c&lWaypoint Teleports\n" +
-                        "&4Feature Description: \n" +
-                        "&c&lThis feature will allow speedrunners to teleport\n" +
-                        "&c&lto their waypoint &43 &c&ltimes in a game! This feature\n" +
-                        "&c&lis enabled to test if it is balanced!\n" +
-                        "&c&m-------------------------------------------"));
+                if(manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "" +
+                            "&a----------------------\n" +
+                            "&2Experimental Feature Enabled!\n" +
+                            "\n" +
+                            "&3Usage: &b/waypoint teleport\n" +
+                            "&3Description: &bTeleport to your waypoint &33\n" +
+                            "&btimes in a game!\n" +
+                            "&a----------------------"));
+                }
 
 
                 player.getInventory().clear();
@@ -184,15 +185,16 @@ public class Manhunt {
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                 }
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&m-------------------------------------------\n" +
-                        "&c(!) Experimental Features Enabled (!)\n" +
-                        "\n" +
-                        "&4Feature Type: &c&lWaypoint Teleports\n" +
-                        "&4Feature Description: \n" +
-                        "&c&lThis feature will allow speedrunners to teleport\n" +
-                        "&c&lto their waypoint &43 &c&ltimes in a game! This feature\n" +
-                        "&c&lis enabled to test if it is balanced!\n" +
-                        "&c&m-------------------------------------------"));
+                if(manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "" +
+                            "&a----------------------\n" +
+                            "&2Experimental Feature Enabled!\n" +
+                            "\n" +
+                            "&3Usage: &b/waypoint teleport\n" +
+                            "&3Description: &bTeleport to your waypoint &33\n" +
+                            "&btimes in a game!\n" +
+                            "&a----------------------"));
+                }
 
                 player.getInventory().clear();
                 manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
