@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 public class PreventAdvancements implements Listener {

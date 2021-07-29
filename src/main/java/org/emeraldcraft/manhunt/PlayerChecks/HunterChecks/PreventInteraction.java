@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 
 public class PreventInteraction implements Listener {
 

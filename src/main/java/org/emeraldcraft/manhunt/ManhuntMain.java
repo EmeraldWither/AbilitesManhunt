@@ -1,14 +1,11 @@
 package org.emeraldcraft.manhunt;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Abilties.DamageItem.DamageItemGUIListener;
 import org.emeraldcraft.manhunt.Abilties.DamageItem.DamageItemListener;
@@ -30,19 +27,16 @@ import org.emeraldcraft.manhunt.Abilties.TargetMobs.TargetMobGUIListener;
 import org.emeraldcraft.manhunt.Abilties.TargetMobs.TargetMobListener;
 import org.emeraldcraft.manhunt.CommandHandlers.ManhuntCommandHandler;
 import org.emeraldcraft.manhunt.CommandHandlers.ManhuntTabCompleter;
-import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Managers.DataManager;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
+import org.emeraldcraft.manhunt.PlayerChecks.ClearStragglers;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.GiveSpeedrunnerScoreboard;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.PushAwayHunter;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
@@ -78,9 +72,6 @@ public class ManhuntMain extends JavaPlugin {
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
         this.saveDefaultConfig();
 
-
-
-
         getLogger().log(INFO, "\n" +
                 "--------------------------------------------------------------\n" +
                 "|                            NOW ENABLING:                              \n" +
@@ -95,10 +86,6 @@ public class ManhuntMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        List<UUID> speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
-        List<UUID> hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
-
-
         getLogger().log(Level.WARNING, "\n" +
                 "--------------------------------------------------------------\n" +
                 "|                            NOW DISABLING:                              \n" +
@@ -108,82 +95,6 @@ public class ManhuntMain extends JavaPlugin {
                 "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
-
-
-        for(Player player : Bukkit.getOnlinePlayers()){
-            if(player.getOpenInventory() != null) {
-                player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-            }
-            for(ItemStack item : player.getInventory().getStorageContents()){
-                ManHuntInventory inv = new ManHuntInventory();
-                if(item != null) {
-                    if (item.isSimilar(inv.getDamageItem())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getGravity())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getLauncher())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getLightning())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getrandomTP())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getPlayerTP())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getScrambler())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getMobTargeter())) {
-                        player.getInventory().remove(item);
-                    }
-                }
-            }
-            if(hunter.contains(player.getUniqueId())){
-                player.setGlowing(false);
-
-                player.getInventory().clear();
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setInvulnerable(false);
-                player.closeInventory();
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.setSaturation(5);
-                for(PotionEffect potionEffect: player.getActivePotionEffects()){
-                    player.removePotionEffect(potionEffect.getType());
-                }
-            }
-            if(speedrunner.contains(player.getUniqueId())){
-                player.setGlowing(false);
-                player.getInventory().clear();
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setInvulnerable(false);
-                player.closeInventory();
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.setSaturation(5);
-                for(PotionEffect potionEffect: player.getActivePotionEffects()){
-                    player.removePotionEffect(potionEffect.getType());
-                }
-            }
-            if(manhunt.getTeam(ManhuntTeam.DEAD).contains(player.getUniqueId())){
-                player.setGlowing(false);
-
-                player.getInventory().clear();
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setInvulnerable(false);
-                player.closeInventory();
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.setSaturation(5);
-            }
-
-        }
-
     }
 
     private void registerListeners(){
@@ -212,7 +123,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PreventHunger(manhunt, this),this);
         getServer().getPluginManager().registerEvents(new TargetMobListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhunt, this, manacounter, abilites),this);
-        getServer().getPluginManager().registerEvents(new ClearInv(manhunt, this),this);
+        getServer().getPluginManager().registerEvents(new ClearStragglers(manhunt),this);
         getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new FreezeListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new PreventAdvancements(manhunt, this), this);
@@ -229,6 +140,17 @@ public class ManhuntMain extends JavaPlugin {
     }
     public DataManager getDataConfig() {
         return data;
+    }
+    public void debug(String s){
+        if(getConfig().getBoolean("debug-msg")){
+            Bukkit.getLogger().log(INFO, "[MANHUNT DEBUG] : " + s);
+        }
+    }
+    public void debug(String s, Player p){
+        if(getConfig().getBoolean("debug-msg")){
+            Bukkit.getLogger().log(INFO, "[MANHUNT DEBUG] : " + s);
+            p.sendMessage(ChatColor.GRAY + "[MANHUNT DEBUG] : " + s);
+        }
     }
 }
 

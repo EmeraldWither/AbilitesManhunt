@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 
 public class PreventDamage implements Listener {
 

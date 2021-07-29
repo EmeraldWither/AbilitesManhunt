@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.Collection;

@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.*;
@@ -406,9 +406,9 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if(sender instanceof Player){
                 if(manhunt.hasGameStarted()) {
                     if (hunter.contains(((Player) sender).getUniqueId())) {
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
                         manhunt.getPackManager().loadPack(((Player) sender).getPlayer());
                         manhunt.getAppliedPack().add(((Player) sender).getUniqueId());
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
                         return true;
                     }
                     sender.sendMessage(ChatColor.RED + "You must be a hunter to use this command!");

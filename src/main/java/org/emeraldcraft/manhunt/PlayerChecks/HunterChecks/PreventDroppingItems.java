@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class PreventDroppingItems implements Listener {
     public PreventDroppingItems(Manhunt manhunt, ManhuntMain manhuntMain){
         this.manhunt = manhunt;
         this.manhuntMain = manhuntMain;
-        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
     }
 
     @EventHandler

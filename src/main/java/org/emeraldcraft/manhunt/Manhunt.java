@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.Managers;
+package org.emeraldcraft.manhunt;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -16,9 +16,9 @@ import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.ManHuntInventory;
-import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.ManhuntMain;
+import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntPackManager;
+import org.emeraldcraft.manhunt.Managers.ManhuntSpeedrunnerScoreboardManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +63,7 @@ public class Manhunt {
         }
         return null;
     }
+
     public ManhuntPackManager getPackManager(){
         return manhuntPackManager;
     }
@@ -229,18 +230,18 @@ public class Manhunt {
                 player.addPotionEffect(potionEffect);
                 player.setGlowing(true);
 
-                sender.sendMessage(ChatColor.GOLD + "" + "_______________________________________");
+                sender.sendMessage(ChatColor.GOLD + "" + "-----------------------------------------");
                 String message = "&2Click here to apply the custom resourcepack!";
                 String command = "manhunt resourcepack";
 
                 TextComponent component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
                 // Add a click event to the component.
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + command));
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click here to apply the custom resourcepack!" ).color(net.md_5.bungee.api.ChatColor.GREEN).create()));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click here to apply the custom resourcepack!").color(net.md_5.bungee.api.ChatColor.GREEN).create()));
 
                 // Send it!
                 player.spigot().sendMessage(component);
-                sender.sendMessage(ChatColor.GOLD + "_______________________________________");
+                sender.sendMessage(ChatColor.GOLD + "-----------------------------------------");
 
             }
         if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY)) {

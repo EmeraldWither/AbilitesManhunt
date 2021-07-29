@@ -7,8 +7,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 public class GiveHunterScoreboard implements Listener {

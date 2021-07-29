@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class DeathCheck implements Listener {
                         for (PotionEffect potionEffect : players.getActivePotionEffects()) {
                             players.removePotionEffect(potionEffect.getType());
                         }
-                        ;                        players.setGlowing(false);
+                        players.setGlowing(false);
                         players.getInventory().clear();
                         players.setGameMode(GameMode.SURVIVAL);
                         players.setInvulnerable(false);
@@ -163,6 +163,7 @@ public class DeathCheck implements Listener {
                     }
                 }, 1L);
                 player.setGameMode(GameMode.SPECTATOR);
+                player.setGlowing(false);
                 player.sendTitle(ChatColor.DARK_RED + "YOU DIED", ChatColor.RED + "Better luck next time.", 20, 100, 20);
             }
         }

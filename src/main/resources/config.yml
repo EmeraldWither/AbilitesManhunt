@@ -7,6 +7,7 @@
 #|------------------------------------------------------------------------| #
 #                                                                           #
 plugin-prefix: "&2[Abilities Manhunt] "
+debug-msg: false
 # mana-amount is how much mana will be given every second.
 # mana-delay is how many ticks until it will give the mana-amount
 mana-delay: 20

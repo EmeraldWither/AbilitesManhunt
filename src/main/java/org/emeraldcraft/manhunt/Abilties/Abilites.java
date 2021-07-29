@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.ManHuntInventory;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 
 import java.util.HashMap;
 import java.util.Map;

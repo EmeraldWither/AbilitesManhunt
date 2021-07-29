@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.Manhunt;
+import org.emeraldcraft.manhunt.Manhunt;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class PreventAttacking implements Listener {
     List<UUID> hunter;
     public PreventAttacking(Manhunt manhunt){
         this.manhunt = manhunt;
-        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
     }
 
     @EventHandler
