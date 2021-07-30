@@ -10,9 +10,6 @@ This plugin WILL require Java 16 to compile and to run. Please ensure that you h
 
 This is a plugin which takes a new take on Manhunt. With 8 abilities, it will elevate the manhunt genre. 
 
-~~You can see the planned features timeline here: https://github.com/EmeraldWither/abilitiesmanhunt/projects/1~~
-
-
 How to compile the plugin
 ----------------------------------------------------------------
 
@@ -24,17 +21,15 @@ How to compile the plugin
 
 3) Open the “pom.xml”.
 
-4) Go to line 32 and replace “REPLACE YOUR DIRECTORY HERE WITH NO “”’, with the directory of your plugins folder. Then replace "YOUR_GITHUB_USERNAME_HERE", with your github       username. 
+4) At line 34, replace the `your plugins directory here` with the directory of your plugins folder. 
 
 5) Click on the maven reload button on the top right. 
 
 ![2021-05-11 12_36_26-Window](https://user-images.githubusercontent.com/68785503/117853252-30c3c500-b256-11eb-990d-9aa93a50026c.png)
 
-6) Go into your plugins folder, and make sure that there are no folders called “classes”. If there are, delete them.
+6) If you wish, edit the plugin. 
 
-7) If you wish, edit the plugin. 
-
-8) Click on Lifecycle > Package. 
+7) Click on Lifecycle > Package. 
 
 Congrats you have compiled the plugin!
 
