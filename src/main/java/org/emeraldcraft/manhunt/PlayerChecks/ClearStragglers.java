@@ -65,14 +65,13 @@ public class ClearStragglers implements Listener {
                 potionEffect.withParticles(false);
                 player.addPotionEffect(potionEffect);
                 player.setGlowing(true);
+                return;
             }
-            if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.SPEEDRUNNER || manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.FROZEN) {
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setAllowFlight(false);
-                player.setFlying(false);
-                player.setInvulnerable(false);
-                player.setGlowing(true);
-            }
+            player.setGameMode(GameMode.SURVIVAL);
+            player.setAllowFlight(false);
+            player.setFlying(false);
+            player.setInvulnerable(false);
+            player.setGlowing(true);
         }
     }
     @EventHandler
@@ -95,16 +94,15 @@ public class ClearStragglers implements Listener {
                     team.removeEntry(player.getName());
                 }
             }
+            return;
         }
-        if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.SPEEDRUNNER || manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.FROZEN || manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.DEAD) {
-            player.setGlowing(false);
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
-            player.setInvulnerable(false);
-            player.closeInventory();
-            player.setFlying(false);
-            player.setAllowFlight(false);
-        }
+        player.setGlowing(false);
+        player.getInventory().clear();
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setInvulnerable(false);
+        player.closeInventory();
+        player.setFlying(false);
+        player.setAllowFlight(false);
     }
 
 }
