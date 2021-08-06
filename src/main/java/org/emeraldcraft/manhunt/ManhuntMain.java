@@ -111,8 +111,9 @@ public class ManhuntMain extends JavaPlugin {
                 "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
-
-        getDataBase().closeConnection();
+        if(getDataBase().getConnection() != null) {
+            getDataBase().closeConnection();
+        }
     }
 
     private void registerListeners(){

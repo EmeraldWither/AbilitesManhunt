@@ -128,6 +128,92 @@ public class DataBase {
         }
 
     }
+    public void addManhuntLoss(UUID uuid){
+        try {
+            Connection connection = getConnection();
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS manhuntStats(UUID  varchar(100),  wins INTEGER(10), losses INTEGER(10), deaths INTEGER(10));";
+            String sqlins = "insert into manhuntStats(UUID, wins, losses ,deaths)  values(?,0,1,0);";
+            String sqlupdate = "update manhuntStats set losses = ? where uuid = ?;";
+            String sqlSelect = "SELECT UUID,losses FROM manhuntStats ORDER BY deaths DESC;";
+
+            // Create table
+            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
+            stmt.executeUpdate();
+
+
+            PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
+            ResultSet results = stmt2.executeQuery();
+            boolean foundUUID = false;
+            while (results.next()) {
+                String sqlUUID = results.getString("UUID");
+                if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
+                    PreparedStatement stmt3 = connection.prepareStatement(sqlupdate);
+                    int losses = results.getInt("losses");
+
+                    stmt3.setString(2, uuid.toString());
+                    stmt3.setInt(1, losses + 1);
+
+
+                    stmt3.executeUpdate();
+                    foundUUID = true;
+                }
+            }
+            if(!foundUUID){
+                //Insert Data
+                PreparedStatement stmt3 = connection.prepareStatement(sqlins);
+                stmt3.setString(1, uuid.toString());
+                stmt3.executeUpdate();
+            }
+        }
+        catch (SQLException e){
+            Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
+            e.printStackTrace();
+        }
+
+    }
+    public void addManhuntDeath(UUID uuid){
+        try {
+            Connection connection = getConnection();
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS manhuntStats(UUID  varchar(100),  wins INTEGER(10), losses INTEGER(10), deaths INTEGER(10));";
+            String sqlins = "insert into manhuntStats(UUID, wins, losses ,deaths)  values(?,0,0,1);";
+            String sqlupdate = "update manhuntStats set deaths = ? where uuid = ?;";
+            String sqlSelect = "SELECT UUID,deaths FROM manhuntStats ORDER BY deaths DESC;";
+
+            // Create table
+            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
+            stmt.executeUpdate();
+
+
+            PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
+            ResultSet results = stmt2.executeQuery();
+            boolean foundUUID = false;
+            while (results.next()) {
+                String sqlUUID = results.getString("UUID");
+                if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
+                    PreparedStatement stmt3 = connection.prepareStatement(sqlupdate);
+                    int deaths = results.getInt("deaths");
+
+                    stmt3.setString(2, uuid.toString());
+                    stmt3.setInt(1, deaths + 1);
+
+
+                    stmt3.executeUpdate();
+                    foundUUID = true;
+                }
+            }
+            if(!foundUUID){
+                //Insert Data
+                PreparedStatement stmt3 = connection.prepareStatement(sqlins);
+                stmt3.setString(1, uuid.toString());
+                stmt3.executeUpdate();
+            }
+        }
+        catch (SQLException e){
+            Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
+            e.printStackTrace();
+        }
+
+    }
     public Integer getManhuntWins(UUID uuid) {
         String sqlSelect = "SELECT UUID,wins,losses,deaths FROM manhuntStats ORDER BY wins DESC;";
         try {
@@ -146,4 +232,41 @@ public class DataBase {
         }
         return 0;
     }
+    public Integer getManhuntLosses(UUID uuid) {
+        String sqlSelect = "SELECT UUID,losses FROM manhuntStats ORDER BY losses DESC;";
+        try {
+            PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
+            ResultSet results = stmt2.executeQuery();
+            while (results.next()) {
+                String sqlUUID = results.getString("UUID");
+                if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
+                    int losses = results.getInt("losses");
+                    System.out.println("Losses are " + losses);
+                    return losses;
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public Integer getManhuntDeaths(UUID uuid) {
+        String sqlSelect = "SELECT UUID,deaths FROM manhuntStats ORDER BY deaths DESC;";
+        try {
+            PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
+            ResultSet results = stmt2.executeQuery();
+            while (results.next()) {
+                String sqlUUID = results.getString("UUID");
+                if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
+                    int deaths = results.getInt("deaths");
+                    System.out.println("Deaths are " + deaths);
+                    return deaths;
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }
