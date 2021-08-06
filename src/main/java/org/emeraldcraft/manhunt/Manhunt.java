@@ -28,6 +28,10 @@ import java.util.UUID;
 import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.DEAD;
 
 public class Manhunt {
+    private ManhuntMain main;
+    public Manhunt(ManhuntMain main){
+        this.main = main;
+    }
 
     List<UUID> hunter = new ArrayList<>();
     List<UUID> speedrunner = new ArrayList<>();
@@ -38,7 +42,6 @@ public class Manhunt {
     List<UUID> appliedPack = new ArrayList<>();
 
     ManhuntPackManager manhuntPackManager = new ManhuntPackManager();
-
     private boolean hasGameStarted = false;
 
     //WAYPOINT
@@ -267,4 +270,11 @@ public class Manhunt {
         public HashMap<UUID, Integer> getWaypointTeleports(){
             return waypointTeleports;
         }
+
+    public ManhuntMain getMain() {
+        return main;
+    }
+    public DataBase getDatabase(){
+        return main.getDataBase();
+    }
 }

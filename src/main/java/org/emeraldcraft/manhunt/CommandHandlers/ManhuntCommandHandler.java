@@ -422,6 +422,31 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 return false;
             }
         }
+        else if (args[0].equalsIgnoreCase("addtestwin")){
+            if(sender instanceof Player) {
+                int[] wins = {0};
+                UUID uuid = ((Player) sender).getUniqueId();
+                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        manhunt.getDatabase().addManhuntWin(uuid);
+                        wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
+                    }
+                });
+                Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        for(Player player : Bukkit.getOnlinePlayers()){
+                            if(player.getUniqueId() == uuid){
+                                player.sendMessage("You have " + wins[0] + " win(s)!");
+                            }
+                        }
+                    }
+                }, 5);
+
+            }
+            return true;
+        }
         showHelp(sender);
 
         return false;

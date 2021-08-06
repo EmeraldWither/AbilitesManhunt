@@ -217,13 +217,22 @@ clear-items-on-leave: true
 prevent-advancements: true
 
 
+# MySQL Connection Settings
+mysql:
+  enabled: false
+  database-url: "database.website.com"
+  database-port: 3306
+  database-name: "ManhuntAbilitiesDB"
+  database-username: "root"
+  database-password: "password"
+
+
 # Experimental Features.
 
 # These experimental features will not
 # break the plugin, just add new features
 # which could not be balanced.
 
-# Features require the game to be restarted.
 experimental-features:
   waypoint-teleport: false
 
