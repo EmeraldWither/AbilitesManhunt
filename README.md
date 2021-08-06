@@ -3,6 +3,7 @@ ________________________________________________________
 #### Notice for Developers:
 This plugin WILL require Java 16 to compile and to run. Please ensure that you have this in your IDE.
 
+This branch is for integrating MySQL to the plugin. 
 ----------------------------------------------------------
 #### Version 1.2.2 has been released! You can check it out here : https://github.com/EmeraldWither/AbilitesManhunt/releases/tag/v1.2.2
 
