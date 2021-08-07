@@ -31,6 +31,7 @@ import org.emeraldcraft.manhunt.Managers.DataManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
 import org.emeraldcraft.manhunt.PlayerChecks.ClearStragglers;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
+import org.emeraldcraft.manhunt.PlayerChecks.ResourcePackListener;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.GiveSpeedrunnerScoreboard;
@@ -44,16 +45,27 @@ import static java.util.logging.Level.INFO;
 public class ManhuntMain extends JavaPlugin {
 
     private DataManager data;
-    Manhunt manhunt;
-    Manacounter manacounter;
-    Abilites abilites;
-    ManhuntHunterScoreboardManager manhuntScoreboardManager;
-
+    private Manhunt manhunt;
+    private Manacounter manacounter;
+    private Abilites abilites;
+    private ManhuntHunterScoreboardManager manhuntScoreboardManager;
+    private DataBase dataBase;
 
     @Override
     public void onEnable(){
         long time = System.currentTimeMillis();
-        manhunt = new Manhunt();
+        manhunt = new Manhunt(this);
+
+
+        //String url, Integer port, String username, String password
+
+        String url = getConfig().getString("mysql.database-url");
+        Integer port = getConfig().getInt("mysql.database-port");
+        String dbname = getConfig().getString("mysql.database-name");
+        String username = getConfig().getString("mysql.database-username");
+        String password = getConfig().getString("mysql.database-password");
+
+        this.dataBase = new DataBase(url, port, dbname, username, password);
         this.data = new DataManager(this);
         this.abilites = new Abilites(manhunt);
         this.manacounter = new Manacounter(manhunt,this);
@@ -71,6 +83,10 @@ public class ManhuntMain extends JavaPlugin {
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
         this.saveDefaultConfig();
+
+        if(getConfig().getBoolean("mysql.enabled")){
+            getDataBase().openConnection();
+        }
 
         getLogger().log(INFO, "\n" +
                 "--------------------------------------------------------------\n" +
@@ -95,6 +111,9 @@ public class ManhuntMain extends JavaPlugin {
                 "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
+        if(getDataBase().getConnection() != null) {
+            getDataBase().closeConnection();
+        }
     }
 
     private void registerListeners(){
@@ -134,6 +153,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PreventGettingClose(manhunt, this), this);
         getServer().getPluginManager().registerEvents(new PushAwayHunter(manhunt, this), this);
         getServer().getPluginManager().registerEvents(new ResourcePackListener(manhunt), this);
+        getServer().getPluginManager().registerEvents(new PreventEXP(manhunt), this);
     }
     public Plugin getPlugin(){
         return this;
@@ -151,6 +171,10 @@ public class ManhuntMain extends JavaPlugin {
             Bukkit.getLogger().log(INFO, "[MANHUNT DEBUG] : " + s);
             p.sendMessage(ChatColor.GRAY + "[MANHUNT DEBUG] : " + s);
         }
+    }
+
+    public DataBase getDataBase() {
+        return dataBase;
     }
 }
 

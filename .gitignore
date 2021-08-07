@@ -2,3 +2,5 @@
 AbilitesManhunt.iml
 pom.xml
 /target
+*.xml
+pom.xml

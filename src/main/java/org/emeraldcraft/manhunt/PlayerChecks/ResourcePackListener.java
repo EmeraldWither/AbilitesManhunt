@@ -1,9 +1,10 @@
-package org.emeraldcraft.manhunt;
+package org.emeraldcraft.manhunt.PlayerChecks;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.emeraldcraft.manhunt.Manhunt;
 
 public class ResourcePackListener implements Listener {
 
