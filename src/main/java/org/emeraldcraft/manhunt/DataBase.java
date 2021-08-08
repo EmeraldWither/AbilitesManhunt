@@ -6,6 +6,8 @@ import java.sql.*;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
+
 public class DataBase {
     private String url;
     private Integer port;
@@ -20,6 +22,20 @@ public class DataBase {
         this.username = username;
         this.password = password;
     }
+    public void testConnection(){
+        try {
+            this.openConnection();
+            if(!getConnection().isClosed() && getConnection() != null){
+                closeConnection();
+                Bukkit.getLogger().log(INFO, "[MANHUNT] Test database connection successful! You are good to go!");
+                return;
+            }
+            Bukkit.getLogger().log(INFO, "[MANHUNT] There seems to be a problem while opening up the database connection! Please consult any stacktrace that may have been printed.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Bukkit.getLogger().log(INFO, "[MANHUNT] There seems to be a problem while opening up the database connection! Please consult any stacktrace that may have been printed.");
+        }
+    }
     public void openConnection(){
         try {
             String url = "jdbc:mysql://" + this.url + ":" + this.port + "/" + this.name;
@@ -28,16 +44,16 @@ public class DataBase {
             // with the method getConnection() from DriverManager, we're trying to set
             // the connection's url, username, password to the variables we made earlier and
             // trying to get a connection at the same time. JDBC allows us to do this.
-            Bukkit.getLogger().log(Level.INFO, "[MANHUNT] Opened the database connection successfully.");
         } catch (SQLException e) { // catching errors
             e.printStackTrace(); // prints out SQLException errors to the console (if any)
         }
     }
     public void closeConnection(){
         try {
-            connection.close();
-            connection = null;
-            Bukkit.getLogger().log(Level.INFO, "[MANHUNT] Closed the database connection.");
+            if(getConnection() != null && !getConnection().isClosed()){
+                connection.close();
+                connection = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,6 +103,9 @@ public class DataBase {
 
     public void addManhuntWin(UUID uuid){
         try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
             Connection connection = getConnection();
             String sqlcreateTable = "CREATE TABLE IF NOT EXISTS manhuntStats(UUID  varchar(100),  wins INTEGER(10), losses INTEGER(10), deaths INTEGER(10));";
             String sqlins = "insert into manhuntStats(UUID, wins, losses ,deaths)  values(?,1,0,0);";
@@ -121,6 +140,7 @@ public class DataBase {
                 stmt3.setString(1, uuid.toString());
                 stmt3.executeUpdate();
             }
+            closeConnection();
         }
         catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
@@ -130,6 +150,9 @@ public class DataBase {
     }
     public void addManhuntLoss(UUID uuid){
         try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
             Connection connection = getConnection();
             String sqlcreateTable = "CREATE TABLE IF NOT EXISTS manhuntStats(UUID  varchar(100),  wins INTEGER(10), losses INTEGER(10), deaths INTEGER(10));";
             String sqlins = "insert into manhuntStats(UUID, wins, losses ,deaths)  values(?,0,1,0);";
@@ -164,15 +187,18 @@ public class DataBase {
                 stmt3.setString(1, uuid.toString());
                 stmt3.executeUpdate();
             }
+            closeConnection();
         }
         catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
             e.printStackTrace();
         }
-
     }
     public void addManhuntDeath(UUID uuid){
         try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
             Connection connection = getConnection();
             String sqlcreateTable = "CREATE TABLE IF NOT EXISTS manhuntStats(UUID  varchar(100),  wins INTEGER(10), losses INTEGER(10), deaths INTEGER(10));";
             String sqlins = "insert into manhuntStats(UUID, wins, losses ,deaths)  values(?,0,0,1);";
@@ -207,6 +233,7 @@ public class DataBase {
                 stmt3.setString(1, uuid.toString());
                 stmt3.executeUpdate();
             }
+            closeConnection();
         }
         catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
@@ -217,16 +244,20 @@ public class DataBase {
     public Integer getManhuntWins(UUID uuid) {
         String sqlSelect = "SELECT UUID,wins,losses,deaths FROM manhuntStats ORDER BY wins DESC;";
         try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
+            Connection connection = getConnection();
             PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
             ResultSet results = stmt2.executeQuery();
             while (results.next()) {
                 String sqlUUID = results.getString("UUID");
                 if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
                     int wins = results.getInt("wins");
-                    System.out.println("Wins are " + wins);
                     return wins;
                 }
             }
+            closeConnection();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -235,16 +266,20 @@ public class DataBase {
     public Integer getManhuntLosses(UUID uuid) {
         String sqlSelect = "SELECT UUID,losses FROM manhuntStats ORDER BY losses DESC;";
         try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
+            Connection connection = getConnection();
             PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
             ResultSet results = stmt2.executeQuery();
             while (results.next()) {
                 String sqlUUID = results.getString("UUID");
                 if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
                     int losses = results.getInt("losses");
-                    System.out.println("Losses are " + losses);
                     return losses;
                 }
             }
+            closeConnection();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -253,16 +288,20 @@ public class DataBase {
     public Integer getManhuntDeaths(UUID uuid) {
         String sqlSelect = "SELECT UUID,deaths FROM manhuntStats ORDER BY deaths DESC;";
         try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
+            Connection connection = getConnection();
             PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
             ResultSet results = stmt2.executeQuery();
             while (results.next()) {
                 String sqlUUID = results.getString("UUID");
                 if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
                     int deaths = results.getInt("deaths");
-                    System.out.println("Deaths are " + deaths);
                     return deaths;
                 }
             }
+            closeConnection();
         }catch (SQLException e){
             e.printStackTrace();
         }

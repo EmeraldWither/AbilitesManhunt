@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static org.emeraldcraft.manhunt.Enums.ManhuntTeam.DEAD;
 
 public class Manhunt {
     private ManhuntMain main;
@@ -58,7 +57,7 @@ public class Manhunt {
         if (team == ManhuntTeam.FROZEN) {
             return frozenPlayers;
         }
-        if (team == DEAD) {
+        if (team == ManhuntTeam.DEAD) {
                 return deadSpeedrunners;
         }
         if (team == ManhuntTeam.SPEEDRUNNER) {
@@ -86,7 +85,7 @@ public class Manhunt {
             return ManhuntTeam.FROZEN;
         }
         if(deadSpeedrunners.contains(uuid)){
-            return DEAD;
+            return ManhuntTeam.DEAD;
         }
         return ManhuntTeam.NONE;
     }
@@ -109,7 +108,7 @@ public class Manhunt {
     public void setGameStatus(boolean b){
         hasGameStarted = b;
     }
-    public boolean startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay, Abilites abilites) {
+    public void startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay, Abilites abilites) {
         String prefix = manhuntMain.getConfig().getString("plugin-prefix");
         try {
             new SpeedrunnerGUI(this).createInventory();
@@ -171,6 +170,8 @@ public class Manhunt {
                 player.addPotionEffect(speedEffect);
                 player.addPotionEffect(saturationEffect);
                 player.setGlowing(true);
+                player.setExp(0);
+                player.setLevel(0);
 
             }
             for (UUID hunter : hunter) {
@@ -221,11 +222,13 @@ public class Manhunt {
                 player.setCollidable(false);
                 player.setHealth(20);
                 player.setFoodLevel(20);
-                player.setGameMode(GameMode.SURVIVAL);
+                player.setGameMode(GameMode.ADVENTURE);
                 player.setInvulnerable(true);
                 player.setAllowFlight(true);
                 player.setFlying(true);
                 player.setSaturation(10000);
+                player.setExp(0);
+                player.setLevel(0);
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 10);
                 for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                     player.removePotionEffect(potionEffect.getType());
@@ -255,15 +258,13 @@ public class Manhunt {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
         }
         manacounter.startMana((JavaPlugin) manhuntMain.getPlugin(), 0, manadelay);
-        return true;
-    }
+        }
         catch(Exception e){
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cAn internal error has occurred with the plugin! The start has been aborted. It is suggested that you report this to the plugin by posting the stacktrace! The plugin will disable itself now."));
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(manhuntMain.getPlugin());
         }
-        return false;
-        }
+    }
         public HashMap<UUID, HashMap<String, Location>> getWaypoints(){
             return waypoints;
         }

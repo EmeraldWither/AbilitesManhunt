@@ -85,7 +85,7 @@ public class ManhuntMain extends JavaPlugin {
         this.saveDefaultConfig();
 
         if(getConfig().getBoolean("mysql.enabled")){
-            getDataBase().openConnection();
+            getDataBase().testConnection();
         }
 
         getLogger().log(INFO, "\n" +
@@ -111,9 +111,7 @@ public class ManhuntMain extends JavaPlugin {
                 "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
                 "|                         BY: EMERALDWITHERYT   \n" +
                 "--------------------------------------------------------------");
-        if(getDataBase().getConnection() != null) {
-            getDataBase().closeConnection();
-        }
+        getDataBase().closeConnection();
     }
 
     private void registerListeners(){
