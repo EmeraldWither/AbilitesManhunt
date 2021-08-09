@@ -47,12 +47,17 @@ public class DeathCheck implements Listener {
         if (manhunt.hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getUniqueId())) {
                 //Add a death to the player
-                int death = 0;
-                if(manhuntMain.getDataConfig().getConfig().contains("players." + event.getEntity().getUniqueId().toString() + ".deaths")){
-                    death = manhuntMain.getDataConfig().getConfig().getInt("players." + event.getEntity().getUniqueId().toString() + ".deaths");
+                if(manhunt.isDatabaseEnabled()){
+                    manhunt.getDatabase().addManhuntDeath(event.getEntity().getUniqueId());
                 }
-                manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".deaths", (death + 1));
-                manhuntMain.getDataConfig().saveConfig();
+                else {
+                    int deaths = 0;
+                    if(manhuntMain.getDataConfig().getConfig().contains("players." + event.getEntity().getUniqueId().toString() + ".deaths")){
+                        deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + event.getEntity().getUniqueId().toString() + ".deaths");
+                    }
+                    manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".deaths", (deaths + 1));
+                    manhuntMain.getDataConfig().saveConfig();
+                }
                 //End Adding death
 
                 speedrunner.remove(event.getEntity().getUniqueId());
@@ -76,12 +81,17 @@ public class DeathCheck implements Listener {
                         Player players = Bukkit.getPlayer(hunter);
 
                         //Add a win to the hunter
-                        int wins = 0;
-                        if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
-                            wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                        if(manhunt.isDatabaseEnabled()){
+                            manhunt.getDatabase().addManhuntWin(players.getUniqueId());
                         }
-                        manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
-                        manhuntMain.getDataConfig().saveConfig();
+                        else {
+                            int wins = 0;
+                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
+                                wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                            }
+                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
+                            manhuntMain.getDataConfig().saveConfig();
+                        }
                         //End adding win
 
 
@@ -116,13 +126,17 @@ public class DeathCheck implements Listener {
                     for (UUID player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
                         //Add a loss
-                        int losses = 0;
-                        if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
-                            losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
+                        if(manhunt.isDatabaseEnabled()){
+                            manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
                         }
-                        manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".losses", (losses + 1));
-                        manhuntMain.getDataConfig().saveConfig();
-                        //End adding loss
+                        else {
+                            int losses = 0;
+                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
+                                losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
+                            }
+                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".losses", (losses + 1));
+                            manhuntMain.getDataConfig().saveConfig();
+                        }
 
 
                         players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + hunters + "!", 20, 100, 20);

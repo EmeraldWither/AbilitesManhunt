@@ -39,6 +39,7 @@ public class Manhunt {
     List<UUID> frozenPlayers = new ArrayList<>();
 
     List<UUID> appliedPack = new ArrayList<>();
+    private boolean isDatabaseEnabled = false;
 
     ManhuntPackManager manhuntPackManager = new ManhuntPackManager();
     private boolean hasGameStarted = false;
@@ -277,5 +278,22 @@ public class Manhunt {
     }
     public DataBase getDatabase(){
         return main.getDataBase();
+    }
+    public void reloadConfig(){
+        main.reloadConfig();
+        Bukkit.getScheduler().runTaskAsynchronously(main.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                updateDatabaseStatus();
+            }
+        });
+    }
+    public void updateDatabaseStatus() {
+        getDatabase().testConnection();
+        isDatabaseEnabled = getDatabase().isEnabled();
+    }
+
+    public boolean isDatabaseEnabled() {
+        return isDatabaseEnabled;
     }
 }

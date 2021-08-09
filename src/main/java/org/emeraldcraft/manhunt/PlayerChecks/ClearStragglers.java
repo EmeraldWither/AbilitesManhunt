@@ -52,7 +52,7 @@ public class ClearStragglers implements Listener {
                 player.setCollidable(false);
                 player.setHealth(20);
                 player.setFoodLevel(20);
-                player.setGameMode(GameMode.SURVIVAL);
+                player.setGameMode(GameMode.ADVENTURE);
                 player.setInvulnerable(true);
                 player.setAllowFlight(true);
                 player.setFlying(true);
@@ -76,10 +76,26 @@ public class ClearStragglers implements Listener {
     }
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER) {
-            for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-                player.removePotionEffect(potionEffect.getType());
+        if (manhunt.hasGameStarted()) {
+            Player player = event.getPlayer();
+            if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER) {
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(potionEffect.getType());
+                }
+                player.setGlowing(false);
+                player.getInventory().clear();
+                player.setGameMode(GameMode.SURVIVAL);
+                player.setInvulnerable(false);
+                player.closeInventory();
+                player.setFlying(false);
+                player.setAllowFlight(false);
+                player.setCollidable(true);
+                for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+                    if (team.hasEntry(player.getName())) {
+                        team.removeEntry(player.getName());
+                    }
+                }
+                return;
             }
             player.setGlowing(false);
             player.getInventory().clear();
@@ -88,21 +104,7 @@ public class ClearStragglers implements Listener {
             player.closeInventory();
             player.setFlying(false);
             player.setAllowFlight(false);
-            player.setCollidable(true);
-            for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-                if (team.hasEntry(player.getName())) {
-                    team.removeEntry(player.getName());
-                }
-            }
-            return;
         }
-        player.setGlowing(false);
-        player.getInventory().clear();
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setInvulnerable(false);
-        player.closeInventory();
-        player.setFlying(false);
-        player.setAllowFlight(false);
     }
 
 }

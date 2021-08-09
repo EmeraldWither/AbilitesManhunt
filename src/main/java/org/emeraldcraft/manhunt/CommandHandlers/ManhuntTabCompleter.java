@@ -91,7 +91,7 @@ public class ManhuntTabCompleter implements TabCompleter {
                 }
             }
             else {
-                if(args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("remove")){
+                if(args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("stats")){
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         players.add(player.getName());
                     }

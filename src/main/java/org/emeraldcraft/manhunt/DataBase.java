@@ -15,6 +15,7 @@ public class DataBase {
     private String name;
     private String password;
     private Connection connection;
+    private boolean isEnabled = false;
     public DataBase(String url, Integer port,String name ,String username, String password){
         this.url = url;
         this.name = name;
@@ -25,14 +26,17 @@ public class DataBase {
     public void testConnection(){
         try {
             this.openConnection();
-            if(!getConnection().isClosed() && getConnection() != null){
+            if(getConnection() != null && !getConnection().isClosed()){
                 closeConnection();
                 Bukkit.getLogger().log(INFO, "[MANHUNT] Test database connection successful! You are good to go!");
+                isEnabled = true;
                 return;
             }
+            isEnabled = false;
             Bukkit.getLogger().log(INFO, "[MANHUNT] There seems to be a problem while opening up the database connection! Please consult any stacktrace that may have been printed.");
         } catch (SQLException e) {
             e.printStackTrace();
+            isEnabled = false;
             Bukkit.getLogger().log(INFO, "[MANHUNT] There seems to be a problem while opening up the database connection! Please consult any stacktrace that may have been printed.");
         }
     }
@@ -100,6 +104,21 @@ public class DataBase {
     }
     //
 
+    public void initializeDB(){
+        try {
+            if(getConnection() == null || getConnection().isClosed()){
+                openConnection();
+            }
+            Connection connection = getConnection();
+            String sqlSelect = "SELECT * FROM manhuntStats";
+            PreparedStatement stmt = connection.prepareStatement(sqlSelect);
+            stmt.executeUpdate();
+            closeConnection();
+        }
+        catch (SQLException e){
+            return;
+        }
+    }
 
     public void addManhuntWin(UUID uuid){
         try {
@@ -253,8 +272,7 @@ public class DataBase {
             while (results.next()) {
                 String sqlUUID = results.getString("UUID");
                 if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
-                    int wins = results.getInt("wins");
-                    return wins;
+                    return results.getInt("wins");
                 }
             }
             closeConnection();
@@ -275,8 +293,7 @@ public class DataBase {
             while (results.next()) {
                 String sqlUUID = results.getString("UUID");
                 if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
-                    int losses = results.getInt("losses");
-                    return losses;
+                    return results.getInt("losses");
                 }
             }
             closeConnection();
@@ -297,8 +314,7 @@ public class DataBase {
             while (results.next()) {
                 String sqlUUID = results.getString("UUID");
                 if (sqlUUID.equalsIgnoreCase(uuid.toString())) {
-                    int deaths = results.getInt("deaths");
-                    return deaths;
+                    return results.getInt("deaths");
                 }
             }
             closeConnection();
@@ -308,4 +324,7 @@ public class DataBase {
         return 0;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 }

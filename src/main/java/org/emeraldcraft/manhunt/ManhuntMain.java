@@ -82,10 +82,11 @@ public class ManhuntMain extends JavaPlugin {
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.forceend"));
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
         this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
-        this.saveDefaultConfig();
 
-        if(getConfig().getBoolean("mysql.enabled")){
-            getDataBase().testConnection();
+        this.saveDefaultConfig();
+        manhunt.updateDatabaseStatus();
+        if(manhunt.isDatabaseEnabled()){
+            dataBase.initializeDB();
         }
 
         getLogger().log(INFO, "\n" +
@@ -152,6 +153,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PushAwayHunter(manhunt, this), this);
         getServer().getPluginManager().registerEvents(new ResourcePackListener(manhunt), this);
         getServer().getPluginManager().registerEvents(new PreventEXP(manhunt), this);
+        getServer().getPluginManager().registerEvents(new GiveFly(manhunt), this);
     }
     public Plugin getPlugin(){
         return this;

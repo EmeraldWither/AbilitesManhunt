@@ -55,6 +55,20 @@ public class EnderDragonCheck implements Listener {
                     String speedrunners = speedrunnerList.toString().replaceAll("]", "").replaceAll("\\[", "");
                     for (UUID hunter : hunter) {
                         Player players = Bukkit.getPlayer(hunter);
+
+                        if(manhunt.isDatabaseEnabled()){
+                            manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                        }
+                        else {
+                            int losses = 0;
+                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
+                                losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
+                            }
+                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".losses", (losses + 1));
+                            manhuntMain.getDataConfig().saveConfig();
+                        }
+
+
                         players.setAllowFlight(false);
                         players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + speedrunners + "!", 20, 100, 20);
                         players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
@@ -86,6 +100,20 @@ public class EnderDragonCheck implements Listener {
                     }
                     for (UUID player : speedrunner) {
                         Player players = Bukkit.getPlayer(player);
+
+                        if(manhunt.isDatabaseEnabled()){
+                            manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                        }
+                        else {
+                            int wins = 0;
+                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
+                                wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                            }
+                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
+                            manhuntMain.getDataConfig().saveConfig();
+                        }
+
+
                         players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + speedrunners + "!", 20, 100, 20);
                         for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
                             players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
@@ -105,6 +133,20 @@ public class EnderDragonCheck implements Listener {
                     }
                     for (UUID player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
+
+                        if(manhunt.isDatabaseEnabled()){
+                            manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                        }
+                        else {
+                            int wins = 0;
+                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
+                                wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                            }
+                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
+                            manhuntMain.getDataConfig().saveConfig();
+                        }
+
+
                         players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + speedrunners + "!", 20, 100, 20);
                         for (String msg : manhuntMain.getConfig().getStringList("messages.speedrunner-win-msg.speedrunners")) {
                             players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));

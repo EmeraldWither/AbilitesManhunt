@@ -228,7 +228,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("emeraldmanhunt.reload") || sender.hasPermission("manhunt.admin")) {
-                manhuntMain.reloadConfig();
+                manhunt.reloadConfig();
                 prefix = manhuntMain.getConfig().getString("plugin-prefix");
                 String msg = manhuntMain.getConfig().getString("config-reload-msg");
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
@@ -558,33 +558,11 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
     }
     public void showStats(Player player, CommandSender sender){
-        int[] losses = {0};
-        int[] deaths = {0};
-        int[] wins = {0};
-        UUID uuid = player.getUniqueId();
-        Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                losses[0] = manhunt.getDatabase().getManhuntLosses(uuid);
-                wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
-                deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
-            }
-        });
-        Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", player.getName())));
-                }
-            }
-        },5);
-    }
-    public void showStats(CommandSender sender){
-        if(sender instanceof Player) {
+        if(manhunt.isDatabaseEnabled()){
             int[] losses = {0};
             int[] deaths = {0};
             int[] wins = {0};
-            UUID uuid = ((Player) sender).getUniqueId();
+            UUID uuid = player.getUniqueId();
             Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
                 @Override
                 public void run() {
@@ -597,10 +575,69 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 @Override
                 public void run() {
                     for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", sender.getName())));
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", player.getName())));
                     }
                 }
             },5);
+            return;
+        }
+        int losses = 0;
+        int deaths = 0;
+        int wins = 0;
+        if(manhuntMain.getDataConfig().getConfig().contains("players." + player.getUniqueId().toString() + ".losses")){
+            losses = manhuntMain.getDataConfig().getConfig().getInt("players." + player.getUniqueId().toString() + ".losses");
+        }
+        if(manhuntMain.getDataConfig().getConfig().contains("players." + player.getUniqueId().toString() + ".deaths")){
+            deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + player.getUniqueId().toString() + ".deaths");
+        }
+        if(manhuntMain.getDataConfig().getConfig().contains("players." + player.getUniqueId().toString() + ".wins")){
+            wins = manhuntMain.getDataConfig().getConfig().getInt("players." + player.getUniqueId().toString() + ".wins");
+        }
+        for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins)).replace("%losses%", Integer.toString(losses)).replace("%deaths%", Integer.toString(deaths)).replace("%player%", player.getName())));
+        }
+
+    }
+    public void showStats(CommandSender sender){
+        if(sender instanceof Player) {
+            if(manhunt.isDatabaseEnabled()) {
+                int[] losses = {0};
+                int[] deaths = {0};
+                int[] wins = {0};
+                UUID uuid = ((Player) sender).getUniqueId();
+                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        losses[0] = manhunt.getDatabase().getManhuntLosses(uuid);
+                        wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
+                        deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
+                    }
+                });
+                Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        for (String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")) {
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", sender.getName())));
+                        }
+                    }
+                }, 5);
+                return;
+            }
+            int losses = 0;
+            int deaths = 0;
+            int wins = 0;
+            if (manhuntMain.getDataConfig().getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".losses")) {
+                losses = manhuntMain.getDataConfig().getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".losses");
+            }
+            if (manhuntMain.getDataConfig().getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".deaths")) {
+                deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".deaths");
+            }
+            if (manhuntMain.getDataConfig().getConfig().contains("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".wins")) {
+                wins = manhuntMain.getDataConfig().getConfig().getInt("players." + ((Player) sender).getPlayer().getUniqueId().toString() + ".wins");
+            }
+            for (String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins)).replace("%losses%", Integer.toString(losses)).replace("%deaths%", Integer.toString(deaths)).replace("%player%", ((Player) sender).getPlayer().getName())));
+            }
             return;
         }
         sender.sendMessage(ChatColor.RED + "Only a player can check their own stats! To see a players stats, type \"/manhunt stats <player>\"! (Note: They must be online)");
