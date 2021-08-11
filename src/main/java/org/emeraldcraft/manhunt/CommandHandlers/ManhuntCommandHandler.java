@@ -10,7 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
+import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.ManHuntInventory;
 import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
@@ -496,6 +498,21 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
             }
             return true;
+        }
+        else if (args[0].equalsIgnoreCase("giveitems")){
+            if(sender instanceof Player){
+                Player player = (Player) sender;
+                ManHuntInventory manHuntInventory = new ManHuntInventory();
+                manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
+                manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
+                manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
+                manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 3);
+                manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 4);
+                manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 5);
+                manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 6);
+                manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 7);
+                manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
+            }
         }
         showHelp(sender);
 

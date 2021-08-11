@@ -7,7 +7,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.emeraldcraft.manhunt.Enums.Ability;
 
@@ -17,27 +16,6 @@ import java.util.List;
 public class ManHuntInventory {
 
     //Inventory Manager
-
-    public ItemStack getLauncher() {
-        List<String> lore = new ArrayList<String>();
-        ItemStack launcher = new ItemStack(Material.FEATHER, 1);
-        ItemMeta meta = launcher.getItemMeta();
-
-        lore.add(ChatColor.translateAlternateColorCodes('&',""));
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&bLaunch the speedrunner"));
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&binto the air!"));
-        lore.add(ChatColor.translateAlternateColorCodes('&',""));
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&b(20 Mana) "));
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aLaunch Speedrunner &2(20 Mana) "));
-        meta.setLore(lore);
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        launcher.setItemMeta(meta);
-
-
-        return launcher;
-
-    }
-
     public ItemStack getLightning() {
         List<String> lore = new ArrayList<String>();
         ItemStack lightning = new ItemStack(Material.STICK, 1);
@@ -52,30 +30,68 @@ public class ManHuntInventory {
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.setCustomModelData(2300);
         lightning.setItemMeta(meta);
 
         return lightning;
     }
-
-    public ItemStack getGravity() {
+    public ItemStack getLauncher() {
         List<String> lore = new ArrayList<String>();
-        ItemStack gravity = new ItemStack(Material.ANVIL, 1);
-        ItemMeta meta = gravity.getItemMeta();
+        ItemStack launcher = new ItemStack(Material.FEATHER, 1);
+        ItemMeta meta = launcher.getItemMeta();
 
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aApply Gravity to Nearby Blocks &2(60 Mana)"));
         lore.add(ChatColor.translateAlternateColorCodes('&',""));
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&bApply gravity to blocks"));
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&bnear the speedrunner!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bLaunch the speedrunner"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&binto the air!"));
         lore.add(ChatColor.translateAlternateColorCodes('&',""));
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&3(60 Mana)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&b(20 Mana) "));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aLaunch Speedrunner &2(20 Mana) "));
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.setCustomModelData(2301);
+        launcher.setItemMeta(meta);
+        return launcher;
+
+    }
+    public ItemStack getFreezer(){
+        List<String> lore = new ArrayList<>();
+        ItemStack freezer = new ItemStack(Material.PACKED_ICE, 1);
+        ItemMeta meta = freezer.getItemMeta();
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bFreeze the speedrunner"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bright where they are standing!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(30 Mana)"));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFreeze Player &2(30 Mana)"));
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        freezer.setItemMeta(meta);
+        meta.setCustomModelData(2302);
+        return freezer;
+    }
+    public ItemStack getDamageItem() {
+        List<String> lore = new ArrayList<>();
+        ItemStack damageItem = new ItemStack(Material.GOLDEN_PICKAXE, 1);
+        ItemMeta meta = damageItem.getItemMeta();
+
+        meta.setDisplayName(ChatColor.GREEN + "Damage Item " + ChatColor.DARK_GREEN +"(40 Mana)");
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bDamage all of the items"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&bin the speedrunners"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&binventory by half!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(40 Mana)"));
+
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        gravity.setItemMeta(meta);
+        meta.setUnbreakable(true);
+        meta.setCustomModelData(2303);
+        damageItem.setItemMeta(meta);
+        return damageItem;
 
-        return gravity;
     }
-
     public ItemStack getScrambler() {
         List<String> lore = new ArrayList<String>();
         ItemStack scrambler = new ItemStack(Material.TNT, 1);
@@ -91,10 +107,30 @@ public class ManHuntInventory {
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.setCustomModelData(2304);
         scrambler.setItemMeta(meta);
-
         return scrambler;
     }
+    public ItemStack getGravity() {
+        List<String> lore = new ArrayList<String>();
+        ItemStack gravity = new ItemStack(Material.ANVIL, 1);
+        ItemMeta meta = gravity.getItemMeta();
+
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aApply Gravity to Nearby Blocks &2(60 Mana)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bApply gravity to blocks"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&bnear the speedrunner!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&',""));
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&3(60 Mana)"));
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.setCustomModelData(2305);
+        gravity.setItemMeta(meta);
+        return gravity;
+    }
+
+
     public ItemStack getrandomTP() {
         List<String> lore = new ArrayList<String>();
         ItemStack randomTP = new ItemStack(Material.ENDER_PEARL, 1);
@@ -110,55 +146,11 @@ public class ManHuntInventory {
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aRandomly Teleport Speedrunner &2(80 Mana)"));
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.setCustomModelData(2306);
         randomTP.setItemMeta(meta);
 
 
         return randomTP;
-
-    }
-    public ItemStack getDamageItem() {
-        List<String> lore = new ArrayList<String>();
-        ItemStack damageItem = new ItemStack(Material.GOLDEN_PICKAXE, 1);
-        ItemMeta meta = damageItem.getItemMeta();
-
-        meta.setDisplayName(ChatColor.GREEN + "Damage Item " + ChatColor.DARK_GREEN +"(40 Mana)");
-        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&bDamage all of the items"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&bin the speedrunners"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&binventory by half!"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(40 Mana)"));
-
-        meta.setLore(lore);
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        if(damageItem.getItemMeta() instanceof Damageable){
-            ((Damageable) damageItem.getItemMeta()).setDamage(damageItem.getType().getMaxDurability() / 2);
-        }
-
-        damageItem.setItemMeta(meta);
-        return damageItem;
-
-    }
-
-    public ItemStack getPlayerTP() {
-        List<String> lore = new ArrayList<String>();
-        ItemStack playerTP = new ItemStack(Material.ENDER_PEARL, 1);
-        ItemMeta meta = playerTP.getItemMeta();
-
-        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&aAllows you to teleport"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&ato the speedrunner!"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(No Mana)"));
-        meta.setDisplayName(ChatColor.AQUA + "Teleport to the Speedrunner");
-        meta.setLore(lore);
-        meta.addEnchant(Enchantment.MENDING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        playerTP.setItemMeta(meta);
-
-
-        return playerTP;
 
     }
     public ItemStack getMobTargeter(){
@@ -175,29 +167,36 @@ public class ManHuntInventory {
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setCustomModelData(2307);
         mobTargeter.setItemMeta(meta);
 
 
         return mobTargeter;
     }
-    public ItemStack getFreezer(){
+    public ItemStack getPlayerTP() {
         List<String> lore = new ArrayList<String>();
-        ItemStack freezer = new ItemStack(Material.PACKED_ICE, 1);
-        ItemMeta meta = freezer.getItemMeta();
+        ItemStack playerTP = new ItemStack(Material.ENDER_PEARL, 1);
+        ItemMeta meta = playerTP.getItemMeta();
+
         lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&bFreeze the speedrunner"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&bright where they are standing!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&aAllows you to teleport"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&ato the speedrunner!"));
         lore.add(ChatColor.translateAlternateColorCodes('&', ""));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(30 Mana)"));
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFreeze Player &2(30 Mana)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&3(No Mana)"));
+        meta.setDisplayName(ChatColor.AQUA + "Teleport to the Speedrunner");
         meta.setLore(lore);
+        meta.addEnchant(Enchantment.MENDING, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        freezer.setItemMeta(meta);
+        meta.setCustomModelData(2308);
+        playerTP.setItemMeta(meta);
 
 
-        return freezer;
+        return playerTP;
+
     }
+
+
     public ItemStack getBarrier(){
         ItemStack barrier = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
         ItemMeta meta = barrier.getItemMeta();
