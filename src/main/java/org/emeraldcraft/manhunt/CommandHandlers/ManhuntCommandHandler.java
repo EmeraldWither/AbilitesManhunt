@@ -229,7 +229,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
 
 
         if (args[0].equalsIgnoreCase("reload")) {
-            if (sender.hasPermission("emeraldmanhunt.reload") || sender.hasPermission("manhunt.admin")) {
+            if (sender.hasPermission("abilitiesmanhunt.reload") || sender.hasPermission("abilitiesmanhunt.admin")) {
                 manhunt.reloadConfig();
                 prefix = manhuntMain.getConfig().getString("plugin-prefix");
                 String msg = manhuntMain.getConfig().getString("config-reload-msg");
@@ -243,7 +243,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("forceend")) {
             if (sender.hasPermission("abilitiesmanhunt.forceend") || sender.hasPermission("abilitiesmanhunt.admin")) {
                 if (manhunt.hasGameStarted()) {
-                    Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
+                    //Bukkit.getScheduler().cancelTasks(manhuntMain);
                     endGame(sender);
                     return true;
                 }
@@ -412,8 +412,10 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if(sender instanceof Player){
                 if(manhunt.hasGameStarted()) {
                     if (hunter.contains(((Player) sender).getUniqueId())) {
-                        manhunt.getPackManager().loadPack(((Player) sender).getPlayer());
-                        manhunt.getAppliedPack().add(((Player) sender).getUniqueId());
+                        manhunt.getPackManager().loadPack(Objects.requireNonNull(((Player) sender).getPlayer()));
+                        if(!manhunt.getAppliedPack().contains(((Player) sender).getUniqueId())){
+                            manhunt.getAppliedPack().add(((Player) sender).getUniqueId());
+                        }
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
                         return true;
                     }
@@ -426,26 +428,13 @@ public class ManhuntCommandHandler implements CommandExecutor {
         }
         else if (args[0].equalsIgnoreCase("addtestwin")){
             if(sender instanceof Player) {
-                int[] wins = {0};
                 UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain(), new Runnable() {
                     @Override
                     public void run() {
                         manhunt.getDatabase().addManhuntWin(uuid);
-                        wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
                     }
                 });
-                Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        for(Player player : Bukkit.getOnlinePlayers()){
-                            if(player.getUniqueId() == uuid){
-                                player.sendMessage("You have " + wins[0] + " win(s)!");
-                            }
-                        }
-                    }
-                }, 5);
-
             }
             return true;
         }
@@ -453,14 +442,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if(sender instanceof Player) {
                 int[] losses = {0};
                 UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain(), new Runnable() {
                     @Override
                     public void run() {
                         manhunt.getDatabase().addManhuntLoss(uuid);
                         losses[0] = manhunt.getDatabase().getManhuntLosses(uuid);
                     }
                 });
-                Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskLater(manhunt.getMain(), new Runnable() {
                     @Override
                     public void run() {
                         for(Player player : Bukkit.getOnlinePlayers()){
@@ -478,14 +467,14 @@ public class ManhuntCommandHandler implements CommandExecutor {
             if(sender instanceof Player) {
                 int[] deaths = {0};
                 UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain(), new Runnable() {
                     @Override
                     public void run() {
                         manhunt.getDatabase().addManhuntDeath(uuid);
                         deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
                     }
                 });
-                Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskLater(manhunt.getMain(), new Runnable() {
                     @Override
                     public void run() {
                         for(Player player : Bukkit.getOnlinePlayers()){
@@ -576,27 +565,29 @@ public class ManhuntCommandHandler implements CommandExecutor {
     }
     public void showStats(Player player, CommandSender sender){
         if(manhunt.isDatabaseEnabled()){
-            int[] losses = {0};
-            int[] deaths = {0};
-            int[] wins = {0};
+            final int[] losses = new int[1];
+            final int[] deaths = new int[1];
+            final int[] wins = new int[1];
             UUID uuid = player.getUniqueId();
-            Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
                 @Override
                 public void run() {
                     losses[0] = manhunt.getDatabase().getManhuntLosses(uuid);
                     wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
                     deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
+
+                    Bukkit.getScheduler().runTask(manhunt.getMain(), new Runnable() {
+                        @Override
+                        public void run() {
+                            for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", sender.getName())));
+                            }
+                        }
+                    });
                 }
             });
-            Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", player.getName())));
-                    }
-                }
-            },5);
             return;
+
         }
         int losses = 0;
         int deaths = 0;
@@ -618,26 +609,27 @@ public class ManhuntCommandHandler implements CommandExecutor {
     public void showStats(CommandSender sender){
         if(sender instanceof Player) {
             if(manhunt.isDatabaseEnabled()) {
-                int[] losses = {0};
-                int[] deaths = {0};
-                int[] wins = {0};
+                final int[] losses = new int[1];
+                final int[] deaths = new int[1];
+                final int[] wins = new int[1];
                 UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain().getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
                     @Override
                     public void run() {
                         losses[0] = manhunt.getDatabase().getManhuntLosses(uuid);
                         wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
                         deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
+
+                        Bukkit.getScheduler().runTask(manhunt.getMain(), new Runnable() {
+                            @Override
+                            public void run() {
+                                for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
+                                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", sender.getName())));
+                                }
+                            }
+                        });
                     }
                 });
-                Bukkit.getScheduler().runTaskLater(manhunt.getMain().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        for (String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")) {
-                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", sender.getName())));
-                        }
-                    }
-                }, 5);
                 return;
             }
             int losses = 0;

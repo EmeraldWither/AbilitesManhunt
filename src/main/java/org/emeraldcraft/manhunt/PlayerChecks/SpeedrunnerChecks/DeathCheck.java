@@ -46,9 +46,16 @@ public class DeathCheck implements Listener {
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
         if (manhunt.hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getUniqueId())) {
+                Bukkit.getScheduler().cancelTasks(manhuntMain);
+
                 //Add a death to the player
                 if(manhunt.isDatabaseEnabled()){
-                    manhunt.getDatabase().addManhuntDeath(event.getEntity().getUniqueId());
+                    Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                        @Override
+                        public void run() {
+                            manhunt.getDatabase().addManhuntDeath(event.getEntity().getUniqueId());
+                        }
+                    });
                 }
                 else {
                     int deaths = 0;
@@ -82,7 +89,12 @@ public class DeathCheck implements Listener {
 
                         //Add a win to the hunter
                         if(manhunt.isDatabaseEnabled()){
-                            manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                @Override
+                                public void run() {
+                                    manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                                }
+                            });
                         }
                         else {
                             int wins = 0;
@@ -120,14 +132,21 @@ public class DeathCheck implements Listener {
                         if(manhunt.getAppliedPack().contains(players.getUniqueId())) {
                             manhunt.getPackManager().unloadPack(players);
                         }
-                        manhunt.getAppliedPack().clear();
+
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
+
+
                     for (UUID player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
                         //Add a loss
                         if(manhunt.isDatabaseEnabled()){
-                            manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                @Override
+                                public void run() {
+                                    manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                                }
+                            });
                         }
                         else {
                             int losses = 0;
@@ -156,8 +175,8 @@ public class DeathCheck implements Listener {
                         players.chat(ChatColor.GOLD + "GG!");
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
+                    manhunt.getAppliedPack().clear();
                     manacounter.clearMana();
-                    manacounter.cancelMana();
                     manhunt.getAppliedPack().clear();
                     speedrunner.clear();
                     deadSpeedrunners.clear();
@@ -165,7 +184,6 @@ public class DeathCheck implements Listener {
                     manhunt.getTeam(ManhuntTeam.FROZEN).clear();
                     Abilites.clearCooldown();
                     manhunt.setGameStatus(false);
-                    Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
                             team.unregister();
@@ -177,7 +195,7 @@ public class DeathCheck implements Listener {
                 Vector direction = event.getEntity().getLocation().getDirection();
                 deathLocation.setDirection(direction);
                 Player player = event.getEntity();
-                Bukkit.getScheduler().runTaskLater(manhuntMain.getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskLater(manhuntMain, new Runnable() {
                     @Override
                     public void run() {
                         player.spigot().respawn();

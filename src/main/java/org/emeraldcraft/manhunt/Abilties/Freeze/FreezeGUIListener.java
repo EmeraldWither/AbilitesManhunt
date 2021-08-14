@@ -91,7 +91,7 @@ public class FreezeGUIListener  implements Listener {
         //speedrunner.sendMessage("MANHUNT [DEBUG] Max freeze ticks: " + speedrunner.getMaxFreezeTicks());
 
         showFreezeEffect(speedrunner);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.getPlugin(), new Runnable() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain, new Runnable() {
             @Override
             public void run() {
                 stopShowFreezeEffect(speedrunner);
@@ -100,7 +100,7 @@ public class FreezeGUIListener  implements Listener {
                 freezeDelay = true;
                 speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-unfreeze-msg").replace("%hunter%", hunter.getName())));
                 hunter.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.unfreeze-msg").replace("%hunter%", hunter.getName()).replace("%speedrunner%", speedrunner.getName())));
-                Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain.getPlugin(), new Runnable() {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain, new Runnable() {
                     @Override
                     public void run() {
                         freezeDelay = false;
@@ -138,7 +138,7 @@ public class FreezeGUIListener  implements Listener {
         }
     }
     public void showFreezeEffect(Player player){
-        showFrozenID = Bukkit.getScheduler().scheduleSyncRepeatingTask(manhuntMain.getPlugin(), new Runnable() {
+        showFrozenID = Bukkit.getScheduler().scheduleSyncRepeatingTask(manhuntMain, new Runnable() {
             @Override
             public void run() {
                 player.setFreezeTicks(139);
@@ -147,6 +147,6 @@ public class FreezeGUIListener  implements Listener {
     }
     public void stopShowFreezeEffect(Player player){
         player.setFreezeTicks(0);
-        Bukkit.getScheduler().cancelTask(showFrozenID);
+        //Bukkit.getScheduler().cancelTask(showFrozenID);
     }
 }

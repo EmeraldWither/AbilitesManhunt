@@ -59,7 +59,7 @@ public class Manacounter{
         }, delay, repeat);
     }
     public void cancelMana(){
-        Bukkit.getServer().getScheduler().cancelTasks(manhuntMain.getPlugin());
+        Bukkit.getServer().getScheduler().cancelTasks(manhuntMain);
         id = -1;
         Mana.clear();
     }

@@ -131,7 +131,7 @@ public class Manhunt {
                 Player player = Bukkit.getPlayer(speedrunnerUUID);
                 getWaypointTeleports().put(speedrunnerUUID, 0);
                 ManhuntSpeedrunnerScoreboardManager speedrunnerScoreboardManager = new ManhuntSpeedrunnerScoreboardManager(this, manhuntMain);
-                speedrunnerScoreboardManager.showSpeedrunnerScoreboard(speedrunnerUUID, manhuntMain.getPlugin());
+                speedrunnerScoreboardManager.showSpeedrunnerScoreboard(speedrunnerUUID, manhuntMain);
                 speedrunnerScoreboardID.put(player.getUniqueId(), speedrunnerScoreboardManager.id);
                 player.spigot().respawn();
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
@@ -181,7 +181,7 @@ public class Manhunt {
                 if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
                     UUID uuid = player.getUniqueId();
                     ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilites, manhuntMain);
-                    manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain.getPlugin());
+                    manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain);
                     int id = manhuntScoreboardManager.id;
                     hunterScoreboardID.put(player.getUniqueId(), id);
                 }
@@ -258,12 +258,12 @@ public class Manhunt {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
         }
-        manacounter.startMana((JavaPlugin) manhuntMain.getPlugin(), 0, manadelay);
+        manacounter.startMana((JavaPlugin) manhuntMain, 0, manadelay);
         }
         catch(Exception e){
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cAn internal error has occurred with the plugin! The start has been aborted. It is suggested that you report this to the plugin by posting the stacktrace! The plugin will disable itself now."));
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(manhuntMain.getPlugin());
+            Bukkit.getPluginManager().disablePlugin(manhuntMain);
         }
     }
         public HashMap<UUID, HashMap<String, Location>> getWaypoints(){
@@ -281,16 +281,13 @@ public class Manhunt {
     }
     public void reloadConfig(){
         main.reloadConfig();
-        Bukkit.getScheduler().runTaskAsynchronously(main.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                updateDatabaseStatus();
-            }
-        });
+        updateDatabaseStatus();
     }
     public void updateDatabaseStatus() {
-        getDatabase().testConnection();
-        isDatabaseEnabled = getDatabase().isEnabled();
+        if(main.getConfig().getBoolean("mysql.enabled")) {
+            getDatabase().testConnection();
+            isDatabaseEnabled = getDatabase().isEnabled();
+        }
     }
 
     public boolean isDatabaseEnabled() {

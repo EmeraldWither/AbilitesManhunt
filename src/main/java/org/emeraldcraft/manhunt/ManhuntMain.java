@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Abilties.DamageItem.DamageItemGUIListener;
@@ -74,20 +73,18 @@ public class ManhuntMain extends JavaPlugin {
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhunt, this, manacounter, abilites));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhunt, this));
 
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.admin"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.setmana"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addhunter"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addspeedrunner"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.removeplayer"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.forceend"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
-        this.getPlugin().getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.admin"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.setmana"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addhunter"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addspeedrunner"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.removeplayer"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.forceend"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
 
         this.saveDefaultConfig();
         manhunt.updateDatabaseStatus();
-        if(manhunt.isDatabaseEnabled()){
-            dataBase.initializeDB();
-        }
+
 
         getLogger().log(INFO, "\n" +
                 "--------------------------------------------------------------\n" +
@@ -137,7 +134,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DamageItemGUIListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new DamageItemListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new PlayerTPListener(manhunt, this, abilites),this);
-        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhunt, this),this);
+        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhunt),this);
         getServer().getPluginManager().registerEvents(new PreventHunger(manhunt, this),this);
         getServer().getPluginManager().registerEvents(new TargetMobListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhunt, this, manacounter, abilites),this);
@@ -154,9 +151,6 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ResourcePackListener(manhunt), this);
         getServer().getPluginManager().registerEvents(new PreventEXP(manhunt), this);
         getServer().getPluginManager().registerEvents(new GiveFly(manhunt), this);
-    }
-    public Plugin getPlugin(){
-        return this;
     }
     public DataManager getDataConfig() {
         return data;

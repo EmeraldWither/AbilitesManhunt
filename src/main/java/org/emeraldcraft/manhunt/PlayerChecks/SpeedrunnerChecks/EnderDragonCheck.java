@@ -47,6 +47,9 @@ public class EnderDragonCheck implements Listener {
         if(event.getEntity() instanceof EnderDragon){
             if (manhunt.hasGameStarted()) {
                 if (speedrunner.size() >= 1) {
+                    Bukkit.getScheduler().cancelTasks(manhuntMain);
+
+
                     Bukkit.getLogger().log(INFO, "[MANHUNT] The game has ended.");
                     List<String> speedrunnerList = new ArrayList<>();
                     for(UUID uuid : hunter){
@@ -57,7 +60,12 @@ public class EnderDragonCheck implements Listener {
                         Player players = Bukkit.getPlayer(hunter);
 
                         if(manhunt.isDatabaseEnabled()){
-                            manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                @Override
+                                public void run() {
+                                    manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                                }
+                            });
                         }
                         else {
                             int losses = 0;
@@ -102,7 +110,12 @@ public class EnderDragonCheck implements Listener {
                         Player players = Bukkit.getPlayer(player);
 
                         if(manhunt.isDatabaseEnabled()){
-                            manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                @Override
+                                public void run() {
+                                    manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                                }
+                            });
                         }
                         else {
                             int wins = 0;
@@ -135,8 +148,12 @@ public class EnderDragonCheck implements Listener {
                         Player players = Bukkit.getPlayer(player);
 
                         if(manhunt.isDatabaseEnabled()){
-                            manhunt.getDatabase().addManhuntWin(players.getUniqueId());
-                        }
+                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                @Override
+                                public void run() {
+                                    manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                                }
+                            });                        }
                         else {
                             int wins = 0;
                             if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
@@ -165,13 +182,11 @@ public class EnderDragonCheck implements Listener {
                         players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
                     manacounter.clearMana();
-                    manacounter.cancelMana();
                     speedrunner.clear();
                     deadSpeedrunners.clear();
                     hunter.clear();
                     manhunt.getTeam(ManhuntTeam.FROZEN).clear();
                     Abilites.clearCooldown();
-                    Bukkit.getScheduler().cancelTasks(manhuntMain.getPlugin());
                     manhunt.getWaypoints().clear();
                     manhunt.setGameStatus(false);
                     manhunt.getAppliedPack().clear();
