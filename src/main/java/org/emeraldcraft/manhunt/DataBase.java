@@ -27,7 +27,7 @@ public class DataBase {
         try {
             this.openConnection();
             if(getConnection() != null && !getConnection().isClosed()){
-                closeConnection();
+
                 Bukkit.getLogger().log(INFO, "[MANHUNT] Test database connection successful! You are good to go!");
                 isEnabled = true;
                 return;
@@ -104,22 +104,6 @@ public class DataBase {
     }
     //
 
-    public void initializeDB(){
-        try {
-            if(getConnection() == null || getConnection().isClosed()){
-                openConnection();
-            }
-            Connection connection = getConnection();
-            String sqlSelect = "SELECT * FROM manhuntStats";
-            PreparedStatement stmt = connection.prepareStatement(sqlSelect);
-            stmt.executeUpdate();
-            closeConnection();
-        }
-        catch (SQLException e){
-            return;
-        }
-    }
-
     public void addManhuntWin(UUID uuid){
         try {
             if(getConnection() == null || getConnection().isClosed()){
@@ -159,7 +143,7 @@ public class DataBase {
                 stmt3.setString(1, uuid.toString());
                 stmt3.executeUpdate();
             }
-            closeConnection();
+
         }
         catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
@@ -206,7 +190,7 @@ public class DataBase {
                 stmt3.setString(1, uuid.toString());
                 stmt3.executeUpdate();
             }
-            closeConnection();
+
         }
         catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
@@ -252,7 +236,7 @@ public class DataBase {
                 stmt3.setString(1, uuid.toString());
                 stmt3.executeUpdate();
             }
-            closeConnection();
+
         }
         catch (SQLException e){
             Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
@@ -275,7 +259,7 @@ public class DataBase {
                     return results.getInt("wins");
                 }
             }
-            closeConnection();
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -296,7 +280,7 @@ public class DataBase {
                     return results.getInt("losses");
                 }
             }
-            closeConnection();
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -317,7 +301,7 @@ public class DataBase {
                     return results.getInt("deaths");
                 }
             }
-            closeConnection();
+
         }catch (SQLException e){
             e.printStackTrace();
         }

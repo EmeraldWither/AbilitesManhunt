@@ -147,6 +147,6 @@ public class FreezeGUIListener  implements Listener {
     }
     public void stopShowFreezeEffect(Player player){
         player.setFreezeTicks(0);
-        //Bukkit.getScheduler().cancelTask(showFrozenID);
+        Bukkit.getScheduler().cancelTask(showFrozenID);
     }
 }

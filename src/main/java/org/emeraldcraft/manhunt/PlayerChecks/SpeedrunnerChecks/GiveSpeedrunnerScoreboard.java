@@ -22,7 +22,7 @@ public class GiveSpeedrunnerScoreboard implements Listener {
     public void PlayerLeave(PlayerQuitEvent event){
         if(manhunt.getTeam(ManhuntTeam.SPEEDRUNNER).contains(event.getPlayer().getUniqueId())){
             if(manhunt.hasGameStarted()){
-                //Bukkit.getScheduler().cancelTask(manhunt.speedrunnerScoreboardID.get(event.getPlayer().getUniqueId()));
+                Bukkit.getScheduler().cancelTask(manhunt.speedrunnerScoreboardID.get(event.getPlayer().getUniqueId()));
                 event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             }
         }

@@ -243,7 +243,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         if (args[0].equalsIgnoreCase("forceend")) {
             if (sender.hasPermission("abilitiesmanhunt.forceend") || sender.hasPermission("abilitiesmanhunt.admin")) {
                 if (manhunt.hasGameStarted()) {
-                    //Bukkit.getScheduler().cancelTasks(manhuntMain);
+                    Bukkit.getScheduler().cancelTasks(manhuntMain);
                     endGame(sender);
                     return true;
                 }
@@ -550,7 +550,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
             hunter.clear();
             manhunt.getAppliedPack().clear();
             deadSpeedrunner.clear();
-            manacounter.cancelMana();
             manacounter.clearMana();
             manhunt.setGameStatus(false);
             Abilites.clearCooldown();
@@ -561,6 +560,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                     team.unregister();
                 }
             }
+            Bukkit.getScheduler().cancelTasks(manhuntMain);
         }
     }
     public void showStats(Player player, CommandSender sender){

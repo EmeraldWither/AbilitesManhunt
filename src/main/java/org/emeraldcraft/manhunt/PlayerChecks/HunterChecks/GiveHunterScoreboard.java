@@ -26,7 +26,7 @@ public class GiveHunterScoreboard implements Listener {
         if (main.getConfig().getBoolean("scoreboard.enabled")) {
             if (manhunt.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getUniqueId())) {
                 if (manhunt.hasGameStarted()) {
-                    //Bukkit.getScheduler().cancelTask(manhunt.hunterScoreboardID.get(event.getPlayer().getUniqueId()));
+                    Bukkit.getScheduler().cancelTask(manhunt.hunterScoreboardID.get(event.getPlayer().getUniqueId()));
                     event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                 }
             }
