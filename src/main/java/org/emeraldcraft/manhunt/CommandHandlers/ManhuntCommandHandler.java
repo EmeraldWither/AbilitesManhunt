@@ -658,7 +658,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
         //Send the general commands
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-----------------------------------\n" +
                 "        &cMinecraft Abilities Manhunt \n" +
-                "            &8By: EmeraldWither\n" +
+                "            &8By: EmerqldWither\n" +
                 "&6\n" +
                 "&7<required> (optional)\n" +
                 "&7Note: You can only see commands that\n" +

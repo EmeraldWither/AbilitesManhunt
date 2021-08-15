@@ -1,4 +1,4 @@
-# Minecraft Manhunt but the Hunter has Special Abilites
+# Minecraft Manhunt but the Hunter has Special Abilities
 ________________________________________________________
 #### Notice for Developers:
 This plugin WILL require Java 16 to compile and to run. Please ensure that you have this in your IDE.

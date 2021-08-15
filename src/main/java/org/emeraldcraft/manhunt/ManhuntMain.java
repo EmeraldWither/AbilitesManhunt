@@ -91,9 +91,9 @@ public class ManhuntMain extends JavaPlugin {
                 "|                            NOW ENABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.3 RELEASE                                  \n" +
+                "|                            v1.4 RELEASE                                  \n" +
                 "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
-                "|                        BY: EMERALDWITHERYT   \n" +
+                "|                        BY: EmerqldWither   \n" +
                 "--------------------------------------------------------------");
         getLogger().log(INFO, "The plugin started up in " + (System.currentTimeMillis() - time) + " ms!");
     }
@@ -105,9 +105,9 @@ public class ManhuntMain extends JavaPlugin {
                 "|                            NOW DISABLING:                              \n" +
                 "|                                                                        \n" +
                 "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.3 RELEASE                                  \n" +
+                "|                            v1.4 RELEASE                                  \n" +
                 "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
-                "|                         BY: EMERALDWITHERYT   \n" +
+                "|                         BY: EmerqldWither   \n" +
                 "--------------------------------------------------------------");
         getDataBase().closeConnection();
     }

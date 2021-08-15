@@ -107,7 +107,7 @@ public class ManhuntSpeedrunnerScoreboardManager {
 
         Team credit = board.registerNewTeam("credit");
         credit.addEntry(ChatColor.RED + "" + ChatColor.GOLD + "" + ChatColor.BLACK);
-        credit.setPrefix(ChatColor.GRAY + "Made by EmeraldWither");
+        credit.setPrefix(ChatColor.GRAY + "Made by EmerqldWither");
         obj.getScore(ChatColor.RED + "" + ChatColor.GOLD + "" + ChatColor.BLACK).setScore(1);
 
 

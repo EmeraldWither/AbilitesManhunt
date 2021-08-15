@@ -1,9 +1,9 @@
 #                                                                           #
 #|------------------------------------------------------------------------| #
 #|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES         | #
-#|                             v1.3 RELEASE                               | #
+#|                             v1.4 RELEASE                               | #
 #|                                                                        | #
-#|                        BY: EMERALDWITHERYT                             | #
+#|                        BY: EmerqldWither                             | #
 #|------------------------------------------------------------------------| #
 #                                                                           #
 plugin-prefix: "&2[Abilities Manhunt] "
@@ -57,7 +57,7 @@ messages:
   start-msg:
     - "&6&m-----------------------------------"
     - "      &e&l MINECRAFT   MANHUNT"
-    - "       &6&lBY: EMERALDWITHERYT "
+    - "       &6&lBY: EmerqldWither "
     - ""
     - "   &3&lThe manhunt is now starting!"
     - ""
@@ -84,7 +84,7 @@ messages:
       - "      &cLOSING TEAM: &4SPEEDRUNNERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
     speedrunners:
       - "&6---------------------------------------"
@@ -96,7 +96,7 @@ messages:
       - "      &cLOSING TEAM: &4SPEEDRUNNERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
   speedrunner-win-msg:
     hunters:
@@ -109,7 +109,7 @@ messages:
       - "         &cLOSING TEAM: &4HUNTERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
     speedrunners:
       - "&6---------------------------------------"
@@ -121,7 +121,7 @@ messages:
       - "         &cLOSING TEAM: &4HUNTERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
 
   # Global Placeholders For "Abilities"
