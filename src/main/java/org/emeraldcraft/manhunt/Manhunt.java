@@ -253,7 +253,7 @@ public class Manhunt {
                 sender.sendMessage(ChatColor.GOLD + "-----------------------------------------");
 
             }
-        if (Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY)) {
+        if (Boolean.TRUE.equals(Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY))) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
@@ -285,6 +285,18 @@ public class Manhunt {
     }
     public void updateDatabaseStatus() {
         if(main.getConfig().getBoolean("mysql.enabled")) {
+            String url = getMain().getConfig().getString("mysql.database-url");
+            Integer port = getMain().getConfig().getInt("mysql.database-port");
+            String dbname = getMain().getConfig().getString("mysql.database-name");
+            String username = getMain().getConfig().getString("mysql.database-username");
+            String password = getMain().getConfig().getString("mysql.database-password");
+
+            getDatabase().setName(dbname);
+            getDatabase().setUrl(url);
+            getDatabase().setPort(port);
+            getDatabase().setUsername(username);
+            getDatabase().setPassword(password);
+
             getDatabase().testConnection();
             isDatabaseEnabled = getDatabase().isEnabled();
         }

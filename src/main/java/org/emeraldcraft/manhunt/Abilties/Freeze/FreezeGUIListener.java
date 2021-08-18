@@ -88,7 +88,6 @@ public class FreezeGUIListener  implements Listener {
         Integer delay = time * 20;
         speedrunner.sendMessage(ChatColor.translateAlternateColorCodes('&' , manhuntMain.getConfig().getString("abilities.freeze.speedrunner-freeze-msg").replace("%hunter%", hunter.getName()).replace("%time%", Integer.toString(time))));
         manhunt.getTeam(ManhuntTeam.FROZEN).add(speedrunner.getUniqueId());
-        //speedrunner.sendMessage("MANHUNT [DEBUG] Max freeze ticks: " + speedrunner.getMaxFreezeTicks());
 
         showFreezeEffect(speedrunner);
         Bukkit.getScheduler().scheduleSyncDelayedTask(manhuntMain, new Runnable() {
