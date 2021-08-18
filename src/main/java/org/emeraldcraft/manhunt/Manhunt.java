@@ -297,8 +297,14 @@ public class Manhunt {
             getDatabase().setUsername(username);
             getDatabase().setPassword(password);
 
-            getDatabase().testConnection();
-            isDatabaseEnabled = getDatabase().isEnabled();
+            Bukkit.getScheduler().runTaskAsynchronously(main, new Runnable() {
+                @Override
+                public void run() {
+                    getDatabase().testConnection();
+                    isDatabaseEnabled = getDatabase().isEnabled();
+                }
+            });
+
         }
     }
 
