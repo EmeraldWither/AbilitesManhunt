@@ -10,9 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
-import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.ManHuntInventory;
 import org.emeraldcraft.manhunt.Manacounter;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
@@ -426,85 +424,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                 return false;
             }
         }
-        else if (args[0].equalsIgnoreCase("addtestwin")){
-            if(sender instanceof Player) {
-                UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain(), new Runnable() {
-                    @Override
-                    public void run() {
-                        manhunt.getDatabase().addManhuntWin(uuid);
-                    }
-                });
-            }
-            return true;
-        }
-        else if (args[0].equalsIgnoreCase("addtestloss")){
-            if(sender instanceof Player) {
-                int[] losses = {0};
-                UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain(), new Runnable() {
-                    @Override
-                    public void run() {
-                        manhunt.getDatabase().addManhuntLoss(uuid);
-                        losses[0] = manhunt.getDatabase().getManhuntLosses(uuid);
-                    }
-                });
-                Bukkit.getScheduler().runTaskLater(manhunt.getMain(), new Runnable() {
-                    @Override
-                    public void run() {
-                        for(Player player : Bukkit.getOnlinePlayers()){
-                            if(player.getUniqueId() == uuid){
-                                player.sendMessage("You have " + losses[0] + " losses(s)!");
-                            }
-                        }
-                    }
-                }, 5);
-
-            }
-            return true;
-        }
-        else if (args[0].equalsIgnoreCase("addtestdeath")){
-            if(sender instanceof Player) {
-                int[] deaths = {0};
-                UUID uuid = ((Player) sender).getUniqueId();
-                Bukkit.getScheduler().runTaskAsynchronously(manhunt.getMain(), new Runnable() {
-                    @Override
-                    public void run() {
-                        manhunt.getDatabase().addManhuntDeath(uuid);
-                        deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
-                    }
-                });
-                Bukkit.getScheduler().runTaskLater(manhunt.getMain(), new Runnable() {
-                    @Override
-                    public void run() {
-                        for(Player player : Bukkit.getOnlinePlayers()){
-                            if(player.getUniqueId() == uuid){
-                                player.sendMessage("You have " + deaths[0] + " deaths(s)!");
-                            }
-                        }
-                    }
-                }, 5);
-
-            }
-            return true;
-        }
-        else if (args[0].equalsIgnoreCase("giveitems")){
-            if(sender instanceof Player){
-                Player player = (Player) sender;
-                ManHuntInventory manHuntInventory = new ManHuntInventory();
-                manHuntInventory.giveAbility(Ability.LIGHTNING, player.getName(), 0);
-                manHuntInventory.giveAbility(Ability.LAUNCHER, player.getName(), 1);
-                manHuntInventory.giveAbility(Ability.FREEZER, player.getName(), 2);
-                manHuntInventory.giveAbility(Ability.DAMAGEITEM, player.getName(), 3);
-                manHuntInventory.giveAbility(Ability.SCRAMBLE, player.getName(), 4);
-                manHuntInventory.giveAbility(Ability.GRAVITY, player.getName(), 5);
-                manHuntInventory.giveAbility(Ability.RANDOMTP, player.getName(), 6);
-                manHuntInventory.giveAbility(Ability.TARGETMOB, player.getName(), 7);
-                manHuntInventory.giveAbility(Ability.PLAYERTP, player.getName(), 8);
-            }
-        }
         showHelp(sender);
-
         return false;
     }
 
@@ -580,7 +500,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         @Override
                         public void run() {
                             for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
-                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", sender.getName())));
+                                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%wins%", Integer.toString(wins[0])).replace("%losses%", Integer.toString(losses[0])).replace("%deaths%", Integer.toString(deaths[0])).replace("%player%", player.getName())));
                             }
                         }
                     });
@@ -653,7 +573,6 @@ public class ManhuntCommandHandler implements CommandExecutor {
     }
 
     public void showHelp(CommandSender sender) {
-
 
         //Send the general commands
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-----------------------------------\n" +

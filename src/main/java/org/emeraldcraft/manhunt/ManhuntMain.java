@@ -1,8 +1,5 @@
 package org.emeraldcraft.manhunt;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.Abilties.Abilites;
@@ -47,16 +44,12 @@ public class ManhuntMain extends JavaPlugin {
     private Manhunt manhunt;
     private Manacounter manacounter;
     private Abilites abilites;
-    private ManhuntHunterScoreboardManager manhuntScoreboardManager;
     private DataBase dataBase;
 
     @Override
     public void onEnable(){
         long time = System.currentTimeMillis();
         manhunt = new Manhunt(this);
-
-
-        //String url, Integer port, String username, String password
 
         String url = getConfig().getString("mysql.database-url");
         Integer port = getConfig().getInt("mysql.database-port");
@@ -68,8 +61,10 @@ public class ManhuntMain extends JavaPlugin {
         this.data = new DataManager(this);
         this.abilites = new Abilites(manhunt);
         this.manacounter = new Manacounter(manhunt,this);
-        this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhunt, abilites, this);
+        new ManhuntHunterScoreboardManager(manhunt, abilites, this);
+
         registerListeners();
+
         Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhunt, this, manacounter, abilites));
         Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhunt, this));
 
@@ -83,32 +78,34 @@ public class ManhuntMain extends JavaPlugin {
         this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
 
         this.saveDefaultConfig();
-        manhunt.updateDatabaseStatus();
+        manhunt.reloadConfig();
 
 
-        getLogger().log(INFO, "\n" +
-                "--------------------------------------------------------------\n" +
-                "|                            NOW ENABLING:                              \n" +
-                "|                                                                        \n" +
-                "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.4 RELEASE                                  \n" +
-                "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
-                "|                        BY: EmerqldWither   \n" +
-                "--------------------------------------------------------------");
+        getLogger().log(INFO, """
+
+                --------------------------------------------------------------
+                |                            NOW ENABLING:                             \s
+                |                                                                       \s
+                |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES   \s
+                |                            v1.4 RELEASE                                 \s
+                |               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR              \s
+                |                        BY: EmerqldWither  \s
+                --------------------------------------------------------------""");
         getLogger().log(INFO, "The plugin started up in " + (System.currentTimeMillis() - time) + " ms!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().log(Level.WARNING, "\n" +
-                "--------------------------------------------------------------\n" +
-                "|                            NOW DISABLING:                              \n" +
-                "|                                                                        \n" +
-                "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.4 RELEASE                                  \n" +
-                "|               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR               \n" +
-                "|                         BY: EmerqldWither   \n" +
-                "--------------------------------------------------------------");
+        getLogger().log(Level.WARNING, """
+
+                --------------------------------------------------------------
+                |                            NOW DISABLING:                             \s
+                |                                                                       \s
+                |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES   \s
+                |                            v1.4 RELEASE                                 \s
+                |               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR              \s
+                |                         BY: EmerqldWither  \s
+                --------------------------------------------------------------""");
         getDataBase().closeConnection();
     }
 
@@ -155,18 +152,6 @@ public class ManhuntMain extends JavaPlugin {
     public DataManager getDataConfig() {
         return data;
     }
-    public void debug(String s){
-        if(getConfig().getBoolean("debug-msg")){
-            Bukkit.getLogger().log(INFO, "[MANHUNT DEBUG] : " + s);
-        }
-    }
-    public void debug(String s, Player p){
-        if(getConfig().getBoolean("debug-msg")){
-            Bukkit.getLogger().log(INFO, "[MANHUNT DEBUG] : " + s);
-            p.sendMessage(ChatColor.GRAY + "[MANHUNT DEBUG] : " + s);
-        }
-    }
-
     public DataBase getDataBase() {
         return dataBase;
     }

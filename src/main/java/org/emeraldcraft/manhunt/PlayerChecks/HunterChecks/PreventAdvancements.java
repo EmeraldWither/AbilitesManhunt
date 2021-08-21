@@ -19,7 +19,7 @@ public class PreventAdvancements implements Listener {
     public void advancementEvent(PlayerAdvancementCriterionGrantEvent event){
         if(manhuntMain.getConfig().getBoolean("prevent-advancements")){
             if(manhunt.hasGameStarted()){
-                if(manhunt.getTeam(ManhuntTeam.HUNTER).contains(event.getPlayer().getUniqueId())){
+                if(manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER){
                     event.setCancelled(true);
                 }
             }

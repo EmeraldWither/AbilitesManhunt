@@ -146,7 +146,7 @@ public class DataBase {
 
         }
         catch (SQLException e){
-            Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
+            Bukkit.getlogger().log(Level.SEVERE, "[MANHUNT] A database error has occurred!");
             e.printStackTrace();
         }
 
@@ -193,7 +193,7 @@ public class DataBase {
 
         }
         catch (SQLException e){
-            Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
+            Bukkit.getlogger().log(Level.SEVERE, "[MANHUNT] A database error has occurred!");
             e.printStackTrace();
         }
     }
@@ -239,7 +239,7 @@ public class DataBase {
 
         }
         catch (SQLException e){
-            Bukkit.getLogger().log(Level.SEVERE, "A database error has occurred!");
+            Bukkit.getlogger().log(Level.SEVERE, "[MANHUNT] A database error has occurred!");
             e.printStackTrace();
         }
 

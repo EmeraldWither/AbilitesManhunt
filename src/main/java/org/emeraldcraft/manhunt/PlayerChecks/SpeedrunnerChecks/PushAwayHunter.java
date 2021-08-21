@@ -17,15 +17,15 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PushAwayHunter implements Listener {
-    private Manhunt manhunt;
-    private ManhuntMain main;
+    private final Manhunt manhunt;
+    private final ManhuntMain main;
 
     public PushAwayHunter(Manhunt manhunt, ManhuntMain manhuntMain) {
         this.manhunt = manhunt;
         this.main = manhuntMain;
     }
 
-    private HashMap<UUID, Long> msgcooldowns = new HashMap<>();
+    private HashMap<UUID, Long> msgCooldowns = new HashMap<>();
 
     @EventHandler
     public void playerMoveEvent(PlayerMoveEvent event) {
@@ -33,20 +33,21 @@ public class PushAwayHunter implements Listener {
             if (manhunt.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)) {
                 Player player = event.getPlayer();
                 int x = main.getConfig().getInt("hunter-range");
-                Collection<Entity> entities = event.getPlayer().getNearbyEntities(x, x, x);
+                Collection<Entity> entities = player.getNearbyEntities(x, x, x);
                 for (Entity entity : entities) {
                     if (entity instanceof Player) {
                         Player player2 = ((Player) entity).getPlayer();
+                        assert player2 != null;
                         if (manhunt.getTeam(player2.getUniqueId()).equals(ManhuntTeam.HUNTER)) {
-                            knockBack(player2, event.getPlayer().getLocation());
-                            if (msgcooldowns.containsKey(player2.getUniqueId())) {
-                                if (msgcooldowns.get(player2.getUniqueId()) > System.currentTimeMillis()) {
+                            knockBack(player2, player.getLocation());
+                            if (msgCooldowns.containsKey(player2.getUniqueId())) {
+                                if (msgCooldowns.get(player2.getUniqueId()) > System.currentTimeMillis()) {
                                     player2.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Hey!" + ChatColor.RESET + "" + ChatColor.RED + " You cant get that close to the speedrunner!");
-                                    msgcooldowns.put(player2.getUniqueId(), System.currentTimeMillis() + 1000);
+                                    msgCooldowns.put(player2.getUniqueId(), System.currentTimeMillis() + 1000);
                                     return;
                                 }
                             }
-                            msgcooldowns.put(player2.getUniqueId(), System.currentTimeMillis());
+                            msgCooldowns.put(player2.getUniqueId(), System.currentTimeMillis());
                         }
                     }
                 }
