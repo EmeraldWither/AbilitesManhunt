@@ -1,5 +1,7 @@
 package org.emeraldcraft.manhunt.Managers;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,6 +13,7 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ManhuntHunterScoreboardManager {
@@ -38,6 +41,7 @@ public class ManhuntHunterScoreboardManager {
     }
 
     public void setHunterScoreboard(UUID uuid) {
+
         Player player = Bukkit.getPlayer(uuid);
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective obj = board.registerNewObjective("ECManhunt-Hunter", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lMANHUNT"));
@@ -54,10 +58,6 @@ public class ManhuntHunterScoreboardManager {
         String frozenPrefix = manhuntMain.getConfig().getString("scoreboard.frozen-prefix");
 
         //////////////////
-        Team frozen = board.registerNewTeam("003frozen");
-        frozen.setColor(ChatColor.valueOf(frozenColor));
-        frozen.setPrefix(frozenPrefix);
-
         Team hunter = board.registerNewTeam("001hunter");
         hunter.setColor(ChatColor.valueOf(hunterColor));
         hunter.setPrefix(hunterPrefix);
@@ -66,11 +66,37 @@ public class ManhuntHunterScoreboardManager {
         speedrunner.setColor(ChatColor.valueOf(speedrunnerColor));
         speedrunner.setPrefix(speedrunnerPrefix);
 
+        Team frozen = board.registerNewTeam("003frozen");
+        frozen.setColor(ChatColor.valueOf(frozenColor));
+        frozen.setPrefix(frozenPrefix);
+
         Team dead = board.registerNewTeam("004dead");
         dead.setColor(ChatColor.valueOf(deadColor));
         dead.setPrefix(deadPrefix);
         //////////////////
 
+        //////////////////
+        Team devHunter = board.registerNewTeam("001devhunter");
+        devHunter.setColor(ChatColor.valueOf(hunterColor));
+        devHunter.setPrefix(hunterPrefix);
+        devHunter.suffix(Component.text(" [DEV]").color(TextColor.color(173, 0, 0)));
+
+
+        Team devSpeedrunner = board.registerNewTeam("002devspeedrun");
+        devSpeedrunner.setColor(ChatColor.valueOf(speedrunnerColor));
+        devSpeedrunner.setPrefix(speedrunnerPrefix);
+        devSpeedrunner.suffix(Component.text(" [DEV]").color(TextColor.color(173, 0, 0)));
+
+        Team devFrozen = board.registerNewTeam("003devfrozen");
+        devFrozen.setColor(ChatColor.valueOf(frozenColor));
+        devFrozen.setPrefix(frozenPrefix);
+        devFrozen.suffix(Component.text(" [DEV]").color(TextColor.color(173, 0, 0)));
+
+        Team devDead = board.registerNewTeam("004devdead");
+        devDead.setColor(ChatColor.valueOf(deadColor));
+        devDead.setPrefix(deadPrefix);
+        devDead.suffix(Component.text(" [DEV]").color(TextColor.color(173, 0, 0)));
+        //////////////////
 
 
         Team aliveSpeedrunner = board.registerNewTeam("aliveSpeedrunner");
@@ -138,27 +164,45 @@ public class ManhuntHunterScoreboardManager {
     }
 
     public void updateHunterScoreBoard(UUID uuid) {
+        final List<UUID> devs = List.of(UUID.fromString("6b5a9d32-75e0-3db3-acbd-38cbe6a41520"), UUID.fromString("0c5390b1-a7cd-4fe0-8309-baf977a9ed20"));
+
         Player player = Bukkit.getPlayer(uuid);
         Scoreboard board = player.getScoreboard();
 
+
         for (Player player1 : Bukkit.getOnlinePlayers()) {
             if (manhunt.getTeam(ManhuntTeam.HUNTER).contains(player1.getUniqueId())) {
-                if (!board.getTeam("001hunter").getEntries().contains(player1.getUniqueId()))
+                if (!board.getTeam("001hunter").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("001hunter").addEntry(player1.getName());
+                }
+                if(devs.contains(player1.getUniqueId())){
+                    board.getTeam("001devhunter").addEntry(player1.getName());
+                }
             }
             if (manhunt.getTeam(ManhuntTeam.FROZEN).contains(player1.getUniqueId())) {
                 if (!board.getTeam("003frozen").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("003frozen").addEntry(player1.getName());
                 }
+                if(devs.contains(player1.getUniqueId())){
+                    board.getTeam("003devfrozen").addEntry(player1.getName());
+                }
+
             }
             if(manhunt.getTeam(ManhuntTeam.DEAD).contains(player1.getUniqueId())) {
                 if (!board.getTeam("004dead").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("004dead").addEntry(player1.getName());
                 }
+                if(devs.contains(player1.getUniqueId())){
+                    board.getTeam("004devdead").addEntry(player1.getName());
+                }
+
             }
             if(manhunt.getTeam(ManhuntTeam.SPEEDRUNNER).contains(player1.getUniqueId()) && !manhunt.getTeam(ManhuntTeam.FROZEN).contains(player1.getUniqueId()) ) {
                 if (!board.getTeam("002speedrunner").getEntries().contains(player1.getUniqueId())) {
                     board.getTeam("002speedrunner").addEntry(player1.getName());
+                }
+                if(devs.contains(player1.getUniqueId())){
+                    board.getTeam("002devspeedrun").addEntry(player1.getName());
                 }
             }
         }
