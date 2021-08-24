@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ stable, development ]
   pull_request:
-    branches: [ master ]
+    branches: [ stable, development ]
 
 jobs:
   build:
@@ -27,4 +27,3 @@ jobs:
         with:
           name: Package
           path: staging
-      
