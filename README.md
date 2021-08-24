@@ -3,11 +3,6 @@ ________________________________________________________
 #### Notice for Developers:
 This plugin WILL require Java 16 to compile and to run. Please ensure that you have this in your IDE.
 
-----------------------------------------------------------
-#### Version 1.2.2 has been released! You can check it out here : https://github.com/EmeraldWither/AbilitesManhunt/releases/tag/v1.2.2
-
-----------------------------------------------------------
-
 This is a plugin which takes a new take on Manhunt. With 8 abilities, it will elevate the manhunt genre. 
 
 How to compile the plugin
