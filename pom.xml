@@ -6,12 +6,12 @@
 
     <groupId>org.emeraldcraft.manhuntabilites</groupId>
     <artifactId>AbilityManHunt</artifactId>
-    <version>v1.3 RELEASE</version>
+    <version>v1.4 RELEASE</version>
     <packaging>jar</packaging>
     <name>AbilityManhunt</name>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
