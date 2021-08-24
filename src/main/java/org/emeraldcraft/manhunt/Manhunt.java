@@ -31,7 +31,8 @@ public class Manhunt {
     public Manhunt(ManhuntMain main){
         this.main = main;
     }
-
+    
+    //Teams
     List<UUID> hunter = new ArrayList<>();
     List<UUID> speedrunner = new ArrayList<>();
 
