@@ -414,7 +414,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         if(!manhunt.getAppliedPack().contains(((Player) sender).getUniqueId())){
                             manhunt.getAppliedPack().add(((Player) sender).getUniqueId());
                         }
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying the hunter resourcepack!"));
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Now applying your resourcepack!"));
                         return true;
                     }
                     sender.sendMessage(ChatColor.RED + "You must be a hunter to use this command!");
