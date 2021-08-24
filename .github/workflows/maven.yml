@@ -22,7 +22,7 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: mvn package -f pom.xml
-      - run: mkdir staging && cp target/*.jar staging
+      - run: mkdir staging && cp your plugins directory/*.jar staging
       - uses: actions/upload-artifact@v2
         with:
           name: Package
