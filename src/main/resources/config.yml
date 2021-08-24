@@ -22,6 +22,7 @@ scoreboard:
   #
   # When enabling the scoreboard, it may conflict with other scoreboard plugins.
   # Note using /manhunt reload WILL NOT update the scoreboard until the game is restarted.
+  # You should probably restart when modifying scoreboards anyways. 
   #
   enabled: true
   # The color will decide what color the prefix is, as well as its glow color.
