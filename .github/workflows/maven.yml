@@ -4,11 +4,15 @@
 name: Java CI with Maven
 
 on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
   push:
-    branches: [ development ]
+    branches:
+      - development
   pull_request:
-    branches: [ development ]
-
+    branches:
+      - development
+  
 jobs:
   build:
 
