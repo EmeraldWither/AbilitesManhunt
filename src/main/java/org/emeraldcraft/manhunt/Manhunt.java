@@ -45,7 +45,7 @@ public class Manhunt {
     ManhuntPackManager manhuntPackManager = new ManhuntPackManager();
     private boolean hasGameStarted = false;
 
-    //WAYPOINTS
+    //Waypoints
     private HashMap<UUID, HashMap<String, Location>> waypoints = new HashMap<>();
     private HashMap<UUID, Integer> waypointTeleports = new HashMap<>();
 
