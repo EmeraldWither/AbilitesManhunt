@@ -18,26 +18,29 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
-                        <id>default-jar</id>
                         <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <finalName>${name}-${version}</finalName>
                             <outputDirectory>your plugins directory</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>15</source>
+                    <target>15</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -46,12 +49,7 @@
             <id>papermc-repo</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>io.papermc.paper</groupId>
