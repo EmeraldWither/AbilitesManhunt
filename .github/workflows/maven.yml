@@ -23,7 +23,7 @@ jobs:
       - name: Build with Maven
         run: mvn package -f pom.xml
       - name : Copy plugin to upload
-        run: mkdir staging && cp target/*.jar staging
+        run: mkdir staging && cp "your plugins directory"/*.jar staging
       - name : Upload plugin
         uses: actions/upload-artifact@v2
         with:
