@@ -13,6 +13,10 @@
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--Output directory can be ANY custom directory that you want the plugin to output in-->
+        <outputDirectory>your plugins directory</outputDirectory>
+        <!---->
+        <jarFileName>${name}-${version}.jar</jarFileName>
     </properties>
     <build>
         <plugins>
@@ -28,8 +32,8 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <finalName>${name}-${version}</finalName>
-                            <outputDirectory>your plugins directory</outputDirectory>
+                            <finalName>${jarFileName}</finalName>
+                            <outputFile>${outputDirectory}${jarFileName}</outputFile>
                         </configuration>
                     </execution>
                 </executions>

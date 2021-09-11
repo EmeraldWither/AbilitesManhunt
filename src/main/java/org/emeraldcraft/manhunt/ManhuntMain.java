@@ -157,4 +157,3 @@ public class ManhuntMain extends JavaPlugin {
     }
 }
 
-

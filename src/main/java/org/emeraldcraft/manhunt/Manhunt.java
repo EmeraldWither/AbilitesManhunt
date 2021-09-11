@@ -27,10 +27,11 @@ import java.util.UUID;
 
 public class Manhunt {
     private ManhuntMain main;
-    public Manhunt(ManhuntMain main){
+
+    public Manhunt(ManhuntMain main) {
         this.main = main;
     }
-    
+
     //Teams
     List<UUID> hunter = new ArrayList<>();
     List<UUID> speedrunner = new ArrayList<>();
@@ -59,7 +60,7 @@ public class Manhunt {
             return frozenPlayers;
         }
         if (team == ManhuntTeam.DEAD) {
-                return deadSpeedrunners;
+            return deadSpeedrunners;
         }
         if (team == ManhuntTeam.SPEEDRUNNER) {
             return speedrunner;
@@ -67,7 +68,7 @@ public class Manhunt {
         return null;
     }
 
-    public ManhuntPackManager getPackManager(){
+    public ManhuntPackManager getPackManager() {
         return manhuntPackManager;
     }
 
@@ -75,26 +76,26 @@ public class Manhunt {
         return appliedPack;
     }
 
-    public ManhuntTeam getTeam(UUID uuid){
-        if(hunter.contains(uuid)){
+    public ManhuntTeam getTeam(UUID uuid) {
+        if (hunter.contains(uuid)) {
             return ManhuntTeam.HUNTER;
         }
-        if(speedrunner.contains(uuid)) {
+        if (speedrunner.contains(uuid)) {
             return ManhuntTeam.SPEEDRUNNER;
         }
-        if(frozenPlayers.contains(uuid)){
+        if (frozenPlayers.contains(uuid)) {
             return ManhuntTeam.FROZEN;
         }
-        if(deadSpeedrunners.contains(uuid)){
+        if (deadSpeedrunners.contains(uuid)) {
             return ManhuntTeam.DEAD;
         }
         return ManhuntTeam.NONE;
     }
 
-    public String getCooldown(Player player, Ability pickAbility, Abilites abilites){
+    public String getCooldown(Player player, Ability pickAbility, Abilites abilites) {
         Long time;
         long cooldown;
-        if(abilites.getCooldown(pickAbility).get(player.getUniqueId()) != null) {
+        if (abilites.getCooldown(pickAbility).get(player.getUniqueId()) != null) {
             time = abilites.getCooldown(pickAbility).get(player.getUniqueId());
             cooldown = ((time - System.currentTimeMillis()) / 1000);
             if (!(cooldown < 1)) {
@@ -103,12 +104,15 @@ public class Manhunt {
         }
         return ChatColor.translateAlternateColorCodes('&', "&aREADY");
     }
-    public boolean hasGameStarted(){
+
+    public boolean hasGameStarted() {
         return hasGameStarted;
     }
-    public void setGameStatus(boolean b){
+
+    public void setGameStatus(boolean b) {
         hasGameStarted = b;
     }
+
     public void startGame(CommandSender sender, ManhuntMain manhuntMain, Manacounter manacounter, Integer manadelay, Abilites abilites) {
         String prefix = manhuntMain.getConfig().getString("plugin-prefix");
         try {
@@ -118,10 +122,10 @@ public class Manhunt {
 
             List<String> hunterList = new ArrayList<>();
             List<String> speedrunnerList = new ArrayList<>();
-            for(UUID uuid : hunter){
+            for (UUID uuid : hunter) {
                 hunterList.add(Bukkit.getPlayer(uuid).getName());
             }
-            for(UUID uuid : speedrunner){
+            for (UUID uuid : speedrunner) {
                 speedrunnerList.add(Bukkit.getPlayer(uuid).getName());
             }
             String hunters = hunterList.toString().replaceAll("]", "").replaceAll("\\[", "");
@@ -137,7 +141,7 @@ public class Manhunt {
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                 }
-                if(manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
+                if (manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "" +
                             "&a----------------------\n" +
                             "&2Experimental Feature Enabled!\n" +
@@ -190,7 +194,7 @@ public class Manhunt {
                 for (String msg : manhuntMain.getConfig().getStringList("messages.start-msg")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace("%hunters%", hunters).replace("%speedrunners%", speedrunners)));
                 }
-                if(manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
+                if (manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "" +
                             "&a----------------------\n" +
                             "&2Experimental Feature Enabled!\n" +
@@ -246,45 +250,49 @@ public class Manhunt {
                 TextComponent component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message)));
                 // Add a click event to the component.
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + command));
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click here to apply the custom resourcepack!").color(net.md_5.bungee.api.ChatColor.GREEN).create()));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click here to apply the custom resourcepack!").color(net.md_5.bungee.api.ChatColor.GREEN).create()));
 
                 // Send it!
                 player.spigot().sendMessage(component);
                 sender.sendMessage(ChatColor.GOLD + "-----------------------------------------");
 
             }
-        if (Boolean.TRUE.equals(Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY))) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
-        }
-        manacounter.startMana(manhuntMain, 0, manadelay);
-        }
-        catch(Exception e){
+            if (Boolean.TRUE.equals(Bukkit.getWorlds().get(0).getGameRuleValue(GameRule.KEEP_INVENTORY))) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4WARNING : Keep Inventory is ENABLED. This may cause problems"));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4such as speedrunners inventories not dropping when they die."));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&4To fix this, please run &c\"/gamerule keepInventory false\"&4!"));
+            }
+            manacounter.startMana(manhuntMain, 0, manadelay);
+        } catch (Exception e) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cAn internal error has occurred with the plugin! The start has been aborted. It is suggested that you report this to the plugin by posting the stacktrace! The plugin will disable itself now."));
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(manhuntMain);
         }
     }
-        public HashMap<UUID, HashMap<String, Location>> getWaypoints(){
-            return waypoints;
-        }
-        public HashMap<UUID, Integer> getWaypointTeleports(){
-            return waypointTeleports;
-        }
+
+    public HashMap<UUID, HashMap<String, Location>> getWaypoints() {
+        return waypoints;
+    }
+
+    public HashMap<UUID, Integer> getWaypointTeleports() {
+        return waypointTeleports;
+    }
 
     public ManhuntMain getMain() {
         return main;
     }
-    public DataBase getDatabase(){
+
+    public DataBase getDatabase() {
         return main.getDataBase();
     }
-    public void reloadConfig(){
+
+    public void reloadConfig() {
         main.reloadConfig();
         updateDatabaseStatus();
     }
+
     public void updateDatabaseStatus() {
-        if(main.getConfig().getBoolean("mysql.enabled")) {
+        if (main.getConfig().getBoolean("mysql.enabled")) {
             String url = getMain().getConfig().getString("mysql.database-url");
             Integer port = getMain().getConfig().getInt("mysql.database-port");
             String dbname = getMain().getConfig().getString("mysql.database-name");

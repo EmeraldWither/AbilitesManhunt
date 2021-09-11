@@ -1,6 +1,7 @@
 package org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks;
 
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,9 +47,9 @@ public class DeathCheck implements Listener {
     public void SpeedrunnerDeath(PlayerDeathEvent event) {
         if (manhunt.hasGameStarted()) {
             if (speedrunner.contains(event.getEntity().getUniqueId())) {
-                Bukkit.getScheduler().cancelTasks(manhuntMain);
-
                 //Add a death to the player
+
+                showDeathEffect(event.getEntity());
                 if(manhunt.isDatabaseEnabled()){
                     Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
                         @Override
@@ -74,6 +75,7 @@ public class DeathCheck implements Listener {
                 event.getEntity().setGlowing(false);
 
                 if (speedrunner.size() == 0) {
+                    Bukkit.getScheduler().cancelTasks(manhuntMain);
                     // If the game was lost
 
                     Bukkit.getLogger().log(INFO, "[MANHUNT] The game has ended.");
@@ -86,94 +88,92 @@ public class DeathCheck implements Listener {
 
                     for (UUID hunter : hunter) {
                         Player players = Bukkit.getPlayer(hunter);
-
-                        //Add a win to the hunter
-                        if(manhunt.isDatabaseEnabled()){
-                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
-                                @Override
-                                public void run() {
-                                    manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                        if (players != null) {
+                            //Add a win to the hunter
+                            if (manhunt.isDatabaseEnabled()) {
+                                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        manhunt.getDatabase().addManhuntWin(players.getUniqueId());
+                                    }
+                                });
+                            } else {
+                                int wins = 0;
+                                if (manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")) {
+                                    wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
                                 }
-                            });
-                        }
-                        else {
-                            int wins = 0;
-                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")){
-                                wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                                manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
+                                manhuntMain.getDataConfig().saveConfig();
                             }
-                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
-                            manhuntMain.getDataConfig().saveConfig();
-                        }
-                        //End adding win
+                            //End adding win
 
 
-                        players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + hunters + "!", 20, 100, 20);
-                        players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
-                        for (String msg : manhuntMain.getConfig().getStringList("messages.hunter-win-msg.hunters")) {
-                            players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
-                        }
-                        for (PotionEffect potionEffect : players.getActivePotionEffects()) {
-                            players.removePotionEffect(potionEffect.getType());
-                        }
-                        players.setGlowing(false);
-                        players.getInventory().clear();
-                        players.setGameMode(GameMode.SURVIVAL);
-                        players.setInvulnerable(false);
-                        players.closeInventory();
-                        players.setFlying(false);
-                        players.setAllowFlight(false);
-                        players.setCollidable(true);
-                        players.chat(ChatColor.GOLD + "GG!");
-                        for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-                            if (team.hasEntry(players.getName())) {
-                                team.removeEntry(players.getName());
+                            players.sendTitle(ChatColor.GREEN + "VICTORY", ChatColor.DARK_GREEN + "Congrats to " + hunters + "!", 20, 100, 20);
+                            players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0, 100);
+                            for (String msg : manhuntMain.getConfig().getStringList("messages.hunter-win-msg.hunters")) {
+                                players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                             }
+                            for (PotionEffect potionEffect : players.getActivePotionEffects()) {
+                                players.removePotionEffect(potionEffect.getType());
+                            }
+                            players.setGlowing(false);
+                            players.getInventory().clear();
+                            players.setGameMode(GameMode.SURVIVAL);
+                            players.setInvulnerable(false);
+                            players.closeInventory();
+                            players.setFlying(false);
+                            players.setAllowFlight(false);
+                            players.setCollidable(true);
+                            players.chat(ChatColor.GOLD + "GG!");
+                            for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+                                if (team.hasEntry(players.getName())) {
+                                    team.removeEntry(players.getName());
+                                }
+                            }
+                            if (manhunt.getAppliedPack().contains(players.getUniqueId())) {
+                                manhunt.getPackManager().unloadPack(players);
+                            }
+                            players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                         }
-                        if(manhunt.getAppliedPack().contains(players.getUniqueId())) {
-                            manhunt.getPackManager().unloadPack(players);
-                        }
-
-                        players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
-
-
                     for (UUID player : deadSpeedrunners) {
                         Player players = Bukkit.getPlayer(player);
-                        //Add a loss
-                        if(manhunt.isDatabaseEnabled()){
-                            Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
-                                @Override
-                                public void run() {
-                                    manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                        if (players != null) {
+                            //Add a loss
+                            if (manhunt.isDatabaseEnabled()) {
+                                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
+                                    }
+                                });
+                            } else {
+                                int losses = 0;
+                                if (manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")) {
+                                    losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
                                 }
-                            });
-                        }
-                        else {
-                            int losses = 0;
-                            if(manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")){
-                                losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
+                                manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".losses", (losses + 1));
+                                manhuntMain.getDataConfig().saveConfig();
                             }
-                            manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".losses", (losses + 1));
-                            manhuntMain.getDataConfig().saveConfig();
-                        }
 
 
-                        players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + hunters + "!", 20, 100, 20);
-                        for (String msg : manhuntMain.getConfig().getStringList("messages.hunter-win-msg.speedrunners")) {
-                            players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            players.sendTitle(ChatColor.DARK_RED + "DEFEATED", ChatColor.RED + "Congrats to " + hunters + "!", 20, 100, 20);
+                            for (String msg : manhuntMain.getConfig().getStringList("messages.hunter-win-msg.speedrunners")) {
+                                players.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            }
+                            for (PotionEffect potionEffect : players.getActivePotionEffects()) {
+                                players.removePotionEffect(potionEffect.getType());
+                            }
+                            players.setGlowing(false);
+                            players.getInventory().clear();
+                            players.setGameMode(GameMode.SURVIVAL);
+                            players.setInvulnerable(false);
+                            players.closeInventory();
+                            players.setFlying(false);
+                            players.setAllowFlight(false);
+                            players.chat(ChatColor.GOLD + "GG!");
+                            players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                         }
-                        for (PotionEffect potionEffect : players.getActivePotionEffects()) {
-                            players.removePotionEffect(potionEffect.getType());
-                        }
-                        players.setGlowing(false);
-                        players.getInventory().clear();
-                        players.setGameMode(GameMode.SURVIVAL);
-                        players.setInvulnerable(false);
-                        players.closeInventory();
-                        players.setFlying(false);
-                        players.setAllowFlight(false);
-                        players.chat(ChatColor.GOLD + "GG!");
-                        players.setScoreboard((Bukkit.getScoreboardManager().getMainScoreboard()));
                     }
                     manhunt.getAppliedPack().clear();
                     manacounter.clearMana();
@@ -206,6 +206,13 @@ public class DeathCheck implements Listener {
                 player.setGlowing(false);
                 player.sendTitle(ChatColor.DARK_RED + "YOU DIED", ChatColor.RED + "Better luck next time.", 20, 100, 20);
             }
+        }
+    }
+
+    private void showDeathEffect(Player player){
+        Entity entity = player;
+        for (int i = 0; i < 4; i++) {
+            entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
         }
     }
 }
