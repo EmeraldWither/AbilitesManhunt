@@ -14,6 +14,7 @@
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--Output directory can be ANY custom directory that you want the plugin to output in-->
+        <!--EX: C:\Users\Minecraft\Documents\servers\Minecraft Server\plugins-->
         <outputDirectory>your plugins directory</outputDirectory>
         <!---->
         <jarFileName>${name}-${version}.jar</jarFileName>
@@ -33,7 +34,7 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <finalName>${jarFileName}</finalName>
-                            <outputFile>${outputDirectory}${jarFileName}</outputFile>
+                            <outputFile>\${outputDirectory}${jarFileName}</outputFile>
                         </configuration>
                     </execution>
                 </executions>
