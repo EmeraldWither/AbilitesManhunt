@@ -34,7 +34,7 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <finalName>${jarFileName}</finalName>
-                            <outputFile>\${outputDirectory}${jarFileName}</outputFile>
+                            <outputFile>${outputDirectory}\${jarFileName}</outputFile>
                         </configuration>
                     </execution>
                 </executions>
