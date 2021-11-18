@@ -1,14 +1,8 @@
 package org.emeraldcraft.manhunt;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Abilties.DamageItem.DamageItemGUIListener;
 import org.emeraldcraft.manhunt.Abilties.DamageItem.DamageItemListener;
 import org.emeraldcraft.manhunt.Abilties.Freeze.FreezeGUIListener;
@@ -29,184 +23,135 @@ import org.emeraldcraft.manhunt.Abilties.TargetMobs.TargetMobGUIListener;
 import org.emeraldcraft.manhunt.Abilties.TargetMobs.TargetMobListener;
 import org.emeraldcraft.manhunt.CommandHandlers.ManhuntCommandHandler;
 import org.emeraldcraft.manhunt.CommandHandlers.ManhuntTabCompleter;
-import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Managers.DataManager;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
+import org.emeraldcraft.manhunt.PlayerChecks.ClearStragglers;
 import org.emeraldcraft.manhunt.PlayerChecks.HunterChecks.*;
+import org.emeraldcraft.manhunt.PlayerChecks.ResourcePackListener;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.DeathCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.EnderDragonCheck;
 import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.GiveSpeedrunnerScoreboard;
+import org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks.PushAwayHunter;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
+import static java.util.logging.Level.INFO;
+
 public class ManhuntMain extends JavaPlugin {
 
-    public Plugin plugin = this;
-    public DataManager data;
-    ManhuntGameManager manhuntGameManager;
-    Manacounter manacounter;
-    AbilitesManager abilitesManager;
-    ManhuntHunterScoreboardManager manhuntScoreboardManager;
-
+    private DataManager data;
+    private Manhunt manhunt;
+    private Manacounter manacounter;
+    private Abilites abilites;
+    private DataBase dataBase;
 
     @Override
     public void onEnable(){
-        manhuntGameManager = new ManhuntGameManager();
+        long time = System.currentTimeMillis();
+        manhunt = new Manhunt(this);
+
+        String url = getConfig().getString("mysql.database-url");
+        Integer port = getConfig().getInt("mysql.database-port");
+        String dbname = getConfig().getString("mysql.database-name");
+        String username = getConfig().getString("mysql.database-username");
+        String password = getConfig().getString("mysql.database-password");
+
+        this.dataBase = new DataBase(url, port, dbname, username, password);
         this.data = new DataManager(this);
-        this.abilitesManager = new AbilitesManager(manhuntGameManager);
-        this.manacounter = new Manacounter(manhuntGameManager,this);
-        this.manhuntScoreboardManager = new ManhuntHunterScoreboardManager(manhuntGameManager, abilitesManager, this);
+        this.abilites = new Abilites(manhunt);
+        this.manacounter = new Manacounter(manhunt,this);
+        new ManhuntHunterScoreboardManager(manhunt, abilites, this);
 
-        getServer().getPluginManager().registerEvents(new LaunchAbility(manhuntGameManager, this, manacounter, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new LightningListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new GravityListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPlacing(manhuntGameManager, this) ,this);
-        getServer().getPluginManager().registerEvents(new CheckChest(manhuntGameManager, this) ,this);
-        getServer().getPluginManager().registerEvents(new DeathCheck(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new LightningGuiListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new LauncherGUIListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new GravityGUIListener(manhuntGameManager, this, manacounter, abilitesManager) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPickingUp(manhuntGameManager) ,this);
-        getServer().getPluginManager().registerEvents(new PreventAttacking(manhuntGameManager),this);
-        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(manhuntGameManager, this, manacounter,abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new ScramblerListener(manhuntGameManager, this, manacounter, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new EnderDragonCheck(manhuntGameManager, this, abilitesManager, manacounter),this);
-        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new RandomTPListener(manhuntGameManager, this, manacounter, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(manhuntGameManager, this, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new DamageItemListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new PlayerTPListener(manhuntGameManager, this, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new PreventHunger(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new TargetMobListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new ClearInv(manhuntGameManager, this),this);
-        getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new FreezeListener(manhuntGameManager, this, manacounter, abilitesManager),this);
-        getServer().getPluginManager().registerEvents(new PreventAdvancements(manhuntGameManager, this), this);
-        getServer().getPluginManager().registerEvents(new GiveScoreboard(manhuntGameManager, manhuntScoreboardManager, this, abilitesManager), this);
-        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhuntGameManager, this, abilitesManager), this);
+        registerListeners();
+
+        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhunt, this, manacounter, abilites));
+        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhunt, this));
+
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.admin"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.setmana"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addhunter"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.addspeedrunner"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.removeplayer"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.forceend"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.reload"));
+        this.getServer().getPluginManager().addPermission(new Permission("abilitiesmanhunt.start"));
+
         this.saveDefaultConfig();
+        manhunt.reloadConfig();
 
 
+        getLogger().log(INFO, """
 
-        Objects.requireNonNull(getCommand("manhunt")).setExecutor(new ManhuntCommandHandler(manhuntGameManager, this, manacounter, abilitesManager));
-        Objects.requireNonNull(getCommand("manhunt")).setTabCompleter(new ManhuntTabCompleter(manhuntGameManager));
-
-        getLogger().log(Level.INFO, "\n" +
-                "--------------------------------------------------------------\n" +
-                "|                            NOW ENABLING:                              \n" +
-                "|                                                                        \n" +
-                "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.3 RELEASE                                  \n" +
-                "|                                                                        \n" +
-                "|                        BY: EMERALDWITHERYT   \n" +
-                "--------------------------------------------------------------");
-
-
+                --------------------------------------------------------------
+                |                            NOW ENABLING:
+                |
+                |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES
+                |                            v1.4 RELEASE
+                |                        BY: EmerqldWither
+                --------------------------------------------------------------""");
+        getLogger().log(INFO, "The plugin started up in " + (System.currentTimeMillis() - time) + " ms!");
     }
 
     @Override
     public void onDisable() {
-        List<String> speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
-        List<String> hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
+        getLogger().log(Level.WARNING, """
 
-
-        getLogger().log(Level.WARNING, "\n" +
-                "--------------------------------------------------------------\n" +
-                "|                            NOW DISABLING:                              \n" +
-                "|                                                                        \n" +
-                "|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITES    \n" +
-                "|                            v1.3 RELEASE                                  \n" +
-                "|                                                                        \n" +
-                "|                         BY: EMERALDWITHERYT   \n" +
-                "--------------------------------------------------------------");
-
-
-        for(Player player : Bukkit.getOnlinePlayers()){
-            if(player.getOpenInventory() != null) {
-                player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-            }
-            for(ItemStack item : player.getInventory().getStorageContents()){
-                ManHuntInventory inv = new ManHuntInventory();
-                if(item != null) {
-                    if (item.isSimilar(inv.getDamageItem())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getGravity())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getLauncher())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getLightning())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getrandomTP())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getPlayerTP())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getScrambler())) {
-                        player.getInventory().remove(item);
-                    }
-                    if (item.isSimilar(inv.getMobTargeter())) {
-                        player.getInventory().remove(item);
-                    }
-                }
-            }
-            if(hunter.contains(player.getName())){
-                player.setGlowing(false);
-                player.getInventory().clear();
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setInvulnerable(false);
-                player.closeInventory();
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.setSaturation(5);
-                for(PotionEffect potionEffect: player.getActivePotionEffects()){
-                    player.removePotionEffect(potionEffect.getType());
-                }
-            }
-            if(speedrunner.contains(player.getName())){
-                player.setGlowing(false);
-                player.getInventory().clear();
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setInvulnerable(false);
-                player.closeInventory();
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.setSaturation(5);
-                for(PotionEffect potionEffect: player.getActivePotionEffects()){
-                    player.removePotionEffect(potionEffect.getType());
-                }
-            }
-            if(manhuntGameManager.getTeam(ManhuntTeam.DEAD).contains(player.getName())){
-                player.setGlowing(false);
-                player.getInventory().clear();
-                player.setGameMode(GameMode.SURVIVAL);
-                player.setInvulnerable(false);
-                player.closeInventory();
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.setSaturation(5);
-            }
-
-        }
-
+                --------------------------------------------------------------
+                |                            NOW DISABLING:                             \s
+                |                                                                       \s
+                |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES   \s
+                |                            v1.4 RELEASE                                 \s
+                |                         BY: EmerqldWither  \s
+                --------------------------------------------------------------""");
+        getDataBase().closeConnection();
     }
 
-    private Plugin getPlugin(){
-        Plugin plugin = this.getPlugin();
-        return plugin;
+    private void registerListeners(){
+        getServer().getPluginManager().registerEvents(new LaunchAbility(manhunt, this, manacounter, abilites), this);
+        getServer().getPluginManager().registerEvents(new LightningListener(manhunt, this, manacounter, abilites) ,this);
+        getServer().getPluginManager().registerEvents(new GravityListener(manhunt, this, manacounter, abilites) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPlacing(manhunt, this) ,this);
+        getServer().getPluginManager().registerEvents(new CheckChest(manhunt, this) ,this);
+        getServer().getPluginManager().registerEvents(new DeathCheck(manhunt, this, manacounter, abilites) ,this);
+        getServer().getPluginManager().registerEvents(new LightningGuiListener(manhunt, this, manacounter, abilites) ,this);
+        getServer().getPluginManager().registerEvents(new LauncherGUIListener(manhunt, this, manacounter, abilites) ,this);
+        getServer().getPluginManager().registerEvents(new GravityGUIListener(manhunt, this, manacounter, abilites) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPickingUp(manhunt) ,this);
+        getServer().getPluginManager().registerEvents(new PreventAttacking(manhunt),this);
+        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhunt, this),this);
+        getServer().getPluginManager().registerEvents(new ScramblerGUIListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new ScramblerListener(manhunt, this, manacounter, abilites), this);
+        getServer().getPluginManager().registerEvents(new EnderDragonCheck(manhunt, this, abilites, manacounter),this);
+        getServer().getPluginManager().registerEvents(new RandomTPGUIListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new RandomTPListener(manhunt, this, manacounter, abilites), this);
+        getServer().getPluginManager().registerEvents(new PlayerTPGUIListener(manhunt, this, abilites),this);
+        getServer().getPluginManager().registerEvents(new DamageItemGUIListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new DamageItemListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new PlayerTPListener(manhunt, this, abilites),this);
+        getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhunt),this);
+        getServer().getPluginManager().registerEvents(new PreventHunger(manhunt, this),this);
+        getServer().getPluginManager().registerEvents(new TargetMobListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new ClearStragglers(manhunt),this);
+        getServer().getPluginManager().registerEvents(new FreezeGUIListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(manhunt, this, manacounter, abilites),this);
+        getServer().getPluginManager().registerEvents(new PreventAdvancements(manhunt, this), this);
+        getServer().getPluginManager().registerEvents(new GiveHunterScoreboard(manhunt, this, abilites), this);
+        getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhunt, this), this);
+        getServer().getPluginManager().registerEvents(new PreventInteraction(manhunt), this);
+        getServer().getPluginManager().registerEvents(new PreventDamage(manhunt), this);
+        getServer().getPluginManager().registerEvents(new PreventGettingClose(manhunt, this), this);
+        getServer().getPluginManager().registerEvents(new PushAwayHunter(manhunt, this), this);
+        getServer().getPluginManager().registerEvents(new ResourcePackListener(manhunt), this);
+        getServer().getPluginManager().registerEvents(new PreventEXP(manhunt), this);
+        getServer().getPluginManager().registerEvents(new GiveFly(manhunt), this);
     }
-
+    public DataManager getDataConfig() {
+        return data;
+    }
+    public DataBase getDataBase() {
+        return dataBase;
+    }
 }
-
 

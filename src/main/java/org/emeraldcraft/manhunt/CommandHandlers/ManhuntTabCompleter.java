@@ -7,50 +7,96 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Manhunt;
+import org.emeraldcraft.manhunt.ManhuntMain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ManhuntTabCompleter implements TabCompleter {
-    private static final List<String> COMMANDS = Arrays.asList("hunter", "speedrunner", "start", "listgroups", "help", "reload", "forceend", "setmana", "stats", "remove", "waypoint");
-    private static final List<String> SUBCOMMANDS = Arrays.asList("add", "remove");
-    private static final List<String> NAME = Arrays.asList("<name>");
-    private static final List<String> players = new ArrayList<String>();
+    private static final List<String> SUBCOMMANDS = new ArrayList<>();
+    private static final List<String> players = new ArrayList<>();
     private static final List<String> BLANK = Arrays.asList("", "", "");
-    private ManhuntGameManager manhuntGameManager;
-    public ManhuntTabCompleter(ManhuntGameManager manhuntGameManager){
-     this.manhuntGameManager = manhuntGameManager;
+    private final Manhunt manhunt;
+    private ManhuntMain manhuntMain;
+    public ManhuntTabCompleter(Manhunt manhunt, ManhuntMain manhuntMain){
+     this.manhunt = manhunt;
+     this.manhuntMain = manhuntMain;
     }
 
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return StringUtil.copyPartialMatches(args[0], COMMANDS, new ArrayList<>());
+            List<String> subCommands = new ArrayList<>();
+            if(manhunt.hasGameStarted()){
+                subCommands.add("listgroups");
+                subCommands.add("stats");
+                subCommands.add("help");
+                subCommands.add("resourcepack");
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.forceend")){
+                    subCommands.add("forceend");
+                }
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.setmana")){
+                    subCommands.add("setmana");
+                }
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.reload")){
+                    subCommands.add("reload");
+                }
+                if(sender instanceof Player && manhunt.getTeam(((Player) sender).getUniqueId()).equals(ManhuntTeam.SPEEDRUNNER)){
+                    subCommands.add("waypoint");
+                }
+            }
+            else {
+                subCommands.add("listgroups");
+                subCommands.add("stats");
+                subCommands.add("help");
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.addhunter")){
+                    subCommands.add("hunter");
+                }
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.addspeedrunner")){
+                    subCommands.add("speedrunner");
+                }
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.removeplayer")){
+                    subCommands.add("remove");
+                }
+                if(sender.hasPermission("abilitiesmanhunt.admin") || sender.hasPermission("abilitiesmanhunt.start")){
+                    subCommands.add("start");
+                }
+            }
+            return StringUtil.copyPartialMatches(args[0], subCommands , new ArrayList<>());
         }
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("setmana") || args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("waypoint")) {
-                if (args[0].equalsIgnoreCase("setmana")) {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        for(String name : manhuntGameManager.getTeam(ManhuntTeam.HUNTER)){
-                            if(name.equalsIgnoreCase(player.getName())){
-                                players.add(player.getName());
-
-                            }
+            if(manhunt.hasGameStarted()){
+                if (args[0].equalsIgnoreCase("setmana") ||  args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("waypoint")) {
+                    if (args[0].equalsIgnoreCase("setmana")) {
+                        for(UUID uuid : manhunt.getTeam(ManhuntTeam.HUNTER)){
+                            players.add(Objects.requireNonNull(Bukkit.getPlayer(uuid)).getName());
                         }
                     }
+                    else if(args[0].equalsIgnoreCase("stats")){
+                        for(Player player : Bukkit.getOnlinePlayers()) {
+                            players.add(player.getName());
+                        }
+                    }
+                    else if(args[0].equalsIgnoreCase("waypoint")){
+                        SUBCOMMANDS.add("create");
+                        SUBCOMMANDS.add("remove");
+                        if(manhuntMain.getConfig().getBoolean("experimental-features.waypoint-teleport")){
+                            SUBCOMMANDS.add("teleport");
+                            SUBCOMMANDS.add("tp");
+                        }
+                        return StringUtil.copyPartialMatches(args[1], SUBCOMMANDS, new ArrayList<>());
+                    }
+                    return StringUtil.copyPartialMatches(args[1], players, new ArrayList<>());
                 }
-                else if(args[0].equalsIgnoreCase("waypoint")){
-                    return StringUtil.copyPartialMatches(args[1], SUBCOMMANDS, new ArrayList<>());
-                }
-                else {
+            }
+            else {
+                if(args[0].equalsIgnoreCase("hunter") || args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("stats")){
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         players.add(player.getName());
                     }
+                    return StringUtil.copyPartialMatches(args[1], players, new ArrayList<>());
                 }
-                return StringUtil.copyPartialMatches(args[1], players, new ArrayList<>());
             }
         }
         if (args.length >= 2) {

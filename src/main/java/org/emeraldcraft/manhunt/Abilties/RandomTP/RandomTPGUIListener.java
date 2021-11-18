@@ -10,47 +10,48 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manacounter;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomTPGUIListener implements Listener {
 
     private ManhuntMain manhuntMain;
     String ability = "RandomTP";
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
     private Manacounter manacounter;
-    private AbilitesManager abilitesManager;
-    Map<String, Long> randomTPCooldown;
-    List<String> hunter;
-    List<String> speedrunner;
-    public RandomTPGUIListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, Manacounter manacounter, AbilitesManager AbilitesManager){
+    private Abilites abilites;
+    Map<UUID, Long> randomTPCooldown;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
+    public RandomTPGUIListener(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites){
         this.manhuntMain = manhuntMain;
         this.manacounter = manacounter;
-        this.manhuntGameManager = manhuntGameManager;
-        this.abilitesManager = AbilitesManager;
-        this.randomTPCooldown = abilitesManager.getCooldown(Ability.RANDOMTP);
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);;
+        this.manhunt = manhunt;
+        this.abilites = Abilites;
+        this.randomTPCooldown = abilites.getCooldown(Ability.RANDOMTP);
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);;
     }
 
     @EventHandler
     public void InventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() instanceof SkullMeta) {
             Player player = (Player) event.getView().getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.RANDOMTP)) {
-                if (randomTPCooldown.containsKey(player.getName())) {
-                    if (randomTPCooldown.get(player.getName()) > System.currentTimeMillis()) {
+            if (abilites.getHeldAbility(player).equals(Ability.RANDOMTP)) {
+                if (randomTPCooldown.containsKey(player.getUniqueId())) {
+                    if (randomTPCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getName()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', manhuntMain.getConfig().getString("messages.cooldown-msg").replace("%time-left%", Long.toString((randomTPCooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000)).replace("%ability%", ability)));
                         return;
                     }
                 }
@@ -59,18 +60,18 @@ public class RandomTPGUIListener implements Listener {
                 Player selectedPlayer = Bukkit.getPlayer(Objects.requireNonNull(skull.getOwner()));
                 assert selectedPlayer != null;
 
-                manacounter.getManaList().put(player.getName(), manacounter.getManaList().get(player.getName()) - 80);
+                manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 80);
                 manacounter.updateActionbar(player);
 
 
                 Integer radius = manhuntMain.getConfig().getInt("abilities.randomtp.tp-radius");
                 Location oldLoc = selectedPlayer.getLocation();
-                randomTP(selectedPlayer.getName(), player.getName(), radius);
+                randomTP(selectedPlayer.getUniqueId(), player.getUniqueId(), radius);
 
                 double distance = selectedPlayer.getLocation().distance(oldLoc);
 
                 Integer cooldown = manhuntMain.getConfig().getInt("abilities.randomtp.cooldown");
-                randomTPCooldown.put(player.getName(), System.currentTimeMillis() + (cooldown * 1000));
+                randomTPCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (cooldown * 1000));
 
 
                 selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1000, 0);
@@ -82,7 +83,7 @@ public class RandomTPGUIListener implements Listener {
         }
     }
 
-    public void randomTP(String speedrunner, String hunter, int radius){
+    public void randomTP(UUID speedrunner, UUID hunter, int radius){
         Player selectedPlayer = Bukkit.getPlayer(speedrunner);
         Player player = Bukkit.getPlayer(hunter);
 
@@ -93,11 +94,5 @@ public class RandomTPGUIListener implements Listener {
 
         selectedPlayer.teleport(loc);
         player.teleport(selectedPlayer.getLocation().add(0, 5, 0));
-    }
-    public void clearCooldowns() {
-        randomTPCooldown.clear();
-    }
-    public Map<String, Long> getCooldowns(){
-        return randomTPCooldown;
     }
 }

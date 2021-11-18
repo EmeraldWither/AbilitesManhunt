@@ -1,9 +1,9 @@
 #                                                                           #
 #|------------------------------------------------------------------------| #
 #|        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES         | #
-#|                             v1.3 RELEASE                               | #
+#|                             v1.4 RELEASE                               | #
 #|                                                                        | #
-#|                        BY: EMERALDWITHERYT                             | #
+#|                        BY: EmerqldWither                               | #
 #|------------------------------------------------------------------------| #
 #                                                                           #
 plugin-prefix: "&2[Abilities Manhunt] "
@@ -11,6 +11,8 @@ plugin-prefix: "&2[Abilities Manhunt] "
 # mana-delay is how many ticks until it will give the mana-amount
 mana-delay: 20
 mana-amount: 1
+# "hunter-range" is how close the player has to come to the speedrunner to be pushed back.
+hunter-range: 4
 config-reload-msg: "&aSuccessfully reloaded the configuration files!"
 scoreboard:
   # If the scoreboard is enabled, it will enable the following options :
@@ -20,21 +22,23 @@ scoreboard:
   #
   # When enabling the scoreboard, it may conflict with other scoreboard plugins.
   # Note using /manhunt reload WILL NOT update the scoreboard until the game is restarted.
+  # You should probably restart when modifying scoreboards anyways. 
   #
   enabled: true
   # The color will decide what color the prefix is, as well as its glow color.
   # A list of valid colors can be found here : https://hub.spigotmc.org/javadocs/spigot/org/bukkit/ChatColor.html
+  # You must use an Enum for the chatcolor.
   # You can only have 1 color.
-  # Note using a invalid color will cause the plugin to shut itself down.
+  # Note using an invalid color will cause the plugin to shut itself down.
   hunter-color: RED
   speedrunner-color: GREEN
-  dead-color: DARK_GRAY
   frozen-color: AQUA
+  dead-color: DARK_GRAY
   # The prefix that will show in the tab, and above the player.
   hunter-prefix: "[HUNTER] "
   speedrunner-prefix: "[SPEEDRUNNER] "
-  dead-prefix: "[DEAD] "
   frozen-prefix: "[FROZEN] "
+  dead-prefix: "[DEAD] "
 
 messages:
   stats-msg:
@@ -54,7 +58,7 @@ messages:
   start-msg:
     - "&6&m-----------------------------------"
     - "      &e&l MINECRAFT   MANHUNT"
-    - "       &6&lBY: EMERALDWITHERYT "
+    - "       &6&lBY: EmerqldWither "
     - ""
     - "   &3&lThe manhunt is now starting!"
     - ""
@@ -81,7 +85,7 @@ messages:
       - "      &cLOSING TEAM: &4SPEEDRUNNERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
     speedrunners:
       - "&6---------------------------------------"
@@ -93,20 +97,20 @@ messages:
       - "      &cLOSING TEAM: &4SPEEDRUNNERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
   speedrunner-win-msg:
     hunters:
       - "&6---------------------------------------"
       - "                 &c&lDEFEAT"
       - ""
-      - "        &2YOU HAVE LOST THE GAME :("
+      - "        &4YOU HAVE LOST THE GAME :("
       - ""
       - "      &aWINNING TEAM: &2SPEEDRUNNERS"
       - "         &cLOSING TEAM: &4HUNTERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
     speedrunners:
       - "&6---------------------------------------"
@@ -114,11 +118,11 @@ messages:
       - ""
       - "        &2YOU HAVE WON THE GAME!"
       - ""
-      - "      &aWINNING TEAM: &SPEEDRUNNERS"
-      - "         &cLOSING TEAM: &HUNTERS"
+      - "      &aWINNING TEAM: &2SPEEDRUNNERS"
+      - "         &cLOSING TEAM: &4HUNTERS"
       - ""
       - "         &3THANK YOU FOR PLAYING"
-      - "        &7 Made by : EmeraldWither"
+      - "        &7 Made by : EmerqldWither"
       - "&6---------------------------------------"
 
   # Global Placeholders For "Abilities"
@@ -131,7 +135,7 @@ messages:
   # Some abilities may also have their own special placeholders outlined below.
   #
   # The "speedrunner-msg" parameter is the message that is sent to the speedrunner
-  # when the hunter uses a ability on the speedrunner. The %hunter% placeholder does work.
+  # when the hunter uses an ability on the speedrunner. The %hunter% placeholder does work.
   #
   # ALL cooldowns should be in SECONDS!
 
@@ -143,8 +147,6 @@ abilities:
   launcher:
     # Launcher Placeholders
     # %velocity% : Gets the launch velocity specified here
-    #                |
-    #                V
     launch-velocity: 10
     launch-upwards: false
     # If launch-upwards is false, the
@@ -156,8 +158,6 @@ abilities:
   gravity:
     # Launcher Placeholders
     # %radius% : Gets the radius of which the gravity ability applies.
-    #       |
-    #       V
     radius: 5
     cooldown: 60
     msg: "&aApplied gravity to all blocks around &2%speedrunner%&a in a &2%radius% &ablock radius!"
@@ -175,6 +175,8 @@ abilities:
     cooldown: 120
     msg: "&aDamaged &2%items% &aitem(s) in &2%speedrunner%&a's inventory!"
     speedrunner-msg: "&4%hunter% &chas damaged &4%items% &citem(s) in your inventory!"
+    # "amount:" is the maximum amount of items that will be damaged.
+    amount: 5
   playertp:
     height-above-player: 5
     msg: "&aTeleported you to &2%speedrunner%&a!"
@@ -193,8 +195,8 @@ abilities:
     msg: "&aNow scrambling &2%items% &aitem(s) in &2%speedrunner%s &ainventory!"
     speedrunner-msg: "&4%hunter% &chas scrambled &4%items% &citem(s) in your inventory!"
   freeze:
-    #Time is how long the speedrunner will be frozen for.
-    time: 5
+    # Time is how long the speedrunner will be frozen for.
+    time: 10
     cooldown: 80
     msg: "&aNow freezing &2%speedrunner% &afor &2%time% &aseconds!"
     unfreeze-msg: "&2%speedrunner% &ahas been unfrozen!"
@@ -207,6 +209,26 @@ abilities:
 # This will remove any special items as
 # to prevent them from being used.
 # It is not suggested you change this!
-clear-items-on-join: true
-clear-items-on-leave: true
 prevent-advancements: true
+
+
+# MySQL Connection Settings
+# Using the JDBC Driver
+mysql:
+  enabled: false
+  database-url: "database.website.com"
+  database-port: 3306
+  database-name: "ManhuntAbilitiesDB"
+  database-username: "root"
+  database-password: "password"
+
+
+# Experimental Features.
+
+# These experimental features will not
+# break the plugin, just add new features
+# which could not be balanced.
+
+experimental-features:
+  waypoint-teleport: false
+

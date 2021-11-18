@@ -1,32 +1,34 @@
 package org.emeraldcraft.manhunt.Abilties;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.ManHuntInventory;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Manhunt;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-public class AbilitesManager {
+public class Abilites {
 
-    private ManhuntGameManager manhuntGameManager;
-    public AbilitesManager(ManhuntGameManager manhuntGameManager){
-        this.manhuntGameManager = manhuntGameManager;
+    private Manhunt manhunt;
+    public Abilites(Manhunt manhunt){
+        this.manhunt = manhunt;
     }
     private ManHuntInventory manhuntInventory = new ManHuntInventory();
 
-    private Map<String, Long> launcherCooldown = new HashMap<String, Long>();
-    private Map<String, Long> freezeCooldown = new HashMap<String, Long>();
-    private Map<String, Long> gravityCooldown = new HashMap<String, Long>();
-    private Map<String, Long> damageCooldown = new HashMap<String, Long>();
-    private Map<String, Long> randomTPCooldown = new HashMap<String, Long>();
-    private Map <String, Long> scramblerCooldown = new HashMap<String, Long>();
-    private Map<String, Long> lightningCooldown = new HashMap<String, Long>();
-    private Map<String, Long> targetMobsCooldown = new HashMap<String, Long>();
+    private Map<UUID, Long> launcherCooldown = new HashMap<>();
+    private Map<UUID, Long> freezeCooldown = new HashMap<>();
+    private Map<UUID, Long> gravityCooldown = new HashMap<>();
+    private Map<UUID, Long> damageCooldown = new HashMap<>();
+    private Map<UUID, Long> randomTPCooldown = new HashMap<>();
+    private Map <UUID, Long> scramblerCooldown = new HashMap<>();
+    private Map<UUID, Long> lightningCooldown = new HashMap<>();
+    private Map<UUID, Long> targetMobsCooldown = new HashMap<>();
 
-    public Map<String, Long> getCooldown(Ability ability){
+    public Map<UUID, Long> getCooldown(Ability ability){
         if(ability.equals(Ability.LAUNCHER)){
             return launcherCooldown;
         }
@@ -54,38 +56,10 @@ public class AbilitesManager {
         return null;
     }
 
-    public void clearCooldown(Ability ability){
-        if(ability.equals(Ability.LAUNCHER)){
-            launcherCooldown.clear();
-        }
-        if(ability.equals(Ability.FREEZER)){
-            freezeCooldown.clear();
-        }
-        if(ability.equals(Ability.GRAVITY)){
-            gravityCooldown.clear();
-        }
-        if(ability.equals(Ability.DAMAGEITEM)){
-            damageCooldown.clear();
-        }
-        if(ability.equals(Ability.RANDOMTP)){
-            randomTPCooldown.clear();
-        }
-        if(ability.equals(Ability.SCRAMBLE)){
-            scramblerCooldown.clear();
-        }
-        if(ability.equals(Ability.LIGHTNING)){
-            lightningCooldown.clear();
-        }
-        if(ability.equals(Ability.TARGETMOB)){
-            targetMobsCooldown.clear();
-        }
-
-    }
-
     public Ability getHeldAbility(Player player) {
-            if (manhuntGameManager.getGameStatus()) {
-                if (manhuntGameManager.getTeam(ManhuntTeam.HUNTER).contains(player.getName())) {
-                    if (player.getInventory().getItemInMainHand() != null) {
+            if (manhunt.hasGameStarted()) {
+                if (manhunt.getTeam(ManhuntTeam.HUNTER).contains(player.getUniqueId())) {
+                    if (player.getInventory().getItemInMainHand().getType() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR) {
                         if (player.getInventory().getItemInMainHand().isSimilar(manhuntInventory.getGravity())) {
                             return Ability.GRAVITY;
                         }

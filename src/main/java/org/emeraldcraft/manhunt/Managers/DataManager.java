@@ -44,7 +44,7 @@ public class DataManager {
         try {
             this.getConfig().save(this.configFile);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save the config to " + this.configFile + "! Please report this to EmeraldWither! Shutting down now.", e);
+            plugin.getLogger().log(Level.SEVERE, "Could not save the config to " + this.configFile + "! Please report this to EmerqldWither! Shutting down now.", e);
             this.plugin.getPluginLoader().disablePlugin(this.plugin);
 
         }

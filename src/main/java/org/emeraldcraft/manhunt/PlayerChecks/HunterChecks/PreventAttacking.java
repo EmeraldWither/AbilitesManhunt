@@ -5,25 +5,26 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Manhunt;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PreventAttacking implements Listener {
 
-    private ManhuntGameManager manhuntGameManager;
+    private Manhunt manhunt;
 
-    List<String> hunter;
-    public PreventAttacking(ManhuntGameManager manhuntGameManager){
-        this.manhuntGameManager = manhuntGameManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);;
+    List<UUID> hunter;
+    public PreventAttacking(Manhunt manhunt){
+        this.manhunt = manhunt;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
     }
 
     @EventHandler
     public void PlayerAttack(EntityDamageByEntityEvent event){
-        if(manhuntGameManager.getGameStatus()) {
+        if(manhunt.hasGameStarted()) {
             if (event.getDamager() instanceof Player) {
-                if (hunter.contains(((Player) event.getDamager()).getPlayer().getName())) {
+                if (hunter.contains(((Player) event.getDamager()).getPlayer().getUniqueId())) {
                     event.setCancelled(true);
                 }
             }

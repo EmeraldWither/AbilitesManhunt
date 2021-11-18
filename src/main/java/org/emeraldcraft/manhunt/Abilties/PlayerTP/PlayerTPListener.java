@@ -6,29 +6,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.emeraldcraft.manhunt.Abilties.AbilitesManager;
+import org.emeraldcraft.manhunt.Abilties.Abilites;
 import org.emeraldcraft.manhunt.Enums.Ability;
 import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
-import org.emeraldcraft.manhunt.Managers.ManhuntGameManager;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerTPListener implements Listener {
 
     private ManhuntMain manhuntMain;
-    private ManhuntGameManager manhuntGameManager;
-    private AbilitesManager abilitesManager;
-    List<String> hunter;
-    List<String> speedrunner;
+    private Manhunt manhunt;
+    private Abilites abilites;
+    List<UUID> hunter;
+    List<UUID> speedrunner;
 
-    public PlayerTPListener(ManhuntGameManager manhuntGameManager, ManhuntMain manhuntMain, AbilitesManager abilitesManager) {
+    public PlayerTPListener(Manhunt manhunt, ManhuntMain manhuntMain, Abilites abilites) {
         this.manhuntMain = manhuntMain;
-        this.manhuntGameManager = manhuntGameManager;
-        this.abilitesManager = abilitesManager;
-        hunter = manhuntGameManager.getTeam(ManhuntTeam.HUNTER);
-        speedrunner = manhuntGameManager.getTeam(ManhuntTeam.SPEEDRUNNER);
+        this.manhunt = manhunt;
+        this.abilites = abilites;
+        hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
+        speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
         ;
     }
 
@@ -36,9 +37,9 @@ public class PlayerTPListener implements Listener {
     public void getPlayerTPItem(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Player player = event.getPlayer();
-            if (abilitesManager.getHeldAbility(player).equals(Ability.PLAYERTP)) {
+            if (abilites.getHeldAbility(player).equals(Ability.PLAYERTP)) {
 
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhuntGameManager, manhuntMain);
+                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
                 inv.createInventory();
                 Inventory getInventory = inv.getInv();
 

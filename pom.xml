@@ -4,33 +4,63 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.YOUR_GITHUB_USERNAMEr</groupId>
+    <groupId>org.emeraldcraft.manhuntabilites</groupId>
     <artifactId>AbilityManHunt</artifactId>
-    <version>v1.3 RELEASE</version>
+    <version>v1.4 RELEASE</version>
+    <packaging>jar</packaging>
+    <name>AbilityManhunt</name>
+
+    <properties>
+        <java.version>16</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--Output directory can be ANY custom directory that you want the plugin to output in-->
+        <!--EX: C:\Users\Minecraft\Documents\servers\Minecraft Server\plugins-->
+        <outputDirectory>your plugins directory</outputDirectory>
+        <!---->
+        <jarFileName>${name}-${version}.jar</jarFileName>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <finalName>${jarFileName}</finalName>
+                            <outputFile>${outputDirectory}\${jarFileName}</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <repositories>
         <repository>
-            <id>papermc</id>
+            <id>papermc-repo</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
     </repositories>
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>plugindir</id>
-            <build>
-                <directory>YOUR DIRECTORY HERE WITH NO ""</directory>
-            </build>
-        </profile>
-    </profiles>
 </project>
