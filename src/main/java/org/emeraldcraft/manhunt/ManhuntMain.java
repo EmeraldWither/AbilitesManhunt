@@ -84,12 +84,11 @@ public class ManhuntMain extends JavaPlugin {
         getLogger().log(INFO, """
 
                 --------------------------------------------------------------
-                |                            NOW ENABLING:                             \s
-                |                                                                       \s
-                |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES   \s
-                |                            v1.4 RELEASE                                 \s
-                |               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR              \s
-                |                        BY: EmerqldWither  \s
+                |                            NOW ENABLING:
+                |
+                |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES
+                |                            v1.4 RELEASE
+                |                        BY: EmerqldWither
                 --------------------------------------------------------------""");
         getLogger().log(INFO, "The plugin started up in " + (System.currentTimeMillis() - time) + " ms!");
     }
@@ -103,7 +102,6 @@ public class ManhuntMain extends JavaPlugin {
                 |                                                                       \s
                 |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES   \s
                 |                            v1.4 RELEASE                                 \s
-                |               THIS IS A DEVELOPER RELEASE, BUGS WILL OCCUR              \s
                 |                         BY: EmerqldWither  \s
                 --------------------------------------------------------------""");
         getDataBase().closeConnection();

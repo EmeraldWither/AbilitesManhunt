@@ -1,7 +1,6 @@
 package org.emeraldcraft.manhunt.PlayerChecks.SpeedrunnerChecks;
 
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +15,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.util.logging.Level.INFO;
@@ -25,10 +25,10 @@ public class DeathCheck implements Listener {
     // This class is called whenever a speedrunner dies.
     // Also called when the hunters win.
 
-    private ManhuntMain manhuntMain;
-    private Abilites Abilites;
-    private Manhunt manhunt;
-    private Manacounter manacounter;
+    private final ManhuntMain manhuntMain;
+    private final Abilites abilites;
+    private final Manhunt manhunt;
+    private final Manacounter manacounter;
     List<UUID> hunter;
     List<UUID> speedrunner;
     List<UUID> deadSpeedrunners;
@@ -37,7 +37,7 @@ public class DeathCheck implements Listener {
         this.manhuntMain = manhuntMain;
         this.manhunt = manhunt;
         this.manacounter = manacounter;
-        this.Abilites = Abilites;
+        this.abilites = Abilites;
         deadSpeedrunners = manhunt.getTeam(ManhuntTeam.DEAD);
         hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
         speedrunner = manhunt.getTeam(ManhuntTeam.SPEEDRUNNER);
@@ -51,19 +51,14 @@ public class DeathCheck implements Listener {
 
                 showDeathEffect(event.getEntity());
                 if(manhunt.isDatabaseEnabled()){
-                    Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
-                        @Override
-                        public void run() {
-                            manhunt.getDatabase().addManhuntDeath(event.getEntity().getUniqueId());
-                        }
-                    });
+                    Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, () -> manhunt.getDatabase().addManhuntDeath(event.getEntity().getUniqueId()));
                 }
                 else {
                     int deaths = 0;
-                    if(manhuntMain.getDataConfig().getConfig().contains("players." + event.getEntity().getUniqueId().toString() + ".deaths")){
-                        deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + event.getEntity().getUniqueId().toString() + ".deaths");
+                    if(manhuntMain.getDataConfig().getConfig().contains("players." + event.getEntity().getUniqueId() + ".deaths")){
+                        deaths = manhuntMain.getDataConfig().getConfig().getInt("players." + event.getEntity().getUniqueId()+ ".deaths");
                     }
-                    manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId().toString() + ".deaths", (deaths + 1));
+                    manhuntMain.getDataConfig().getConfig().set("players." + event.getEntity().getUniqueId() + ".deaths", (deaths + 1));
                     manhuntMain.getDataConfig().saveConfig();
                 }
                 //End Adding death
@@ -81,7 +76,7 @@ public class DeathCheck implements Listener {
                     Bukkit.getLogger().log(INFO, "[MANHUNT] The game has ended.");
                     List<String> hunterList = new ArrayList<>();
                     for(UUID uuid : hunter){
-                        hunterList.add(Bukkit.getPlayer(uuid).getName());
+                        hunterList.add(Objects.requireNonNull(Bukkit.getPlayer(uuid)).getName());
                     }
 
                     String hunters = hunterList.toString().replaceAll("]", "").replaceAll("\\[", "");
@@ -91,18 +86,13 @@ public class DeathCheck implements Listener {
                         if (players != null) {
                             //Add a win to the hunter
                             if (manhunt.isDatabaseEnabled()) {
-                                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        manhunt.getDatabase().addManhuntWin(players.getUniqueId());
-                                    }
-                                });
+                                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, () -> manhunt.getDatabase().addManhuntWin(players.getUniqueId()));
                             } else {
                                 int wins = 0;
-                                if (manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".wins")) {
-                                    wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".wins");
+                                if (manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId() + ".wins")) {
+                                    wins = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId() + ".wins");
                                 }
-                                manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".wins", (wins + 1));
+                                manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId() + ".wins", (wins + 1));
                                 manhuntMain.getDataConfig().saveConfig();
                             }
                             //End adding win
@@ -141,18 +131,13 @@ public class DeathCheck implements Listener {
                         if (players != null) {
                             //Add a loss
                             if (manhunt.isDatabaseEnabled()) {
-                                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        manhunt.getDatabase().addManhuntLoss(players.getUniqueId());
-                                    }
-                                });
+                                Bukkit.getScheduler().runTaskAsynchronously(manhuntMain, () -> manhunt.getDatabase().addManhuntLoss(players.getUniqueId()));
                             } else {
                                 int losses = 0;
-                                if (manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId().toString() + ".losses")) {
-                                    losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId().toString() + ".losses");
+                                if (manhuntMain.getDataConfig().getConfig().contains("players." + players.getUniqueId() + ".losses")) {
+                                    losses = manhuntMain.getDataConfig().getConfig().getInt("players." + players.getUniqueId() + ".losses");
                                 }
-                                manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId().toString() + ".losses", (losses + 1));
+                                manhuntMain.getDataConfig().getConfig().set("players." + players.getUniqueId() + ".losses", (losses + 1));
                                 manhuntMain.getDataConfig().saveConfig();
                             }
 
@@ -182,7 +167,7 @@ public class DeathCheck implements Listener {
                     deadSpeedrunners.clear();
                     hunter.clear();
                     manhunt.getTeam(ManhuntTeam.FROZEN).clear();
-                    Abilites.clearCooldown();
+                    abilites.clearCooldown();
                     manhunt.setGameStatus(false);
                     for (org.bukkit.scoreboard.Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
                         if (team.getName().equalsIgnoreCase("hunterTeam") || team.getName().equalsIgnoreCase("speedrunnerTeam")) {
@@ -195,12 +180,9 @@ public class DeathCheck implements Listener {
                 Vector direction = event.getEntity().getLocation().getDirection();
                 deathLocation.setDirection(direction);
                 Player player = event.getEntity();
-                Bukkit.getScheduler().runTaskLater(manhuntMain, new Runnable() {
-                    @Override
-                    public void run() {
-                        player.spigot().respawn();
-                        player.teleport(deathLocation);
-                    }
+                Bukkit.getScheduler().runTaskLater(manhuntMain, () -> {
+                    player.spigot().respawn();
+                    player.teleport(deathLocation);
                 }, 1L);
                 player.setGameMode(GameMode.SPECTATOR);
                 player.setGlowing(false);
@@ -210,9 +192,8 @@ public class DeathCheck implements Listener {
     }
 
     private void showDeathEffect(Player player){
-        Entity entity = player;
         for (int i = 0; i < 4; i++) {
-            entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+            player.getWorld().playEffect(player.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
         }
     }
 }
