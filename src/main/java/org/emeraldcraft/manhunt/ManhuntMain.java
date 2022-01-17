@@ -87,7 +87,7 @@ public class ManhuntMain extends JavaPlugin {
                 |                            NOW ENABLING:
                 |
                 |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES
-                |                            v1.4 RELEASE
+                |                            v1.5 RELEASE
                 |                        BY: EmerqldWither
                 --------------------------------------------------------------""");
         getLogger().log(INFO, "The plugin started up in " + (System.currentTimeMillis() - time) + " ms!");
@@ -101,7 +101,7 @@ public class ManhuntMain extends JavaPlugin {
                 |                            NOW DISABLING:                             \s
                 |                                                                       \s
                 |        MINECRAFT MANHUNT, BUT THE HUNTER HAS SPECIAL ABILITIES   \s
-                |                            v1.4 RELEASE                                 \s
+                |                            v1.5 RELEASE                                 \s
                 |                         BY: EmerqldWither  \s
                 --------------------------------------------------------------""");
         getDataBase().closeConnection();
@@ -111,7 +111,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LaunchAbility(manhunt, this, manacounter, abilites), this);
         getServer().getPluginManager().registerEvents(new LightningListener(manhunt, this, manacounter, abilites) ,this);
         getServer().getPluginManager().registerEvents(new GravityListener(manhunt, this, manacounter, abilites) ,this);
-        getServer().getPluginManager().registerEvents(new PreventPlacing(manhunt, this) ,this);
+        getServer().getPluginManager().registerEvents(new PreventPlacing(manhunt) ,this);
         getServer().getPluginManager().registerEvents(new CheckChest(manhunt, this) ,this);
         getServer().getPluginManager().registerEvents(new DeathCheck(manhunt, this, manacounter, abilites) ,this);
         getServer().getPluginManager().registerEvents(new LightningGuiListener(manhunt, this, manacounter, abilites) ,this);
@@ -119,7 +119,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GravityGUIListener(manhunt, this, manacounter, abilites) ,this);
         getServer().getPluginManager().registerEvents(new PreventPickingUp(manhunt) ,this);
         getServer().getPluginManager().registerEvents(new PreventAttacking(manhunt),this);
-        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhunt, this),this);
+        getServer().getPluginManager().registerEvents(new PreventDroppingItems(manhunt),this);
         getServer().getPluginManager().registerEvents(new ScramblerGUIListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new ScramblerListener(manhunt, this, manacounter, abilites), this);
         getServer().getPluginManager().registerEvents(new EnderDragonCheck(manhunt, this, abilites, manacounter),this);
@@ -130,7 +130,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DamageItemListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new PlayerTPListener(manhunt, this, abilites),this);
         getServer().getPluginManager().registerEvents(new PreventProjectileThrowing(manhunt),this);
-        getServer().getPluginManager().registerEvents(new PreventHunger(manhunt, this),this);
+        getServer().getPluginManager().registerEvents(new PreventHunger(manhunt),this);
         getServer().getPluginManager().registerEvents(new TargetMobListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new TargetMobGUIListener(manhunt, this, manacounter, abilites),this);
         getServer().getPluginManager().registerEvents(new ClearStragglers(manhunt),this);
@@ -141,7 +141,7 @@ public class ManhuntMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GiveSpeedrunnerScoreboard(manhunt, this), this);
         getServer().getPluginManager().registerEvents(new PreventInteraction(manhunt), this);
         getServer().getPluginManager().registerEvents(new PreventDamage(manhunt), this);
-        getServer().getPluginManager().registerEvents(new PreventGettingClose(manhunt, this), this);
+        getServer().getPluginManager().registerEvents(new SocialDistance(manhunt, this), this);
         getServer().getPluginManager().registerEvents(new PushAwayHunter(manhunt, this), this);
         getServer().getPluginManager().registerEvents(new ResourcePackListener(manhunt), this);
         getServer().getPluginManager().registerEvents(new PreventEXP(manhunt), this);

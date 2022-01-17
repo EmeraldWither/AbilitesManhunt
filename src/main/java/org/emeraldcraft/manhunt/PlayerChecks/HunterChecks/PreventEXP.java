@@ -7,17 +7,18 @@ import org.emeraldcraft.manhunt.Enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.Manhunt;
 
 public class PreventEXP implements Listener {
-    private Manhunt manhunt;
+    private final Manhunt manhunt;
     public PreventEXP(Manhunt manhunt){
         this.manhunt = manhunt;
     }
 
     @EventHandler
     public void onExpEvent(PlayerPickupExperienceEvent event){
-        if(manhunt.hasGameStarted()) {
-            if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER) {
-                event.setCancelled(true);
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER) {
+            event.setCancelled(true);
         }
     }
 }

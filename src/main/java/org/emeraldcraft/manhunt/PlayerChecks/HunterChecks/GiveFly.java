@@ -14,14 +14,13 @@ public class GiveFly implements Listener {
     }
     @EventHandler
     public void giveFly(PlayerChangedWorldEvent event){
-        if(manhunt.hasGameStarted()) {
-            if (manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER) {
-                event.getPlayer().setAllowFlight(true);
-                if(event.getPlayer().isFlying()){
-                    event.getPlayer().setFlying(true);
-                }
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
         }
+        if (manhunt.getTeam(event.getPlayer().getUniqueId()) != ManhuntTeam.HUNTER) {
+            return;
+        }
+        event.getPlayer().setAllowFlight(true);
+        event.getPlayer().setFlying(true);
     }
-
 }

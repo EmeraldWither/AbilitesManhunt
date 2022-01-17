@@ -9,19 +9,21 @@ import org.emeraldcraft.manhunt.Manhunt;
 
 public class PreventDamage implements Listener {
 
-    private Manhunt manhunt;
+    private final Manhunt manhunt;
     public PreventDamage(Manhunt manhunt){
         this.manhunt = manhunt;
     }
 
     @EventHandler
     public void damageEvent(EntityDamageEvent event){
-        if(manhunt.hasGameStarted()) {
-            if (event.getEntity() instanceof Player) {
-                if (manhunt.getTeam(event.getEntity().getUniqueId()).equals(ManhuntTeam.HUNTER)) {
-                    event.setCancelled(true);
-                }
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        if (manhunt.getTeam(event.getEntity().getUniqueId()).equals(ManhuntTeam.HUNTER)) {
+            event.setCancelled(true);
         }
     }
 }

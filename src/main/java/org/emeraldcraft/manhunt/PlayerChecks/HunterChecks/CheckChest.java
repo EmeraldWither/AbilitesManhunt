@@ -14,6 +14,7 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CheckChest implements Listener{
@@ -30,59 +31,69 @@ public class CheckChest implements Listener{
 
     @EventHandler
     public void ChestClick(InventoryClickEvent event) {
-        if(hunter.contains(event.getView().getPlayer().getUniqueId())) {
-            if(manhunt.hasGameStarted()) {
-
-                SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
-                Inventory getInventory = inv.getInv();
-
-                if (event.getInventory() != getInventory) {
-                    event.setCancelled(true);
-                }
-                ((Player) event.getView().getBottomInventory().getHolder()).updateInventory();
-            }
+        if (!hunter.contains(event.getView().getPlayer().getUniqueId())) {
+            return;
         }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+
+        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
+        Inventory getInventory = inv.getInv();
+
+        if (event.getInventory() != getInventory) {
+            event.setCancelled(true);
+        }
+        ((Player) Objects.requireNonNull(event.getView().getBottomInventory().getHolder())).updateInventory();
 
     }
     @EventHandler
     public void ChestDragEvent(InventoryDragEvent event){
-        if(event.getView().getBottomInventory().getHolder() instanceof Player) {
-            if (manhunt.hasGameStarted()) {
-                if (hunter.contains(event.getView().getPlayer().getUniqueId())) {
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
-                    Inventory getInventory = inv.getInv();
-                    if (event.getInventory() != getInventory) {
-                        event.setCancelled(true);
-                    }
-                    ((Player) event.getView().getBottomInventory().getHolder()).updateInventory();
-                }
-            }
+        if (!(event.getView().getBottomInventory().getHolder() instanceof Player)) {
+            return;
         }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (!hunter.contains(event.getView().getPlayer().getUniqueId())) {
+            return;
+        }
+        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
+        Inventory getInventory = inv.getInv();
+        if (event.getInventory() != getInventory) {
+            event.setCancelled(true);
+        }
+        ((Player) event.getView().getBottomInventory().getHolder()).updateInventory();
     }
     @EventHandler
     public void ChestMoveEvent(InventoryMoveItemEvent event){
-        if(manhunt.hasGameStarted()) {
-            if (event.getSource().getHolder() instanceof Player) {
-                if (hunter.contains(((Player) event.getSource().getHolder()).getName())) {
-                    SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
-                    Inventory getInventory = inv.getInv();
-
-                    if (event.getSource() != getInventory) {
-                        event.setCancelled(true);
-                    }
-                    ((Player) event.getSource().getHolder()).updateInventory();
-
-                }
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
         }
+        if (!(event.getSource().getHolder() instanceof Player)) {
+            return;
+        }
+        if (!hunter.contains(((Player) event.getSource().getHolder()).getUniqueId())) {
+            return;
+        }
+        SpeedrunnerGUI inv = new SpeedrunnerGUI(manhunt);
+        Inventory getInventory = inv.getInv();
+
+        if (event.getSource() != getInventory) {
+            event.setCancelled(true);
+        }
+        ((Player) Objects.requireNonNull(event.getSource().getHolder())).updateInventory();
+
     }
     @EventHandler
     public void SwitchOffHand(PlayerSwapHandItemsEvent event) {
-        if(manhunt.hasGameStarted()) {
-            if (hunter.contains(event.getPlayer().getUniqueId())) {
-                event.setCancelled(true);
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
         }
+        if (!hunter.contains(event.getPlayer().getUniqueId())) {
+            return;
+        }
+        event.setCancelled(true);
     }
 }
 

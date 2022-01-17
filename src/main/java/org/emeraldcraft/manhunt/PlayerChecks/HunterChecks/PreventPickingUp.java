@@ -23,11 +23,11 @@ public class PreventPickingUp implements Listener {
 
     @EventHandler
     public void ItemPickupEvent(PlayerAttemptPickupItemEvent event){
-        if(manhunt.hasGameStarted()) {
-            if (hunter.contains(event.getPlayer().getUniqueId())) {
-                event.setCancelled(true);
-
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (hunter.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
         }
     }
 }

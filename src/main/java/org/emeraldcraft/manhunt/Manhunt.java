@@ -19,6 +19,7 @@ import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntPackManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntSpeedrunnerScoreboardManager;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 
 public class Manhunt {
-    private ManhuntMain main;
+    private final ManhuntMain main;
 
     public Manhunt(ManhuntMain main) {
         this.main = main;
@@ -52,6 +53,7 @@ public class Manhunt {
     public HashMap<UUID, Integer> hunterScoreboardID = new HashMap<>();
     public HashMap<UUID, Integer> speedrunnerScoreboardID = new HashMap<>();
 
+    @Nullable
     public List<UUID> getTeam(ManhuntTeam team) {
         if (team == ManhuntTeam.HUNTER) {
             return hunter;
@@ -92,7 +94,7 @@ public class Manhunt {
         return ManhuntTeam.NONE;
     }
 
-    public String getCooldown(Player player, Ability pickAbility, Abilites abilites) {
+    public String getCooldownMessage(Player player, Ability pickAbility, Abilites abilites) {
         Long time;
         long cooldown;
         if (abilites.getCooldown(pickAbility).get(player.getUniqueId()) != null) {
@@ -183,6 +185,7 @@ public class Manhunt {
                 Player player = Bukkit.getPlayer(hunter);
 
                 if (manhuntMain.getConfig().getBoolean("scoreboard.enabled")) {
+                    assert player != null;
                     UUID uuid = player.getUniqueId();
                     ManhuntHunterScoreboardManager manhuntScoreboardManager = new ManhuntHunterScoreboardManager(this, abilites, manhuntMain);
                     manhuntScoreboardManager.showHunterScoreboard(uuid, manhuntMain);
@@ -278,7 +281,7 @@ public class Manhunt {
         return waypointTeleports;
     }
 
-    public ManhuntMain getMain() {
+    public ManhuntMain getJavaPlugin() {
         return main;
     }
 
@@ -293,11 +296,11 @@ public class Manhunt {
 
     public void updateDatabaseStatus() {
         if (main.getConfig().getBoolean("mysql.enabled")) {
-            String url = getMain().getConfig().getString("mysql.database-url");
-            Integer port = getMain().getConfig().getInt("mysql.database-port");
-            String dbname = getMain().getConfig().getString("mysql.database-name");
-            String username = getMain().getConfig().getString("mysql.database-username");
-            String password = getMain().getConfig().getString("mysql.database-password");
+            String url = getJavaPlugin().getConfig().getString("mysql.database-url");
+            Integer port = getJavaPlugin().getConfig().getInt("mysql.database-port");
+            String dbname = getJavaPlugin().getConfig().getString("mysql.database-name");
+            String username = getJavaPlugin().getConfig().getString("mysql.database-username");
+            String password = getJavaPlugin().getConfig().getString("mysql.database-password");
 
             getDatabase().setName(dbname);
             getDatabase().setUrl(url);
@@ -305,12 +308,9 @@ public class Manhunt {
             getDatabase().setUsername(username);
             getDatabase().setPassword(password);
 
-            Bukkit.getScheduler().runTaskAsynchronously(main, new Runnable() {
-                @Override
-                public void run() {
-                    getDatabase().testConnection();
-                    isDatabaseEnabled = getDatabase().isEnabled();
-                }
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                getDatabase().testConnection();
+                isDatabaseEnabled = getDatabase().isEnabled();
             });
 
         }

@@ -23,18 +23,21 @@ public class PreventProjectileThrowing implements Listener {
     }
     @EventHandler
     public void ProjectileToss(ProjectileLaunchEvent event){
-        if(event.getEntity().getShooter() instanceof Player){
-            if(manhunt.hasGameStarted()) {
-                if (hunter.contains(((Player) event.getEntity().getShooter()).getUniqueId())) {
-                    event.setCancelled(true);
-                }
-            }
+        if (!(event.getEntity().getShooter() instanceof Player)) {
+            return;
+        }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (hunter.contains(((Player) event.getEntity().getShooter()).getUniqueId())) {
+            event.setCancelled(true);
         }
     }
     @EventHandler
     public void projectileCollide(ProjectileCollideEvent event){
-        if(hunter.contains(event.getCollidedWith().getUniqueId())){
-            event.setCancelled(true);
+        if (!hunter.contains(event.getCollidedWith().getUniqueId())) {
+            return;
         }
+        event.setCancelled(true);
     }
 }

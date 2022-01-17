@@ -27,12 +27,7 @@ public class ManhuntSpeedrunnerScoreboardManager {
     public int id = 0;
     public void showSpeedrunnerScoreboard(UUID uuid, Plugin plugin){
         setSpeedrunnerScoreboard(uuid);
-        id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                updateSpeedrunnerScoreBoard(uuid);
-            }
-        }, 0, 1L);
+        id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> updateSpeedrunnerScoreBoard(uuid), 0, 1L);
     }
 
     public void setSpeedrunnerScoreboard(UUID uuid){

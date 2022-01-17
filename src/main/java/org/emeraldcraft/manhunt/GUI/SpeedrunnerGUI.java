@@ -20,8 +20,9 @@ import java.util.UUID;
 public class SpeedrunnerGUI {
 
     private Manhunt manhunt;
-    List<UUID> hunter;
-    List<UUID> speedrunner;
+    private List<UUID> hunter;
+    private List<UUID> speedrunner;
+    private Inventory inv;
     public SpeedrunnerGUI(Manhunt manhunt){
         this.manhunt = manhunt;
         hunter = manhunt.getTeam(ManhuntTeam.HUNTER);
@@ -29,7 +30,6 @@ public class SpeedrunnerGUI {
     }
     public Inventory createInventory() {
 
-        Inventory inv;
         inv = Bukkit.createInventory(null, 9, ChatColor.translateAlternateColorCodes('&', "&9&lSelect a Speedrunner: "));
         for (UUID playerUUID : manhunt.getTeam(ManhuntTeam.SPEEDRUNNER)) {
             Player player = Bukkit.getPlayer(playerUUID);
@@ -60,7 +60,6 @@ public class SpeedrunnerGUI {
     }
 
     public Inventory getInv() {
-
-        return createInventory();
+        return this.inv;
     }
 }

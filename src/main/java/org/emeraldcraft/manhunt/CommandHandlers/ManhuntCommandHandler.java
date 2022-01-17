@@ -30,7 +30,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
     List<UUID> deadSpeedrunner;
     HashMap<UUID, Integer> Mana;
     private final ManhuntMain manhuntMain;
-    private Manacounter manacounter;
+    private final Manacounter manacounter;
 
     public ManhuntCommandHandler(Manhunt manhunt, ManhuntMain manhuntMain, Manacounter manacounter, Abilites Abilites) {
         this.manhunt = manhunt;
@@ -496,7 +496,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                     wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
                     deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
 
-                    Bukkit.getScheduler().runTask(manhunt.getMain(), new Runnable() {
+                    Bukkit.getScheduler().runTask(manhunt.getJavaPlugin(), new Runnable() {
                         @Override
                         public void run() {
                             for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){
@@ -540,7 +540,7 @@ public class ManhuntCommandHandler implements CommandExecutor {
                         wins[0] = manhunt.getDatabase().getManhuntWins(uuid);
                         deaths[0] = manhunt.getDatabase().getManhuntDeaths(uuid);
 
-                        Bukkit.getScheduler().runTask(manhunt.getMain(), new Runnable() {
+                        Bukkit.getScheduler().runTask(manhunt.getJavaPlugin(), new Runnable() {
                             @Override
                             public void run() {
                                 for(String msg : manhuntMain.getConfig().getStringList("messages.stats-msg")){

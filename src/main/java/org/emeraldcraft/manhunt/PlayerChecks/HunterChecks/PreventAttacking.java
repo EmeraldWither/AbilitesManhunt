@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class PreventAttacking implements Listener {
 
-    private Manhunt manhunt;
+    private final Manhunt manhunt;
 
     List<UUID> hunter;
     public PreventAttacking(Manhunt manhunt){
@@ -22,12 +22,14 @@ public class PreventAttacking implements Listener {
 
     @EventHandler
     public void PlayerAttack(EntityDamageByEntityEvent event){
-        if(manhunt.hasGameStarted()) {
-            if (event.getDamager() instanceof Player) {
-                if (hunter.contains(((Player) event.getDamager()).getPlayer().getUniqueId())) {
-                    event.setCancelled(true);
-                }
-            }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (!(event.getDamager() instanceof Player)) {
+            return;
+        }
+        if (hunter.contains(((Player) event.getDamager()).getPlayer().getUniqueId())) {
+            event.setCancelled(true);
         }
     }
 }

@@ -16,16 +16,19 @@ public class PreventInteraction implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event){
-        if(manhunt.hasGameStarted()){
-            if(manhunt.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.HUNTER)){
-                event.setCancelled(true);
-                if(event.getClickedBlock() != null) {
-                    event.getClickedBlock().getState();
-                    if (event.getClickedBlock().getState() instanceof InventoryHolder) {
-                        event.getPlayer().openInventory(((InventoryHolder) event.getClickedBlock().getState()).getInventory());
-                    }
-                }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if (!manhunt.getTeam(event.getPlayer().getUniqueId()).equals(ManhuntTeam.HUNTER)) {
+            return;
+        }
+        event.setCancelled(true);
+        if(event.getClickedBlock() != null) {
+            event.getClickedBlock().getState();
+            if (!(event.getClickedBlock().getState() instanceof InventoryHolder)) {
+                return;
             }
+            event.getPlayer().openInventory(((InventoryHolder) event.getClickedBlock().getState()).getInventory());
         }
     }
 

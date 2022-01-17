@@ -8,8 +8,8 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 
 public class PreventAdvancements implements Listener {
-    private Manhunt manhunt;
-    private ManhuntMain manhuntMain;
+    private final Manhunt manhunt;
+    private final ManhuntMain manhuntMain;
     public PreventAdvancements(Manhunt manhunt, ManhuntMain manhuntMain){
         this.manhuntMain = manhuntMain;
         this.manhunt = manhunt;
@@ -17,12 +17,14 @@ public class PreventAdvancements implements Listener {
     }
     @EventHandler
     public void advancementEvent(PlayerAdvancementCriterionGrantEvent event){
-        if(manhuntMain.getConfig().getBoolean("prevent-advancements")){
-            if(manhunt.hasGameStarted()){
-                if(manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER){
-                    event.setCancelled(true);
-                }
-            }
+        if (!manhuntMain.getConfig().getBoolean("prevent-advancements")) {
+            return;
+        }
+        if (!manhunt.hasGameStarted()) {
+            return;
+        }
+        if(manhunt.getTeam(event.getPlayer().getUniqueId()) == ManhuntTeam.HUNTER){
+            event.setCancelled(true);
         }
     }
 }
