@@ -66,7 +66,6 @@ public class DamageItemGUIListener implements Listener {
                 ItemStack[] givenList = selectedPlayer.getInventory().getContents();
 
                 int numberOfElements = manhuntMain.getConfig().getInt("abilities.damageitem.amount");
-
                 for (int i = 0; i < numberOfElements; i++) {
                     int randomIndex = rand.nextInt(givenList.length);
                     ItemStack item = givenList[randomIndex];
@@ -80,9 +79,10 @@ public class DamageItemGUIListener implements Listener {
                             }
                         }
                     }
+                    else i--;
                 }
-                Integer cooldown = manhuntMain.getConfig().getInt("abilities.damageitem.cooldown");
-                damageCooldown.put(player.getUniqueId(), (System.currentTimeMillis() + (cooldown * 1000)));
+                int cooldown = manhuntMain.getConfig().getInt("abilities.damageitem.cooldown");
+                damageCooldown.put(player.getUniqueId(), (System.currentTimeMillis() + (cooldown * 1000L)));
 
                 manacounter.getManaList().put(player.getUniqueId(), manacounter.getManaList().get(player.getUniqueId()) - 40);
                 manacounter.updateActionbar(player);

@@ -18,8 +18,8 @@ import org.emeraldcraft.manhunt.GUI.SpeedrunnerGUI;
 import org.emeraldcraft.manhunt.Managers.ManhuntHunterScoreboardManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntPackManager;
 import org.emeraldcraft.manhunt.Managers.ManhuntSpeedrunnerScoreboardManager;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
