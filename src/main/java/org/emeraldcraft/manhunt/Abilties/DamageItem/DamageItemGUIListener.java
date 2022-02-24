@@ -68,7 +68,7 @@ public class DamageItemGUIListener implements Listener {
                 int numberOfElements = manhuntMain.getConfig().getInt("abilities.damageitem.amount");
                 for (int i = 0; i < numberOfElements; i++) {
                     int randomIndex = rand.nextInt(givenList.length);
-                    ItemStack item = givenList[randomIndex];
+                    ItemStack item = givenList[randomIndex - 1];
                     if (item != null) {
                         if (item.getItemMeta() instanceof Damageable) {
                             int itemDurablity = item.getType().getMaxDurability() - ((Damageable) item.getItemMeta()).getDamage();
@@ -77,7 +77,9 @@ public class DamageItemGUIListener implements Listener {
                                 item.setDurability((short) itemDamage);
                                 damageableItems++;
                             }
+                            else i--;
                         }
+                        else i--;
                     }
                     else i--;
                 }
