@@ -1,3 +1,4 @@
-# Minecraft Manhunt but the Hunter has Special Abilities
-________________________________________________________
-Requires PaperMC.
+#Version 2 Branch
+------------------------------
+
+The point of this branch is to be a complete re-write. 
