@@ -8,6 +8,7 @@
     <artifactId>AbilityManHunt</artifactId>
     <version>v2.0-ALPHA</version>
     <packaging>jar</packaging>
+    <name>AbilitesManhunt</name>
 
     <properties>
         <java.version>17</java.version>
