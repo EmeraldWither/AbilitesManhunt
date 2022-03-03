@@ -6,20 +6,38 @@
 
     <groupId>org.emeraldcraft.manhuntabilites</groupId>
     <artifactId>AbilityManHunt</artifactId>
-    <version>v1.4 RELEASE</version>
+    <version>v2.0-ALPHA</version>
     <packaging>jar</packaging>
-    <name>AbilityManhunt</name>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--Output directory can be ANY custom directory that you want the plugin to output in-->
         <!--EX: C:\Users\Minecraft\Documents\servers\Minecraft Server\plugins-->
         <outputDirectory>your plugins directory</outputDirectory>
-        <!---->
         <jarFileName>${name}-${version}.jar</jarFileName>
     </properties>
     <build>
+        <!-- Filter only plugin.yml -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -39,14 +57,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <repositories>
@@ -59,7 +69,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.18.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
