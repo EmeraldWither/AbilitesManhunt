@@ -1,0 +1,1 @@
+All classes that start with "I" (where it makes sense) are internal classes and shouldn't be used by other plugins.
