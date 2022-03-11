@@ -20,4 +20,5 @@ public interface ManhuntPlayer{
 
     @Nullable
     Player getAsBukkitPlayer();
+
 }

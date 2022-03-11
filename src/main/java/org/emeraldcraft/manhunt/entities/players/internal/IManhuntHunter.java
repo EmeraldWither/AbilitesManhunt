@@ -17,13 +17,10 @@ import java.util.UUID;
  * and should only be used internally.
  */
 public class IManhuntHunter implements ManhuntHunter {
-    private final ManhuntTeam team;
     private final UUID uuid;
-    private Player player;
+    private int mana = 0;
 
-    public IManhuntHunter(ManhuntTeam team, Player player) {
-        this.team = team;
-        this.player = player;
+    public IManhuntHunter(Player player) {
         if (player == null || !player.isOnline())
             throw new IllegalArgumentException("Bukkit player is invalid (null or offline)");
         this.uuid = player.getUniqueId();
@@ -36,7 +33,7 @@ public class IManhuntHunter implements ManhuntHunter {
 
     @Override
     public ManhuntTeam getTeam() {
-        return team;
+        return ManhuntTeam.HUNTER;
     }
 
     @Override
@@ -53,10 +50,23 @@ public class IManhuntHunter implements ManhuntHunter {
     @Override
     public void executeAbility(ManhuntAbility ability) {
 
+
+    }
+    @Override
+    public int getMana() {
+        return 0;
+    }
+
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public void addMana(){
+        this.mana++;
     }
 
     @Override
-    public int getMana() {
+    public long getCooldownEndPeriod(ManhuntAbility ability) {
         return 0;
     }
 }

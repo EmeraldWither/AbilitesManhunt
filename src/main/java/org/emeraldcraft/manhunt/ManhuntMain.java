@@ -10,7 +10,6 @@ public class ManhuntMain extends JavaPlugin {
     }
     @Override
     public void onDisable(){
-
     }
 }
 

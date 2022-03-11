@@ -13,5 +13,12 @@ public interface ManhuntHunter extends ManhuntPlayer {
     void executeAbility(ManhuntAbility ability);
     int getMana();
 
+    /**
+     * Used for calculating cool-downs
+     * @param ability The ability you wish to check
+     * @return The last time that this ability was executed
+     */
+    long getCooldownEndPeriod(ManhuntAbility ability);
+
 
 }
