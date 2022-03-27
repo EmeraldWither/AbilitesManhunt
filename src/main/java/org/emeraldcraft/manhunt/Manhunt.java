@@ -10,7 +10,7 @@ public class Manhunt {
     public static ManhuntAPI getAPI(){
         return Manhunt.API;
     }
-    public void setAPI(ManhuntAPI api){
+    public static void setAPI(ManhuntAPI api){
         if(Manhunt.API == null){
             Manhunt.API = api;
         }

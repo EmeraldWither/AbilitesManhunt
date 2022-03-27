@@ -3,14 +3,21 @@ package org.emeraldcraft.manhunt.entities;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
-import org.emeraldcraft.manhunt.entities.players.ManhuntHunter;
-import org.emeraldcraft.manhunt.entities.players.ManhuntSpeedrunner;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.emeraldcraft.manhunt.ManhuntMain;
+import org.emeraldcraft.manhunt.entities.players.Hunter;
+import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Represents a simple ManhuntAbility. Ability execution logic is handled by {@link org.emeraldcraft.manhunt.entities.players.ManhuntHunter}.
+ * Represents a simple ManhuntAbility. Ability execution logic is handled by {@link Hunter}.
  */
 public abstract class ManhuntAbility {
     private final UUID uuid;
@@ -20,6 +27,8 @@ public abstract class ManhuntAbility {
     private final int mana;
     private final Material material;
     private final HashMap<ManhuntAbility, Long> cooldowns = new HashMap<>();
+    private final NamespacedKey key;
+    private final ItemStack itemStack;
 
     /**
      * @param cooldown The cooldown for the item (-1 for no cooldown)
@@ -33,9 +42,18 @@ public abstract class ManhuntAbility {
         this.mana = mana;
         this.material = material;
         this.uuid = UUID.randomUUID();
+
+        //Create our itemstack
+        ItemStack itemStack = new ItemStack(this.material, 1);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        key = new NamespacedKey(JavaPlugin.getProvidingPlugin(ManhuntMain.class), this.uuid.toString());
+        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, this.uuid.toString());
+        itemStack.setItemMeta(itemMeta);
+        IManhuntUtils.createItemLore(this, itemStack, this.name, this.description);
+        this.itemStack = itemStack;
     }
 
-    protected abstract void onExecute(ManhuntHunter hunter, ManhuntSpeedrunner speedrunner);
+    protected abstract void onExecute(Hunter hunter, Speedrunner speedrunner);
 
     /**
      * Executes the ability while accounting for mana and cooldown costs.
@@ -43,7 +61,7 @@ public abstract class ManhuntAbility {
      * @param hunter      The hunter
      * @param speedrunner The speedrunner
      */
-    public void execute(ManhuntHunter hunter, ManhuntSpeedrunner speedrunner) {
+    public void execute(Hunter hunter, Speedrunner speedrunner) {
         if (hunter.getMana() < this.mana) {
             if (hunter.getAsBukkitPlayer() == null) return;
 
@@ -59,7 +77,9 @@ public abstract class ManhuntAbility {
         }
         onExecute(hunter, speedrunner);
     }
-
+    public ItemStack getAsItemStack(){
+        return itemStack;
+    }
 
     public int getCooldown() {
         return cooldown;

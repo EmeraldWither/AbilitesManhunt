@@ -3,7 +3,7 @@ package org.emeraldcraft.manhunt.entities.players.internal;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.entities.Waypoint;
-import org.emeraldcraft.manhunt.entities.players.ManhuntSpeedrunner;
+import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class IManhuntSpeedrunner implements ManhuntSpeedrunner {
+public class ManhuntSpeedrunner implements Speedrunner {
     private final UUID uuid;
     private final List<Waypoint> waypoints = new ArrayList<>();
-    public IManhuntSpeedrunner(Player player){
+    public ManhuntSpeedrunner(Player player){
         if (player == null || !player.isOnline())
             throw new IllegalArgumentException("Bukkit player is invalid (null or offline)");
         uuid = player.getUniqueId();

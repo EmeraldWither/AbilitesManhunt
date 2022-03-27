@@ -6,19 +6,19 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
-import org.emeraldcraft.manhunt.entities.players.ManhuntHunter;
-import org.emeraldcraft.manhunt.entities.players.ManhuntSpeedrunner;
+import org.emeraldcraft.manhunt.entities.players.Hunter;
+import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 
 public class LaunchAbility extends ManhuntAbility {
     public LaunchAbility() {
         super("Launch Ability",
                 "Launches the speedrunner into the air",
                 180,
-                180,
+                50,
                 Material.SLIME_BALL);
     }
     @Override
-    protected void onExecute(ManhuntHunter hunter, ManhuntSpeedrunner speedrunner) {
+    protected void onExecute(Hunter hunter, Speedrunner speedrunner) {
         if(hunter.getAsBukkitPlayer() == null) return;
         Player player = hunter.getAsBukkitPlayer();
         Vector velocity = player.getVelocity();
