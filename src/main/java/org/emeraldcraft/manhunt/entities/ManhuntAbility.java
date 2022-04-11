@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public abstract class ManhuntAbility {
     public void execute(Hunter hunter, Speedrunner speedrunner) {
         if (hunter.getMana() < this.mana) {
             if (hunter.getAsBukkitPlayer() == null) return;
-
+            IManhuntUtils.debug("Hunters mana: " + hunter.getMana() + ", Ability Mana: " + this.mana);
             Component message = Component.text("You do not have enough mana!").color(TextColor.color(255, 0, 0));
             hunter.getAsBukkitPlayer().sendMessage(message);
             return;
@@ -76,6 +77,7 @@ public abstract class ManhuntAbility {
             return;
         }
         onExecute(hunter, speedrunner);
+        ((ManhuntHunter) hunter).setMana(hunter.getMana() - this.mana);
     }
     public ItemStack getAsItemStack(){
         return itemStack;
@@ -101,7 +103,7 @@ public abstract class ManhuntAbility {
         return description;
     }
 
-    public UUID getUuid() {
+    public UUID getUUID() {
         return uuid;
     }
 }

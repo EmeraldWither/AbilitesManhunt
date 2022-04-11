@@ -1,9 +1,10 @@
 package org.emeraldcraft.manhunt;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.emeraldcraft.manhunt.abilites.LaunchAbility;
+import org.bukkit.scheduler.BukkitTask;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
@@ -29,6 +30,8 @@ public class ManhuntAPI {
     private final ManhuntConfigValues configValues;
     private final List<ManhuntPlayer> players = new ArrayList<>();
     private final List<ManhuntAbility> abilites = new ArrayList<>();
+    private BukkitTask bukkitTask;
+    private boolean isRunning = false;
 
     public ManhuntAPI(ManhuntMain main){
         this.main = main;
@@ -62,20 +65,36 @@ public class ManhuntAPI {
         this.players.add(manhuntPlayer);
     }
     public void testStart(){
-        IManhuntUtils.debug("Started the gamemode. ");
-        registerAbility(new LaunchAbility());
         List<Hunter> hunters = this.players.stream().filter(player -> player.getTeam() == ManhuntTeam.HUNTER).map(player -> (Hunter) player).toList();
         List<Speedrunner> speedrunners = this.players.stream().filter(player -> player.getTeam() == ManhuntTeam.SPEEDRUNNER).map(player -> (Speedrunner) player).toList();
 
         for(Hunter hunter : hunters){
             constructInventory(hunter);
+            ((ManhuntHunter) hunter).setMana(51);
             IManhuntUtils.debug("Constructed inventory ");
         }
+        startManaScheduler();
+        isRunning = true;
+        IManhuntUtils.debug("Started the gamemode. ");
+    }
+    public void end(){
+        this.bukkitTask.cancel();
+        for(ManhuntPlayer player : this.getTeam(ManhuntTeam.HUNTER)){
+            ManhuntHunter hunter = (ManhuntHunter) player;
+            if(hunter.getAsBukkitPlayer() == null) continue;
+            hunter.getAsBukkitPlayer().getInventory().clear();
+        }
+        isRunning = false;
     }
     public void registerAbility(ManhuntAbility ability){
         if(this.abilites.contains(ability)) throw new IllegalArgumentException("Ability is already registered");
         this.abilites.add(ability);
     }
+
+    public List<ManhuntAbility> getAbilities() {
+        return new ArrayList<>(abilites);
+    }
+
     private void constructInventory(Hunter hunter){
         if (hunter.getAsBukkitPlayer() != null) {
             Inventory inventory = IManhuntUtils.constructInventory(hunter, this.abilites);
@@ -100,5 +119,19 @@ public class ManhuntAPI {
             if(ability.getName().equalsIgnoreCase(name)) return ability;
         }
         return null;
+    }
+    private void startManaScheduler(){
+        bukkitTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
+            Manhunt.getAPI().getTeam(ManhuntTeam.HUNTER).forEach(player -> {
+                ((ManhuntHunter) player).addMana();
+                if(player.getAsBukkitPlayer() == null) return;
+                player.getAsBukkitPlayer().sendActionBar(ChatColor.GREEN + "Mana: " + ChatColor.GRAY + ((ManhuntHunter) player).getMana());
+            });
+
+        }, 0, 20L);
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }

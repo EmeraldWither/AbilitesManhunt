@@ -10,7 +10,7 @@ import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 import org.jetbrains.annotations.NotNull;
 
-public class ManhuntAddPlayersCommand implements CommandExecutor {
+public class ManhuntCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length > 2){
@@ -29,11 +29,6 @@ public class ManhuntAddPlayersCommand implements CommandExecutor {
             Manhunt.getAPI().registerPlayer(player, ManhuntTeam.HUNTER);
             return true;
         }
-        if(args[0].equalsIgnoreCase("start")){
-            Manhunt.getAPI().testStart();
-            commandSender.sendMessage("Started. ");
-            return true;
-        }
         if(args[0].equalsIgnoreCase("list")){
             String msg = "Hunters: ";
             for(ManhuntPlayer player : Manhunt.getAPI().getTeam(ManhuntTeam.HUNTER)) msg = msg.concat(player.getAsBukkitPlayer().getName());
@@ -41,6 +36,16 @@ public class ManhuntAddPlayersCommand implements CommandExecutor {
             String speedrunnerMsg = "Speedrunners: ";
             for(ManhuntPlayer player : Manhunt.getAPI().getTeam(ManhuntTeam.SPEEDRUNNER)) speedrunnerMsg = speedrunnerMsg.concat(player.getAsBukkitPlayer().getName());
             commandSender.sendMessage(speedrunnerMsg);
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("start")){
+            Manhunt.getAPI().testStart();
+            commandSender.sendMessage("Started.");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("end")){
+            Manhunt.getAPI().end();
+            commandSender.sendMessage("Ended.");
             return true;
         }
         return false;

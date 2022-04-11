@@ -38,9 +38,9 @@ public class IManhuntUtils {
     }
     public static void createItemLore(ManhuntAbility manhuntAbility, ItemStack ability, String name, String description){
         ItemMeta itemMeta = ability.getItemMeta();
-        itemMeta.displayName(Component.text(name).color(TextColor.color(0, 4, 255)).decorate(TextDecoration.ITALIC));
+        itemMeta.displayName(Component.text(name + " (" + manhuntAbility.getMana() + " mana)").color(TextColor.color(0, 4, 255)).decorate(TextDecoration.ITALIC));
         List<Component> components = new ArrayList<>();
-        Component descriptionComponent = Component.text(description + "\n").color(TextColor.fromCSSHexString("#00eeff"));
+        Component descriptionComponent = Component.text(description).color(TextColor.fromCSSHexString("#00eeff"));
         Component manaComponent = Component.text("Mana: " + manhuntAbility.getMana()).color(TextColor.fromCSSHexString("#ff0026"));
         Component cooldownComponent = Component.text("Cooldown:  " + manhuntAbility.getCooldown() + " seconds").color(TextColor.fromHexString("#00ff0d"));
         components.add(descriptionComponent);

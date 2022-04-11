@@ -49,7 +49,7 @@ public class ManhuntHunter implements Hunter {
 
     @Override
     public int getMana() {
-        return 0;
+        return mana;
     }
 
     public void setMana(int mana) {
