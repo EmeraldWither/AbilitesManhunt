@@ -23,37 +23,43 @@ public class LavaAbility extends ManhuntAbility {
     protected void onExecute(Hunter hunter, Speedrunner speedrunner) {
         if (speedrunner.getAsBukkitPlayer() != null) {
             Player player = speedrunner.getAsBukkitPlayer();
-            new Scheduler(player).runTaskTimer(main, 0, 1);
+            new LavaScheduler(player).runTaskTimer(main, 0, 1);
             player.sendMessage("You are now on fire!");
         }
     }
-    private class Scheduler extends BukkitRunnable{
+    static class LavaScheduler extends BukkitRunnable{
         private final Player player;
         private int amount = 0;
         private Block block;
         private BlockData blockData;
         private Material blockType;
-        public Scheduler(Player player) {
+        public LavaScheduler(Player player) {
             this.player = player;
         }
         @Override
         public void run() {
+            //If it is the first tick that the scheduler is running (the ability was just called)
+            //then set the lava block to the player's location
             if(amount == 0){
                 block = player.getLocation().getBlock();
                 blockData = player.getLocation().getBlock().getBlockData();
                 blockType = player.getLocation().getBlock().getType();
                 player.getLocation().getBlock().setType(Material.LAVA);
+                amount++;
+                return;
             }
+            //If the scheduler has not ran for 20 seconds,
+            //make sure that the player is still on fire
             if(amount < 10 * 20) {
                 player.setFireTicks(80);
                 player.setVisualFire(false);
                 amount++;
+                return;
             }
-            else {
-                block.getWorld().getBlockAt(block.getLocation()).setType(blockType);
-                block.getWorld().getBlockAt(block.getLocation()).setBlockData(blockData, false);
-                cancel();
-            }
+            //The ability period has ended, so lets set the original block back to where it was
+            block.getWorld().getBlockAt(block.getLocation()).setType(blockType);
+            block.getWorld().getBlockAt(block.getLocation()).setBlockData(blockData, false);
+            cancel();
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.listeners;
+package org.emeraldcraft.manhunt.listeners.hunters;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

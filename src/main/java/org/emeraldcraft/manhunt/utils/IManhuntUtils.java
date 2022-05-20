@@ -10,6 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
+import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -48,5 +50,13 @@ public class IManhuntUtils {
         components.add(cooldownComponent);
         itemMeta.lore(components);
         ability.setItemMeta(itemMeta);
+    }
+
+    /**
+     * Checks to see if the hunters have won
+     * @return The team that won. Null if no team won.
+     */
+    public static boolean haveHuntersWon(){
+        return Manhunt.getAPI().getTeam(ManhuntTeam.SPEEDRUNNER).stream().allMatch(manhuntPlayer -> ((Speedrunner) manhuntPlayer).isEliminated());
     }
 }

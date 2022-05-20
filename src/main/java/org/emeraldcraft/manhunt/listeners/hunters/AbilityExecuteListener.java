@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.listeners;
+package org.emeraldcraft.manhunt.listeners.hunters;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -12,6 +12,7 @@ import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.events.hunter.HunterExecuteAbilityEvent;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 public class AbilityExecuteListener implements Listener {
@@ -46,6 +47,14 @@ public class AbilityExecuteListener implements Listener {
                 if (ability.getUUID().toString().equalsIgnoreCase(key.getKey())) {
                     IManhuntUtils.debug("Ability found");
                     Speedrunner speedrunner = (Speedrunner) Manhunt.getAPI().getTeam(ManhuntTeam.SPEEDRUNNER).get(0);
+
+                    HunterExecuteAbilityEvent hunterExecuteAbilityEvent = new HunterExecuteAbilityEvent(ability, hunter, speedrunner);
+                    plugin.getServer().getPluginManager().callEvent(hunterExecuteAbilityEvent);
+                    if (hunterExecuteAbilityEvent.isCancelled()){
+                        IManhuntUtils.debug("Event was cancelled. No longer executing ability.");
+                        return;
+                    }
+
                     ability.execute(hunter, speedrunner);
                 }
             }

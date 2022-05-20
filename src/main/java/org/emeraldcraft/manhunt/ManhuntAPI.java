@@ -18,7 +18,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * The API class which provides the control of the plugin.
@@ -37,9 +36,7 @@ public class ManhuntAPI {
         this.main = main;
         configValues = new ManhuntConfigValues(main.getConfig());
     }
-    public void debug(String message){
-        if(configValues.isDebugging()) Bukkit.getLogger().log(Level.INFO, "[MANHUNT DEBUG] " + message);
-    }
+
 
     /**
      * @return The configuration values of the plugin
@@ -70,7 +67,7 @@ public class ManhuntAPI {
 
         for(Hunter hunter : hunters){
             constructInventory(hunter);
-            ((ManhuntHunter) hunter).setMana(51);
+            ((ManhuntHunter) hunter).setMana(100);
             IManhuntUtils.debug("Constructed inventory ");
         }
         startManaScheduler();
@@ -125,7 +122,7 @@ public class ManhuntAPI {
             Manhunt.getAPI().getTeam(ManhuntTeam.HUNTER).forEach(player -> {
                 ((ManhuntHunter) player).addMana();
                 if(player.getAsBukkitPlayer() == null) return;
-                player.getAsBukkitPlayer().sendActionBar(ChatColor.GREEN + "Mana: " + ChatColor.GRAY + ((ManhuntHunter) player).getMana());
+                player.getAsBukkitPlayer().sendActionBar(ChatColor.GREEN + "Mana: " + ChatColor.GRAY + ((Hunter) player).getMana());
             });
 
         }, 0, 20L);

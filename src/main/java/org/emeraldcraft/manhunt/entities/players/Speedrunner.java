@@ -11,5 +11,6 @@ public interface Speedrunner extends ManhuntPlayer{
     List<Waypoint> getWaypoints();
     void addWaypoint(Waypoint waypoint);
     void eliminate();
+    boolean isEliminated();
 
 }
