@@ -39,7 +39,7 @@ public class ManhuntCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("start")){
-            Manhunt.getAPI().testStart();
+            Manhunt.getAPI().start();
             commandSender.sendMessage("Started.");
             return true;
         }

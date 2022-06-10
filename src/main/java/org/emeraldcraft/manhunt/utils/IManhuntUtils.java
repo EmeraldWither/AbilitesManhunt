@@ -4,20 +4,22 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.logging.Level.INFO;
+import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
 
 /**
  * Internal class using for certain utility functions for the plugin.
@@ -38,6 +40,29 @@ public class IManhuntUtils {
         }
         return inventory;
     }
+    public static Inventory createPlayerSelector(){
+        //Calculate how many inventory slots we need!
+
+        //Divide the current players by 9 (amount in each row of an inventory), then round up, and cast it back into an int
+        int inventorySlots = (int) (Math.ceil(Manhunt.getAPI().getTeam(SPEEDRUNNER).size()/9.0) * 9);
+
+
+        Inventory inventory = Bukkit.createInventory(null, inventorySlots, Component.text("Select a player").color(TextColor.color(52, 229, 235)));
+        for (int i = 0; i < Manhunt.getAPI().getTeam(SPEEDRUNNER).size(); i++) {
+            Speedrunner speedrunner = (Speedrunner) Manhunt.getAPI().getTeam(SPEEDRUNNER).get(i);
+            ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            Component playerName = Component.text(speedrunner.getAsBukkitPlayer().getName()).color(TextColor.color(52, 229, 235));
+            itemMeta.displayName(playerName);
+            List<Component> lore = new ArrayList<>();
+            lore.add(Component.text("Click to select this player").color(TextColor.color(52, 229, 235)));
+            itemMeta.lore(lore);
+            ((SkullMeta) itemMeta).setOwningPlayer(speedrunner.getAsBukkitPlayer());
+            itemStack.setItemMeta(itemMeta);
+            inventory.setItem(i, itemStack);
+        }
+        return inventory;
+    }
     public static void createItemLore(ManhuntAbility manhuntAbility, ItemStack ability, String name, String description){
         ItemMeta itemMeta = ability.getItemMeta();
         itemMeta.displayName(Component.text(name + " (" + manhuntAbility.getMana() + " mana)").color(TextColor.color(0, 4, 255)).decorate(TextDecoration.ITALIC));
@@ -50,13 +75,5 @@ public class IManhuntUtils {
         components.add(cooldownComponent);
         itemMeta.lore(components);
         ability.setItemMeta(itemMeta);
-    }
-
-    /**
-     * Checks to see if the hunters have won
-     * @return The team that won. Null if no team won.
-     */
-    public static boolean haveHuntersWon(){
-        return Manhunt.getAPI().getTeam(ManhuntTeam.SPEEDRUNNER).stream().allMatch(manhuntPlayer -> ((Speedrunner) manhuntPlayer).isEliminated());
     }
 }

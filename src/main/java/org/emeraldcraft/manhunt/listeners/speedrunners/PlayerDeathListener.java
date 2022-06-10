@@ -8,6 +8,8 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.events.speedrunner.SpeedrunnerDeathEvent;
 
+import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
+
 public class PlayerDeathListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -25,8 +27,9 @@ public class PlayerDeathListener implements Listener {
             }
             //Eliminate the player from the game
             speedrunner.eliminate();
-
-
+            if(Manhunt.getAPI().getTeam(SPEEDRUNNER).size() == 0){
+                Manhunt.getAPI().end();
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import static org.bukkit.GameMode.SPECTATOR;
 public class ManhuntSpeedrunner implements Speedrunner {
     private final UUID uuid;
     private final List<Waypoint> waypoints = new ArrayList<>();
-    private boolean elimated;
+    private boolean eliminated;
 
     public ManhuntSpeedrunner(Player player){
         if (player == null || !player.isOnline())
@@ -47,7 +47,7 @@ public class ManhuntSpeedrunner implements Speedrunner {
 
     @Override
     public void eliminate() {
-        this.elimated = true;
+        this.eliminated = true;
         if(getAsBukkitPlayer() != null){
             Player player = getAsBukkitPlayer();
             player.spigot().respawn();
@@ -59,7 +59,7 @@ public class ManhuntSpeedrunner implements Speedrunner {
 
     @Override
     public boolean isEliminated() {
-        return elimated;
+        return eliminated;
     }
 
     @Override

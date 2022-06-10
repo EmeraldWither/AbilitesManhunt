@@ -1,17 +1,18 @@
 package org.emeraldcraft.manhunt;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.emeraldcraft.manhunt.background.ManaDisplayTask;
+import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
+import org.emeraldcraft.manhunt.entities.ManhuntBackgroundTask;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
-import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntSpeedrunner;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.gui.ManhuntGUIManager;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import javax.annotation.Nullable;
@@ -29,7 +30,8 @@ public class ManhuntAPI {
     private final ManhuntConfigValues configValues;
     private final List<ManhuntPlayer> players = new ArrayList<>();
     private final List<ManhuntAbility> abilites = new ArrayList<>();
-    private BukkitTask bukkitTask;
+    private final ManhuntGUIManager guiManager = new ManhuntGUIManager();
+    private ArrayList<ManhuntBackgroundTask> tasks = new ArrayList<>();
     private boolean isRunning = false;
 
     public ManhuntAPI(ManhuntMain main){
@@ -61,26 +63,40 @@ public class ManhuntAPI {
         }
         this.players.add(manhuntPlayer);
     }
-    public void testStart(){
+    public void start(){
         List<Hunter> hunters = this.players.stream().filter(player -> player.getTeam() == ManhuntTeam.HUNTER).map(player -> (Hunter) player).toList();
-        List<Speedrunner> speedrunners = this.players.stream().filter(player -> player.getTeam() == ManhuntTeam.SPEEDRUNNER).map(player -> (Speedrunner) player).toList();
 
         for(Hunter hunter : hunters){
             constructInventory(hunter);
             ((ManhuntHunter) hunter).setMana(100);
             IManhuntUtils.debug("Constructed inventory ");
         }
-        startManaScheduler();
+        //Start running mana tasks
+        registerManaTasks();
+
+        //Start running background tasks
+        tasks.forEach(ManhuntBackgroundTask::start);
         isRunning = true;
-        IManhuntUtils.debug("Started the gamemode. ");
+        IManhuntUtils.debug("Started the game-mode.");
     }
+
+    private void registerManaTasks() {
+        tasks.add(new ManaDisplayTask(this.main));
+        tasks.add(new ManaUpdaterTask(this.main));
+    }
+
+    public ManhuntGUIManager getGUIManager(){
+        return this.guiManager;
+    }
+
     public void end(){
-        this.bukkitTask.cancel();
         for(ManhuntPlayer player : this.getTeam(ManhuntTeam.HUNTER)){
             ManhuntHunter hunter = (ManhuntHunter) player;
             if(hunter.getAsBukkitPlayer() == null) continue;
             hunter.getAsBukkitPlayer().getInventory().clear();
         }
+        tasks.forEach(BukkitRunnable::cancel);
+        tasks.clear();
         isRunning = false;
     }
     public void registerAbility(ManhuntAbility ability){
@@ -117,16 +133,7 @@ public class ManhuntAPI {
         }
         return null;
     }
-    private void startManaScheduler(){
-        bukkitTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
-            Manhunt.getAPI().getTeam(ManhuntTeam.HUNTER).forEach(player -> {
-                ((ManhuntHunter) player).addMana();
-                if(player.getAsBukkitPlayer() == null) return;
-                player.getAsBukkitPlayer().sendActionBar(ChatColor.GREEN + "Mana: " + ChatColor.GRAY + ((Hunter) player).getMana());
-            });
 
-        }, 0, 20L);
-    }
 
     public boolean isRunning() {
         return isRunning;
