@@ -30,12 +30,12 @@ ability:
       - "You're the reason that God created the middle finger"
       - "You're the gray sprinkle on the rainbow cupcake"
       - "You bring everyone so much joy when you leave the room!"
-  commandmobs:
-    #Placeholder: "%velocity%"
-    cooldown: 200
-    mana: 70
-    material: SLIME_BALL
-    #The upwards velocity to launch the player
-    velocity: 10
-    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow> <red><b>%velocity%</b></red><yellow>!</yellow>"
+  commandmonsters:
+    cooldown: 500
+    mana: 120
+    material: COMMAND_BLOCK
+    #The range that will include the MONSTERS
+    range: 100
+    #Placeholder: "%mobs%" - the amount of mobs that will attack
+    msg: "<b><blue>%hunter%</blue></b> <yellow>has commanded</yellow> <b><red>%mobs%</red></b> <yellow>mobs to attack you!</yellow>"
 

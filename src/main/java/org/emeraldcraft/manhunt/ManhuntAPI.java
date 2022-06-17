@@ -103,6 +103,7 @@ public class ManhuntAPI {
         tasks.clear();
         this.players.clear();
         this.abilities.clear();
+        this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
     }
     public void registerAbility(ManhuntAbility ability){

@@ -11,7 +11,6 @@ import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.gui.ManhuntGUI;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
 
@@ -50,7 +49,7 @@ public class AbilityOpenGUIListener implements Listener {
                     Ability found (%s). Passing it off to the GUI Manager""".formatted(ability.getName()));
                     ManhuntGUI gui = new ManhuntGUI(ability, hunter);
                     Manhunt.getAPI().getGUIManager().registerManhuntGUI(gui);
-                    event.getPlayer().openInventory(IManhuntUtils.createPlayerSelector());
+                    event.getPlayer().openInventory(gui.getInventory());
 
                 }
             }

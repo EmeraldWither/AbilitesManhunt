@@ -2,7 +2,7 @@ package org.emeraldcraft.manhunt;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.emeraldcraft.manhunt.abilites.CommandMobsAbility;
+import org.emeraldcraft.manhunt.abilites.CommandMonstersAbility;
 import org.emeraldcraft.manhunt.abilites.CryAbility;
 import org.emeraldcraft.manhunt.abilites.LaunchAbility;
 import org.emeraldcraft.manhunt.abilites.LavaAbility;
@@ -29,7 +29,7 @@ public class ManhuntMain extends JavaPlugin {
         Manhunt.getAPI().registerAbility(new LaunchAbility());
         Manhunt.getAPI().registerAbility(new LavaAbility(this));
         Manhunt.getAPI().registerAbility(new CryAbility());
-        Manhunt.getAPI().registerAbility(new CommandMobsAbility());
+        Manhunt.getAPI().registerAbility(new CommandMonstersAbility());
     }
     private void registerListeners(){
         Bukkit.getPluginManager().registerEvents(new AbilityOpenGUIListener(this), this);
