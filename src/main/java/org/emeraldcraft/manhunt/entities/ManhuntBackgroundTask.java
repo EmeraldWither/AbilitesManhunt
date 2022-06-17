@@ -7,7 +7,7 @@ import org.bukkit.scheduler.BukkitTask;
 public abstract class ManhuntBackgroundTask extends BukkitRunnable {
     private final int delay;
     private final int period;
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin;
     private BukkitTask bukkitTask;
     public ManhuntBackgroundTask(JavaPlugin plugin, int delay, int period) {
         this.plugin = plugin;

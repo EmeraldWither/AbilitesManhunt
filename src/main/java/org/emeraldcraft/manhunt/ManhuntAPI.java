@@ -1,8 +1,9 @@
 package org.emeraldcraft.manhunt;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.emeraldcraft.manhunt.background.ManaDisplayTask;
 import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
@@ -90,13 +91,18 @@ public class ManhuntAPI {
     }
 
     public void end(){
+        final Component gameEnd = Component.text("The game has ended!").color(TextColor.color(255, 0, 0));
         for(ManhuntPlayer player : this.getTeam(ManhuntTeam.HUNTER)){
             ManhuntHunter hunter = (ManhuntHunter) player;
             if(hunter.getAsBukkitPlayer() == null) continue;
-            hunter.getAsBukkitPlayer().getInventory().clear();
+            Player bukkitPlayer = hunter.getAsBukkitPlayer();
+            bukkitPlayer.getInventory().clear();
+            bukkitPlayer.sendMessage(gameEnd);
         }
-        tasks.forEach(BukkitRunnable::cancel);
+        tasks.forEach(ManhuntBackgroundTask::end);
         tasks.clear();
+        this.players.clear();
+        this.abilites.clear();
         isRunning = false;
     }
     public void registerAbility(ManhuntAbility ability){
