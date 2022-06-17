@@ -17,6 +17,7 @@ import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.logging.Level.INFO;
 import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
@@ -26,7 +27,7 @@ import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
  */
 public class IManhuntUtils {
     public static void debug(String msg){
-        if(Manhunt.getAPI().getConfigValues().isDebugging()) Bukkit.getLogger().log(INFO, "[Manhunt Debug] " + msg);
+        if(Manhunt.getAPI().getConfig().isDebugging()) Bukkit.getLogger().log(INFO, "[Manhunt Debug] " + msg);
     }
     @Nullable
     public static Inventory constructInventory(Hunter hunter, List<ManhuntAbility> abilities){
@@ -75,5 +76,11 @@ public class IManhuntUtils {
         components.add(cooldownComponent);
         itemMeta.lore(components);
         ability.setItemMeta(itemMeta);
+    }
+    public static String parseBasicMessage(String message, @Nullable Hunter hunter, @Nullable Speedrunner speedrunner){
+        return message.replaceAll("%hunter%",
+                Objects.requireNonNull(hunter.getAsBukkitPlayer()).getName())
+                .replaceAll("%speedrunner%",
+                        Objects.requireNonNull(speedrunner.getAsBukkitPlayer()).getName());
     }
 }

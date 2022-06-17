@@ -30,9 +30,9 @@ public class ManhuntAPI {
     private final ManhuntMain main;
     private final ManhuntConfigValues configValues;
     private final List<ManhuntPlayer> players = new ArrayList<>();
-    private final List<ManhuntAbility> abilites = new ArrayList<>();
+    private final List<ManhuntAbility> abilities = new ArrayList<>();
     private final ManhuntGUIManager guiManager = new ManhuntGUIManager();
-    private ArrayList<ManhuntBackgroundTask> tasks = new ArrayList<>();
+    private final ArrayList<ManhuntBackgroundTask> tasks = new ArrayList<>();
     private boolean isRunning = false;
 
     public ManhuntAPI(ManhuntMain main){
@@ -44,7 +44,7 @@ public class ManhuntAPI {
     /**
      * @return The configuration values of the plugin
      */
-    public ManhuntConfigValues getConfigValues(){
+    public ManhuntConfigValues getConfig(){
         return this.configValues;
     }
 
@@ -102,21 +102,21 @@ public class ManhuntAPI {
         tasks.forEach(ManhuntBackgroundTask::end);
         tasks.clear();
         this.players.clear();
-        this.abilites.clear();
+        this.abilities.clear();
         isRunning = false;
     }
     public void registerAbility(ManhuntAbility ability){
-        if(this.abilites.contains(ability)) throw new IllegalArgumentException("Ability is already registered");
-        this.abilites.add(ability);
+        if(this.abilities.contains(ability)) throw new IllegalArgumentException("Ability is already registered");
+        this.abilities.add(ability);
     }
 
     public List<ManhuntAbility> getAbilities() {
-        return new ArrayList<>(abilites);
+        return new ArrayList<>(abilities);
     }
 
     private void constructInventory(Hunter hunter){
         if (hunter.getAsBukkitPlayer() != null) {
-            Inventory inventory = IManhuntUtils.constructInventory(hunter, this.abilites);
+            Inventory inventory = IManhuntUtils.constructInventory(hunter, this.abilities);
             IManhuntUtils.debug("Created inventory for " + hunter.getUUID());
             if (inventory != null) {
                 hunter.getAsBukkitPlayer().getInventory().setContents(inventory.getContents());
@@ -134,7 +134,7 @@ public class ManhuntAPI {
 
     @Nullable
     public ManhuntAbility getAbility(String name) {
-        for (ManhuntAbility ability:this.abilites) {
+        for (ManhuntAbility ability:this.abilities) {
             if(ability.getName().equalsIgnoreCase(name)) return ability;
         }
         return null;

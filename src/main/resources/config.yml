@@ -1,8 +1,41 @@
 debug: true
-insults:
-  - "You're a cockalorum"
-  - "Someday you'll go far, and I hope that you will stay there"
-  - "I love what you have done with your hair! How did you get it come out of your nostrils like that?"
-  - "You're the reason that God created the middle finger"
-  - "You're the gray sprinkle on the rainbow cupcake"
-  - "You bring everyone so much joy when you leave the room!"
+
+
+# Allow you to be able to customize the abilities to your liking
+
+#Cooldowns are in seconds
+#Material is the item that will represent the ability
+#Message is the message to send. It will be parsed using the MiniMessage format
+
+# Message Placeholders:
+#  - %hunter% - the name of the hunter
+#  - %speedrunner% - the name of the speedrunner
+#  - %ability-name% - the name of the ability
+ability:
+  launch:
+    cooldown: 200
+    mana: 70
+    material: SLIME_BALL
+    #The upwards velocity to launch the player
+    velocity: 10
+    #Placeholder: "%velocity%" - the velocity of the launch
+    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow> <red><b>%velocity%</b></red><yellow>!</yellow>"
+  cry:
+    cooldown: 400
+    mana: 80
+    material: WATER_BUCKET
+    insults:
+      - "Someday you'll go far, and I hope that you will stay there"
+      - "I love what you have done with your hair! How did you get it come out of your nostrils like that?"
+      - "You're the reason that God created the middle finger"
+      - "You're the gray sprinkle on the rainbow cupcake"
+      - "You bring everyone so much joy when you leave the room!"
+  commandmobs:
+    #Placeholder: "%velocity%"
+    cooldown: 200
+    mana: 70
+    material: SLIME_BALL
+    #The upwards velocity to launch the player
+    velocity: 10
+    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow> <red><b>%velocity%</b></red><yellow>!</yellow>"
+
