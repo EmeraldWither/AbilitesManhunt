@@ -38,7 +38,7 @@ public class CommandMonstersAbility extends ManhuntAbility {
 
             //Parse into minimessage
             Component msg = MiniMessage.miniMessage().deserialize(
-                    IManhuntUtils.parseBasicMessage(mobsMsgStr, hunter, speedrunner)
+                    IManhuntUtils.parseBasicMessage(mobsMsgStr, this, speedrunner, hunter)
                             .replaceAll("%mobs%", entities.size() + "")
             );
             player.sendMessage(msg);

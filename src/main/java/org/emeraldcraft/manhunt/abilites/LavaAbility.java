@@ -1,21 +1,31 @@
 package org.emeraldcraft.manhunt.abilites;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 public class LavaAbility extends ManhuntAbility {
 
     private final ManhuntMain main;
+    private static int lavaStayAmount = 0;
 
     public LavaAbility(ManhuntMain main) {
-        super("Lava", "Sets the player on fire and puts lava on them.", 500, 60, Material.LAVA_BUCKET);
+        super("Lava",
+                "Sets the player on fire and puts lava on them.",
+                Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.cooldown"),
+                Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.mana"),
+                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.material")));
+        lavaStayAmount = Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.duration");
         this.main = main;
     }
 
@@ -24,7 +34,14 @@ public class LavaAbility extends ManhuntAbility {
         if (speedrunner.getAsBukkitPlayer() != null) {
             Player player = speedrunner.getAsBukkitPlayer();
             new LavaScheduler(player).runTaskTimer(main, 0, 1);
-            player.sendMessage("You are now on fire!");
+            //Minimessage start parsing config
+            String lavaMsg = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.msg");
+            if (lavaMsg == null) return;
+            //Parse into minimessage
+            Component msg = MiniMessage.miniMessage().deserialize(
+                    IManhuntUtils.parseBasicMessage(lavaMsg, this, speedrunner, hunter)
+            );
+            player.sendMessage(msg);
         }
     }
     static class LavaScheduler extends BukkitRunnable{
@@ -48,9 +65,8 @@ public class LavaAbility extends ManhuntAbility {
                 amount++;
                 return;
             }
-            //If the scheduler has not ran for 20 seconds,
-            //make sure that the player is still on fire
-            if(amount < 10 * 20) {
+            //Wait for X (config) seconds
+            if(amount < 20 * lavaStayAmount){
                 player.setFireTicks(80);
                 player.setVisualFire(false);
                 amount++;

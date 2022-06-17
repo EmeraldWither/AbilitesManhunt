@@ -77,10 +77,12 @@ public class IManhuntUtils {
         itemMeta.lore(components);
         ability.setItemMeta(itemMeta);
     }
-    public static String parseBasicMessage(String message, @Nullable Hunter hunter, @Nullable Speedrunner speedrunner){
+    public static String parseBasicMessage(String message, ManhuntAbility ability, @Nullable Speedrunner speedrunner, @Nullable Hunter hunter){
         return message.replaceAll("%hunter%",
                 Objects.requireNonNull(hunter.getAsBukkitPlayer()).getName())
                 .replaceAll("%speedrunner%",
-                        Objects.requireNonNull(speedrunner.getAsBukkitPlayer()).getName());
+                        Objects.requireNonNull(speedrunner.getAsBukkitPlayer()).getName())
+                .replaceAll("%ability-name%",
+                        ability.getName());
     }
 }

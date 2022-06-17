@@ -35,7 +35,7 @@ public class LaunchAbility extends ManhuntAbility {
         //Minimessage start parsing config
         String launchMsgStr = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.launch.msg");
         if (launchMsgStr != null) {
-            launchMsgStr = IManhuntUtils.parseBasicMessage(launchMsgStr, hunter, speedrunner);
+            launchMsgStr = IManhuntUtils.parseBasicMessage(launchMsgStr, this, speedrunner, hunter);
             launchMsgStr = launchMsgStr.replaceAll("%velocity%", this.velocity + "");
             //Parse into minimessage
             Component launchMsg = MiniMessage.miniMessage().deserialize(launchMsgStr);
