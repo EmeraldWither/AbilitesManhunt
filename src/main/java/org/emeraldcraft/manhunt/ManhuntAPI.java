@@ -102,7 +102,6 @@ public class ManhuntAPI {
         tasks.forEach(ManhuntBackgroundTask::end);
         tasks.clear();
         this.players.clear();
-        this.abilities.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
     }
