@@ -1,3 +1,4 @@
+# I would suggest leaving this off, as it causes a lot of log spam
 debug: true
 
 
@@ -45,3 +46,12 @@ ability:
     #How long the lava will stay in seconds
     duration: 10
     msg: "<yellow>You have been set on <color:#ffdd00><b>f</b></color><color:#ff9900><b>i</b></color><color:#ff6f00><b>r</b></color><red><b>e</b></red> by </yellow><blue><b>%hunter%</b></blue>"
+  itemdeleter:
+    cooldown: 500
+    mana: 100
+    material: CACTUS
+    #Whether or not to include AIR as an item.
+    include-air: false
+    #Placeholder: "%item-amount%" - the amount of items that will be deleted
+    #             "%item-name%" - the name of the item
+    msg: "<b><blue>%hunter%</blue></b> <yellow>has removed</yellow> <b><aqua>%item-amount%</aqua></b> <b><color:#ff1100>%item-type%</color></b> <yellow>from your inventory!</yellow>"

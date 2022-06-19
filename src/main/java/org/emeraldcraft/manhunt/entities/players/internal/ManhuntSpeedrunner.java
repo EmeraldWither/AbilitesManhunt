@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.Waypoint;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
@@ -50,10 +52,12 @@ public class ManhuntSpeedrunner implements Speedrunner {
         this.eliminated = true;
         if(getAsBukkitPlayer() != null){
             Player player = getAsBukkitPlayer();
-            player.spigot().respawn();
-            player.setGameMode(SPECTATOR);
             Component deathMessage = Component.text("You have been eliminated!").color(TextColor.color(255, 0, 0));
             player.sendMessage(deathMessage);
+            player.setGameMode(SPECTATOR);
+            Bukkit.getScheduler().runTaskLater(JavaPlugin.getProvidingPlugin(ManhuntMain.class), () -> {
+                player.spigot().respawn();
+            }, 2L);
         }
     }
 

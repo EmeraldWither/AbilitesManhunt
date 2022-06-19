@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+
 /**
  * The API class which provides the control of the plugin.
  *
@@ -70,7 +72,7 @@ public class ManhuntAPI {
         for(Hunter hunter : hunters){
             constructInventory(hunter);
             ((ManhuntHunter) hunter).setMana(100);
-            IManhuntUtils.debug("Constructed inventory ");
+            debug("Constructed inventory ");
         }
         //Start running mana tasks
         registerManaTasks();
@@ -78,7 +80,8 @@ public class ManhuntAPI {
         //Start running background tasks
         tasks.forEach(ManhuntBackgroundTask::start);
         isRunning = true;
-        IManhuntUtils.debug("Started the game-mode.");
+        debug("Started the game");
+
     }
 
     private void registerManaTasks() {
@@ -104,10 +107,12 @@ public class ManhuntAPI {
         this.players.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
+        debug("Ended the game");
     }
     public void registerAbility(ManhuntAbility ability){
         if(this.abilities.contains(ability)) throw new IllegalArgumentException("Ability is already registered");
         this.abilities.add(ability);
+        debug("Registered ability " + ability.getName());
     }
 
     public List<ManhuntAbility> getAbilities() {
@@ -117,10 +122,10 @@ public class ManhuntAPI {
     private void constructInventory(Hunter hunter){
         if (hunter.getAsBukkitPlayer() != null) {
             Inventory inventory = IManhuntUtils.constructInventory(hunter, this.abilities);
-            IManhuntUtils.debug("Created inventory for " + hunter.getUUID());
+            debug("Created inventory for " + hunter.getUUID());
             if (inventory != null) {
                 hunter.getAsBukkitPlayer().getInventory().setContents(inventory.getContents());
-                IManhuntUtils.debug("Set contents for " + hunter.getUUID());
+                debug("Set contents for " + hunter.getUUID());
             }
         }
     }

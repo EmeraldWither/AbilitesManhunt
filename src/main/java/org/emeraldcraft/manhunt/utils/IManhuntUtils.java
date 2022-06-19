@@ -27,7 +27,7 @@ import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
  */
 public class IManhuntUtils {
     public static void debug(String msg){
-        if(Manhunt.getAPI().getConfig().isDebugging()) Bukkit.getLogger().log(INFO, "[Manhunt Debug] " + msg);
+        if(Manhunt.getAPI().getConfig().isDebugging()) Bukkit.getLogger().log(INFO, "[Manhunt DEBUG] " + msg);
     }
     @Nullable
     public static Inventory constructInventory(Hunter hunter, List<ManhuntAbility> abilities){
@@ -37,7 +37,7 @@ public class IManhuntUtils {
             if(abilities.get(i) == null) continue;
             ManhuntAbility ability = abilities.get(i);
             inventory.setItem(i + 1, ability.getAsItemStack());
-            IManhuntUtils.debug("Set itemstack for ability " + ability.getName() + " at slot " + i);
+            debug("Set itemstack for ability " + ability.getName() + " at slot " + i);
         }
         return inventory;
     }

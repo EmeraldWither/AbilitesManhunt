@@ -76,6 +76,7 @@ public abstract class ManhuntAbility {
             hunter.getAsBukkitPlayer().sendMessage(message);
             return;
         }
+        if(hunter.getAsBukkitPlayer() == null || speedrunner.getAsBukkitPlayer() == null) return;
         onExecute(hunter, speedrunner);
         ((ManhuntHunter) hunter).setMana(hunter.getMana() - this.mana);
     }

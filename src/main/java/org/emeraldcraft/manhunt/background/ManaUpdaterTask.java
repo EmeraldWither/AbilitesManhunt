@@ -3,6 +3,7 @@ package org.emeraldcraft.manhunt.background;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntBackgroundTask;
+import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 
@@ -15,6 +16,7 @@ public class ManaUpdaterTask extends ManhuntBackgroundTask {
     @Override
     public void run() {
         for(ManhuntPlayer hunter : Manhunt.getAPI().getTeam(HUNTER)){
+            if(((Hunter) hunter).getMana() > 300) continue;
             ((ManhuntHunter) hunter).addMana();
         }
     }

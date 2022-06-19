@@ -23,7 +23,7 @@ public class AbilityOpenGUIListener implements Listener {
 
     @EventHandler
     public void onAbilityExecute(PlayerInteractEvent event) {
-        debug("Detected player interacting with ability. " + event.getPlayer().getName());
+        debug("Detected player interacting interaction >> " + event.getPlayer().getName());
         if (Manhunt.getAPI().getPlayer(event.getPlayer().getUniqueId()) == null) return;
 
         ManhuntPlayer player = Manhunt.getAPI().getPlayer(event.getPlayer().getUniqueId());
