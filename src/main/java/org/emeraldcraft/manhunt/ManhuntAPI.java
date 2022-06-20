@@ -75,8 +75,8 @@ public class ManhuntAPI {
             ((ManhuntHunter) hunter).setMana(100);
             debug("Constructed inventory ");
         }
-        //Start running mana tasks
-        registerManaTasks();
+        //Start registering tasks 
+        tasks = new ArrayList<ManhuntBackgroundTask>(gameTasks);
 
         //Start running background tasks
         tasks.forEach(ManhuntBackgroundTask::start);
@@ -100,10 +100,7 @@ public class ManhuntAPI {
             Player bukkitPlayer = hunter.getAsBukkitPlayer();
             bukkitPlayer.getInventory().clear();
             bukkitPlayer.sendMessage(gameEnd);
-        }
-        tasks = new ArrayList<ManhuntBackgroundTask>(gameTasks);
-        
-        
+        }        
         tasks.forEach(ManhuntBackgroundTask::end);
         this.players.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
