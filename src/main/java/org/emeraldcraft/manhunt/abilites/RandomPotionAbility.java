@@ -38,7 +38,7 @@ public class RandomPotionAbility extends ManhuntAbility{
 		speedrunner.getAsBukkitPlayer().addPotionEffect(potionEffect);
 		
 		//Minimessage start parsing config
-        String msgStr = getAPI().getConfig().getFileConfig().getString("ability.itemdeleter.msg");
+        String msgStr = getAPI().getConfig().getFileConfig().getString("ability.random-potion.msg");
         if (msgStr == null) return;
         Component msg = MiniMessage.miniMessage().deserialize(
                 IManhuntUtils.parseBasicMessage(msgStr
