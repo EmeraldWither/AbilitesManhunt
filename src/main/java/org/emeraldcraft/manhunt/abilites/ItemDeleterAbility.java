@@ -1,7 +1,11 @@
 package org.emeraldcraft.manhunt.abilites;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import static org.bukkit.Material.AIR;
+import static org.emeraldcraft.manhunt.Manhunt.getAPI;
+import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+
+import java.util.Random;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,11 +14,8 @@ import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
-import java.util.Random;
-
-import static org.bukkit.Material.AIR;
-import static org.emeraldcraft.manhunt.Manhunt.getAPI;
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class ItemDeleterAbility extends ManhuntAbility {
     private final boolean includesAir;
@@ -60,6 +61,5 @@ public class ItemDeleterAbility extends ManhuntAbility {
                         hunter)
         );
         player.sendMessage(msg);
-        //TODO Add minimessage parsing
     }
 }

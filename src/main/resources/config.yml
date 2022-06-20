@@ -55,3 +55,13 @@ ability:
     #Placeholder: "%item-amount%" - the amount of items that will be deleted
     #             "%item-name%" - the name of the item
     msg: "<b><blue>%hunter%</blue></b> <yellow>has removed</yellow> <b><aqua>%item-amount%</aqua></b> <b><color:#ff1100>%item-type%</color></b> <yellow>from your inventory!</yellow>"
+  random-potion:
+    cooldown: 300
+    mana: 70
+    material: POTION
+    #Duration - how long the potion effect will last for 
+    duration: 15
+    #Amplifer - How much the potion effect is amplifed
+    amplifer: 2
+    #Placeholder: "%effect%" - the name of the potion effect 
+    msg: "<b><blue>%hunter%</blue></b> <yellow>has applied the</yellow> <b><red>%effect%</red></b> <yellow>potion effect on you!</yellow>"
