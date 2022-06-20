@@ -10,7 +10,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntSpeedrunner;
-import org.emeraldcraft.manhunt.gui.ManhuntGUI;
 import org.emeraldcraft.manhunt.gui.ManhuntPlayerSelector;
 
 import java.util.UUID;
