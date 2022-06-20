@@ -2,6 +2,11 @@ package org.emeraldcraft.manhunt.entities;
 
 import org.bukkit.Location;
 
+/**
+ * No implementation has been made yet for supporting waypoints.
+ * Future task though 
+ */
+@Deprecated
 public class Waypoint {
     private final String name;
     private final Location location;

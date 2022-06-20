@@ -47,7 +47,7 @@ public class AbilityOpenGUIListener implements Listener {
                 if (ability.getUUID().toString().equalsIgnoreCase(key.getKey())) {
                     debug("""
                     Ability found (%s). Passing it off to the GUI Manager""".formatted(ability.getName()));
-                    ManhuntGUI gui = new ManhuntGUI(ability, hunter);
+                    ManhuntPlayerSelector gui = new ManhuntPlayerSelector(ability, hunter);
                     Manhunt.getAPI().getGUIManager().registerManhuntGUI(gui);
                     event.getPlayer().openInventory(gui.getInventory());
 

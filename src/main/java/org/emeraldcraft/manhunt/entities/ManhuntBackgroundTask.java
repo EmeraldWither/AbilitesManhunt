@@ -4,6 +4,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+/**
+ * Represents a task that should run in the background while the gamemode is running. 
+ */
 public abstract class ManhuntBackgroundTask extends BukkitRunnable {
     private final int delay;
     private final int period;

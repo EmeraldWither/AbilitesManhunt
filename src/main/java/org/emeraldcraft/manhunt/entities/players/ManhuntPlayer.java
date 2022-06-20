@@ -1,10 +1,11 @@
 package org.emeraldcraft.manhunt.entities.players;
 
-import org.bukkit.entity.Player;
-import org.emeraldcraft.manhunt.enums.ManhuntTeam;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
+
+import org.bukkit.entity.Player;
+import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 
 /**
  * Represents a basic manhunt player.
@@ -19,6 +20,10 @@ public interface ManhuntPlayer{
     UUID getUUID();
 
     @Nullable
+    /**
+     * Uses the default Bukkit.getPlayer(), so it may be null
+     * @return The player as a org.bukkit Player. 
+     */
     Player getAsBukkitPlayer();
 
 }

@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
 
 public class ManhuntGUIManager {
-    private final ArrayList<ManhuntGUI> guis = new ArrayList<>();
-    public void registerManhuntGUI(ManhuntGUI gui){
+    private final ArrayList<ManhuntPlayerSelector> guis = new ArrayList<>();
+    public void registerManhuntGUI(ManhuntPlayerSelector gui){
         debug("Processed GUI: " + gui);
         guis.add(gui);
     }
-    public ArrayList<ManhuntGUI> getGUIs() {
+    public ArrayList<ManhuntPlayerSelector> getGUIs() {
         return new ArrayList<>(guis);
     }
-    public void processManhuntGUI(ManhuntGUI gui){
+    public void processManhuntGUI(ManhuntPlayerSelector gui){
         debug("Processed GUI: " + gui);
         guis.remove(gui);
     }

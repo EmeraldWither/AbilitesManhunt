@@ -6,7 +6,7 @@ import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
-public class ManhuntGUI {
+public class ManhuntPlayerSelector {
     private final ManhuntAbility ability;
     private final Hunter hunter;
     private Speedrunner speedrunner;
@@ -16,7 +16,7 @@ public class ManhuntGUI {
      * @param ability The ability that will execute when player is selected
      * @param hunter The hunter that originally ran it
      */
-    public ManhuntGUI(ManhuntAbility ability, Hunter hunter) {
+    public ManhuntPlayerSelector(ManhuntAbility ability, Hunter hunter) {
         this.ability = ability;
         this.hunter = hunter;
         this.inventory = IManhuntUtils.createPlayerSelector();
@@ -32,7 +32,10 @@ public class ManhuntGUI {
     public Inventory getInventory(){
         return inventory;
     }
-    public void createNewInventory(){
+    /*
+     * Creates a new player selector for this GUI 
+     */
+    public void createPlayerSelector(){
         inventory = IManhuntUtils.createPlayerSelector();
     }
     /**

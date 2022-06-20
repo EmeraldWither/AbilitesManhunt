@@ -1,7 +1,7 @@
 package org.emeraldcraft.manhunt.entities;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import java.util.UUID;
+
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +14,8 @@ import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
-import java.util.HashMap;
-import java.util.UUID;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 /**
  * Represents a simple ManhuntAbility. Ability execution logic is handled by {@link Hunter}.
@@ -27,7 +27,6 @@ public abstract class ManhuntAbility {
     private final int cooldown;
     private final int mana;
     private final Material material;
-    private final HashMap<ManhuntAbility, Long> cooldowns = new HashMap<>();
     private final NamespacedKey key;
     private final ItemStack itemStack;
 

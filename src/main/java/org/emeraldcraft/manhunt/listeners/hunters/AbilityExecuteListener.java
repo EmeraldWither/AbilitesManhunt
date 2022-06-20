@@ -11,6 +11,7 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntSpeedrunner;
 import org.emeraldcraft.manhunt.gui.ManhuntGUI;
+import org.emeraldcraft.manhunt.gui.ManhuntPlayerSelector;
 
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class AbilityExecuteListener implements Listener {
         if(!(Manhunt.getAPI().getPlayer(player.getUniqueId()) instanceof ManhuntHunter hunter)) return;
         //make sure that the inventory is ours
         boolean isOurs = false;
-        for (ManhuntGUI gui : Manhunt.getAPI().getGUIManager().getGUIs()) {
+        for (ManhuntPlayerSelector gui : Manhunt.getAPI().getGUIManager().getGUIs()) {
             if (event.getInventory() == gui.getInventory()){
                 isOurs = true;
                 break;
@@ -69,7 +70,7 @@ public class AbilityExecuteListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event){
         Player player = (Player) event.getPlayer();
         if (Manhunt.getAPI().getPlayer(player.getUniqueId()) == null || Manhunt.getAPI().getPlayer(player.getUniqueId()).getTeam() != HUNTER) return;
-        for (ManhuntGUI gui : Manhunt.getAPI().getGUIManager().getGUIs()) {
+        for (ManhuntPlayerSelector gui : Manhunt.getAPI().getGUIManager().getGUIs()) {
             if (event.getInventory() == gui.getInventory()) {
                 Manhunt.getAPI().getGUIManager().processManhuntGUI(gui);
                 return;
