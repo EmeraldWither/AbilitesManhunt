@@ -8,6 +8,8 @@ import org.emeraldcraft.manhunt.abilites.ItemDeleterAbility;
 import org.emeraldcraft.manhunt.abilites.LaunchAbility;
 import org.emeraldcraft.manhunt.abilites.LavaAbility;
 import org.emeraldcraft.manhunt.abilites.RandomPotionAbility;
+import org.emeraldcraft.manhunt.background.ManaDisplayTask;
+import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.commands.ManhuntCommand;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityExecuteListener;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityOpenGUIListener;
@@ -23,6 +25,8 @@ public class ManhuntMain extends JavaPlugin {
         this.getCommand("manhunt").setExecutor(new ManhuntCommand());
         registerListeners();
         registerDefaultAbilities();
+        Manhunt.getAPI().registerBackgroundTask(new ManaUpdaterTask(this));
+        Manhunt.getAPI().registerBackgroundTask(new ManaDisplayTask(this));
     }
     @Override
     public void onDisable(){

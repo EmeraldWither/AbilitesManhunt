@@ -34,7 +34,8 @@ public class ManhuntAPI {
     private final List<ManhuntPlayer> players = new ArrayList<>();
     private final List<ManhuntAbility> abilities = new ArrayList<>();
     private final ManhuntGUIManager guiManager = new ManhuntGUIManager();
-    private final ArrayList<ManhuntBackgroundTask> tasks = new ArrayList<>();
+    private final ArrayList<ManhuntBackgroundTask> gameTasks = new ArrayList<>();
+    private ArrayList<ManhuntBackgroundTask> tasks;
     private boolean isRunning = false;
 
     public ManhuntAPI(ManhuntMain main){
@@ -83,10 +84,8 @@ public class ManhuntAPI {
         debug("Started the game");
 
     }
-
-    private void registerManaTasks() {
-        tasks.add(new ManaDisplayTask(this.main));
-        tasks.add(new ManaUpdaterTask(this.main));
+    public void registerBackgroundTask(ManhuntBackgroundTask task) {
+    	gameTasks.add(task);
     }
 
     public ManhuntGUIManager getGUIManager(){
@@ -102,8 +101,10 @@ public class ManhuntAPI {
             bukkitPlayer.getInventory().clear();
             bukkitPlayer.sendMessage(gameEnd);
         }
+        tasks = new ArrayList<ManhuntBackgroundTask>(gameTasks);
+        
+        
         tasks.forEach(ManhuntBackgroundTask::end);
-        tasks.clear();
         this.players.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
