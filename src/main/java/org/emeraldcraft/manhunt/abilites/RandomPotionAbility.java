@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2022-2023 Ishaan Sayal 
- *
- * Licensed under the EmeraldCraft License, Version 2.0 (the "Eshan License");
- * you may not use this file except in compliance with the Eshan License.
- * You may obtain a copy of the Eshan License at 
- *
- *      http://www.emeraldcraft.org/licenses/EmeraldCraft-LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the Eshan License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Eshan License for the specific language governing permissions and 
- * limitations under the Eshan License.
- */
 package org.emeraldcraft.manhunt.abilites;
 
 import static org.emeraldcraft.manhunt.Manhunt.getAPI;
