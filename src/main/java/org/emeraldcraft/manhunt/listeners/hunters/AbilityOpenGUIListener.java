@@ -10,7 +10,7 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
-import org.emeraldcraft.manhunt.gui.ManhuntGUI;
+import org.emeraldcraft.manhunt.gui.ManhuntPlayerSelector;
 
 import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
 
