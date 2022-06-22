@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.ManhuntBackgroundTask;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
@@ -33,6 +34,7 @@ public class ManhuntAPI {
     private final List<ManhuntAbility> abilities = new ArrayList<>();
     private final ManhuntGUIManager guiManager = new ManhuntGUIManager();
     private final ArrayList<ManhuntBackgroundTask> gameTasks = new ArrayList<>();
+    private final ArrayList<BukkitRunnable> tasks = new ArrayList<>();
     private boolean isRunning = false;
 
     public ManhuntAPI(ManhuntMain main){
@@ -71,8 +73,16 @@ public class ManhuntAPI {
             hunter.setMana(100);
             debug("Constructed inventory ");
         }
-        gameTasks.forEach(ManhuntBackgroundTask::end);
-        gameTasks.forEach(ManhuntBackgroundTask::start);
+        gameTasks.forEach(task -> {
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    task.run();
+                }
+            };
+            runnable.runTaskTimer(main, task.getDelay(), task.getPeriod());
+            tasks.add(runnable);
+        });
         isRunning = true;
         debug("Started the game");
 
@@ -93,8 +103,9 @@ public class ManhuntAPI {
             Player bukkitPlayer = hunter.getAsBukkitPlayer();
             bukkitPlayer.getInventory().clear();
             bukkitPlayer.sendMessage(gameEnd);
-        }        
-        gameTasks.forEach(ManhuntBackgroundTask::end);
+        }
+        tasks.forEach(BukkitRunnable::cancel);
+        tasks.clear();
         this.players.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
