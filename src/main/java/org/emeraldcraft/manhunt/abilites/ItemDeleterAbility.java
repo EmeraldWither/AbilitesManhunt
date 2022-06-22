@@ -1,11 +1,7 @@
 package org.emeraldcraft.manhunt.abilites;
 
-import static org.bukkit.Material.AIR;
-import static org.emeraldcraft.manhunt.Manhunt.getAPI;
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
-
-import java.util.Random;
-
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +10,11 @@ import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import java.util.Random;
+
+import static org.bukkit.Material.AIR;
+import static org.emeraldcraft.manhunt.Manhunt.getAPI;
+import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
 
 public class ItemDeleterAbility extends ManhuntAbility {
     private final boolean includesAir;
@@ -35,6 +34,19 @@ public class ItemDeleterAbility extends ManhuntAbility {
         Player player = speedrunner.getAsBukkitPlayer();
         ItemStack[] items = player.getInventory().getStorageContents();
         debug("Items: " + items.length);
+        boolean hasItem = false;
+        for (ItemStack i : items) {
+            if (i != null && i.getType() != AIR) {
+                hasItem = true;
+                break;
+            }
+        }
+        if(!hasItem) {
+            hunter.getAsBukkitPlayer().sendMessage(IManhuntUtils.parseBasicMessage("You don't have any items to delete.", this, speedrunner, hunter));
+            hunter.setMana(hunter.getMana() + getMana());
+            hunter.setCooldown(this, 0);
+            return;
+        }
         ItemStack item;
         int itemSlot;
         if (includesAir) {

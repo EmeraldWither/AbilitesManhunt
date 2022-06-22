@@ -7,6 +7,8 @@ import org.emeraldcraft.manhunt.entities.ManhuntAbility;
  */
 public interface Hunter extends ManhuntPlayer {
     int getMana();
+    void setMana(int mana);
+    void setCooldown(ManhuntAbility ability, long cooldown);
 
     /**
      * Used for calculating cool-downs

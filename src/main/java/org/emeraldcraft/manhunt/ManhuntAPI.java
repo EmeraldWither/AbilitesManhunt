@@ -4,8 +4,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.emeraldcraft.manhunt.background.ManaDisplayTask;
-import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.ManhuntBackgroundTask;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
@@ -35,14 +33,12 @@ public class ManhuntAPI {
     private final List<ManhuntAbility> abilities = new ArrayList<>();
     private final ManhuntGUIManager guiManager = new ManhuntGUIManager();
     private final ArrayList<ManhuntBackgroundTask> gameTasks = new ArrayList<>();
-    private ArrayList<ManhuntBackgroundTask> tasks;
     private boolean isRunning = false;
 
     public ManhuntAPI(ManhuntMain main){
         this.main = main;
         configValues = new ManhuntConfigValues(main.getConfig());
     }
-
 
     /**
      * @return The configuration values of the plugin
@@ -72,14 +68,11 @@ public class ManhuntAPI {
 
         for(Hunter hunter : hunters){
             constructInventory(hunter);
-            ((ManhuntHunter) hunter).setMana(100);
+            hunter.setMana(100);
             debug("Constructed inventory ");
         }
-        //Start registering tasks 
-        tasks = new ArrayList<ManhuntBackgroundTask>(gameTasks);
-
-        //Start running background tasks
-        tasks.forEach(ManhuntBackgroundTask::start);
+        gameTasks.forEach(ManhuntBackgroundTask::end);
+        gameTasks.forEach(ManhuntBackgroundTask::start);
         isRunning = true;
         debug("Started the game");
 
@@ -101,7 +94,7 @@ public class ManhuntAPI {
             bukkitPlayer.getInventory().clear();
             bukkitPlayer.sendMessage(gameEnd);
         }        
-        tasks.forEach(ManhuntBackgroundTask::end);
+        gameTasks.forEach(ManhuntBackgroundTask::end);
         this.players.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
@@ -110,7 +103,7 @@ public class ManhuntAPI {
     public void registerAbility(ManhuntAbility ability){
         if(this.abilities.contains(ability)) throw new IllegalArgumentException("Ability is already registered");
         this.abilities.add(ability);
-        debug("Registered ability " + ability.getName());
+        debug("Registered ability " + ability.name());
     }
 
     public List<ManhuntAbility> getAbilities() {
@@ -138,7 +131,7 @@ public class ManhuntAPI {
     @Nullable
     public ManhuntAbility getAbility(String name) {
         for (ManhuntAbility ability:this.abilities) {
-            if(ability.getName().equalsIgnoreCase(name)) return ability;
+            if(ability.name().equalsIgnoreCase(name)) return ability;
         }
         return null;
     }

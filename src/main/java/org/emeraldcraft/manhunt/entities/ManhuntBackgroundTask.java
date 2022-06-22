@@ -1,5 +1,6 @@
 package org.emeraldcraft.manhunt.entities;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,7 +24,7 @@ public abstract class ManhuntBackgroundTask extends BukkitRunnable {
     }
     public void end(){
         if (bukkitTask != null){
-            bukkitTask.cancel();
+            Bukkit.getScheduler().cancelTask(bukkitTask.getTaskId());
             bukkitTask = null;
         }
     }

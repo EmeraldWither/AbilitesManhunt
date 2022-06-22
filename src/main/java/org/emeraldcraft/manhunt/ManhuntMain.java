@@ -2,12 +2,7 @@ package org.emeraldcraft.manhunt;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.emeraldcraft.manhunt.abilites.CommandMonstersAbility;
-import org.emeraldcraft.manhunt.abilites.CryAbility;
-import org.emeraldcraft.manhunt.abilites.ItemDeleterAbility;
-import org.emeraldcraft.manhunt.abilites.LaunchAbility;
-import org.emeraldcraft.manhunt.abilites.LavaAbility;
-import org.emeraldcraft.manhunt.abilites.RandomPotionAbility;
+import org.emeraldcraft.manhunt.abilites.*;
 import org.emeraldcraft.manhunt.background.ManaDisplayTask;
 import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.commands.ManhuntCommand;
@@ -41,7 +36,7 @@ public class ManhuntMain extends JavaPlugin {
         Manhunt.getAPI().registerAbility(new RandomPotionAbility());
     }
     private void registerListeners(){
-        Bukkit.getPluginManager().registerEvents(new AbilityOpenGUIListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new AbilityOpenGUIListener(), this);
         Bukkit.getPluginManager().registerEvents(new PreventItemInteractionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AbilityExecuteListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);

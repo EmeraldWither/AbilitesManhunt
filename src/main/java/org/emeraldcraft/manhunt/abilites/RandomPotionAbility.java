@@ -1,9 +1,7 @@
 package org.emeraldcraft.manhunt.abilites;
 
-import static org.emeraldcraft.manhunt.Manhunt.getAPI;
-
-import java.util.Random;
-
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -12,8 +10,9 @@ import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import java.util.Random;
+
+import static org.emeraldcraft.manhunt.Manhunt.getAPI;
 
 public class RandomPotionAbility extends ManhuntAbility{
 	private final int duration;
@@ -34,7 +33,7 @@ public class RandomPotionAbility extends ManhuntAbility{
 		PotionEffectType[] potionEffects = PotionEffectType.values();
 		PotionEffectType effect = potionEffects[new Random().nextInt(potionEffects.length)];
 		
-		PotionEffect potionEffect = new PotionEffect(effect, duration, amplifer);
+		PotionEffect potionEffect = new PotionEffect(effect, duration * 20, amplifer);
 		speedrunner.getAsBukkitPlayer().addPotionEffect(potionEffect);
 		
 		//Minimessage start parsing config

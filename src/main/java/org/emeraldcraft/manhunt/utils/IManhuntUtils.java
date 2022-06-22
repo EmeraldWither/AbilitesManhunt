@@ -37,7 +37,7 @@ public class IManhuntUtils {
             if(abilities.get(i) == null) continue;
             ManhuntAbility ability = abilities.get(i);
             inventory.setItem(i + 1, ability.getAsItemStack());
-            debug("Set itemstack for ability " + ability.getName() + " at slot " + i);
+            debug("Set itemstack for ability " + ability.name() + " at slot " + i);
         }
         return inventory;
     }
@@ -83,6 +83,6 @@ public class IManhuntUtils {
                 .replaceAll("%speedrunner%",
                         Objects.requireNonNull(speedrunner.getAsBukkitPlayer()).getName())
                 .replaceAll("%ability-name%",
-                        ability.getName());
+                        ability.name());
     }
 }

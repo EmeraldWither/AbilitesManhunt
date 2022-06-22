@@ -5,8 +5,10 @@ import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -18,6 +20,7 @@ import java.util.UUID;
  */
 public class ManhuntHunter implements Hunter {
     private final UUID uuid;
+    private final HashMap<ManhuntAbility, Long> cooldowns = new HashMap<>();
     private int mana = 0;
 
     public ManhuntHunter(Player player) {
@@ -59,9 +62,25 @@ public class ManhuntHunter implements Hunter {
     public void addMana(){
         this.mana++;
     }
-
+    public void setCooldown(ManhuntAbility ability, long cooldown){
+        if(cooldowns.containsKey(ability)) {
+            IManhuntUtils.debug("Cooldown for " + ability.name() + " already exists, overwriting");
+            cooldowns.replace(ability, cooldown);
+        }
+        else {
+            IManhuntUtils.debug("Cooldown for " + ability.name() + " does not exist, adding");
+            cooldowns.put(ability, cooldown);
+        }
+    }
     @Override
     public long getCooldownEndPeriod(ManhuntAbility ability) {
-        return 0;
+        if(cooldowns.get(ability) == null){
+            IManhuntUtils.debug("Cooldown for " + ability.name() + " is null");
+            return 0;
+        }
+        IManhuntUtils.debug("Cooldown for " + ability.name() + " is " + cooldowns.get(ability));
+        IManhuntUtils.debug("Current time is " + System.currentTimeMillis());
+        IManhuntUtils.debug("Current size of cooldowns is " + cooldowns.size());
+        return cooldowns.get(ability);
     }
 }
