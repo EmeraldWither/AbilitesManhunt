@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.bukkit.GameMode.ADVENTURE;
 import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
 
 /**
@@ -72,6 +73,15 @@ public class ManhuntAPI {
             constructInventory(hunter);
             hunter.setMana(100);
             debug("Constructed inventory ");
+            Player player = hunter.getAsBukkitPlayer();
+            assert player != null;
+            player.setGameMode(ADVENTURE);
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            player.setGlowing(true);
+            player.setHealth(20);
+            player.setFoodLevel(20);
+            player.setSaturation(1000);
         }
         gameTasks.forEach(task -> {
             BukkitRunnable runnable = new BukkitRunnable() {
@@ -103,6 +113,9 @@ public class ManhuntAPI {
             Player bukkitPlayer = hunter.getAsBukkitPlayer();
             bukkitPlayer.getInventory().clear();
             bukkitPlayer.sendMessage(gameEnd);
+            bukkitPlayer.setAllowFlight(false);
+            bukkitPlayer.setFlying(false);
+            bukkitPlayer.setGlowing(false);
         }
         tasks.forEach(BukkitRunnable::cancel);
         tasks.clear();

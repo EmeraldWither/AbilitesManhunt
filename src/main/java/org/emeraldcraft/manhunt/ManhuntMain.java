@@ -8,7 +8,10 @@ import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.commands.ManhuntCommand;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityExecuteListener;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityOpenGUIListener;
-import org.emeraldcraft.manhunt.listeners.hunters.PreventItemInteractionListener;
+import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventAttackListener;
+import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventInventoryMoveListener;
+import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemInteractionListener;
+import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemPlacementListener;
 import org.emeraldcraft.manhunt.listeners.speedrunners.PlayerDeathListener;
 
 public class ManhuntMain extends JavaPlugin {
@@ -37,9 +40,14 @@ public class ManhuntMain extends JavaPlugin {
     }
     private void registerListeners(){
         Bukkit.getPluginManager().registerEvents(new AbilityOpenGUIListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PreventItemInteractionListener(), this);
         Bukkit.getPluginManager().registerEvents(new AbilityExecuteListener(), this);
+        //Speedrunner section
         Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
+        //Prevent hunter from doing X section of the game
+        Bukkit.getPluginManager().registerEvents(new PreventItemInteractionListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PreventAttackListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PreventInventoryMoveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PreventItemPlacementListener(), this);
     }
 }
 

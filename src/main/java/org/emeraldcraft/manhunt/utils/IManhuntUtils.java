@@ -46,7 +46,7 @@ public class IManhuntUtils {
 
         //Divide the current players by 9 (amount in each row of an inventory), then round up, and cast it back into an int
         int inventorySlots = (int) (Math.ceil(Manhunt.getAPI().getTeam(SPEEDRUNNER).size()/9.0) * 9);
-
+        if(inventorySlots == 0) inventorySlots = 9;
 
         Inventory inventory = Bukkit.createInventory(null, inventorySlots, Component.text("Select a player").color(TextColor.color(52, 229, 235)));
         for (int i = 0; i < Manhunt.getAPI().getTeam(SPEEDRUNNER).size(); i++) {
