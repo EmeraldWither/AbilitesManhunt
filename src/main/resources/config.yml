@@ -65,3 +65,8 @@ ability:
     amplifer: 2
     #Placeholder: "%effect%" - the name of the potion effect 
     msg: "<b><blue>%hunter%</blue></b> <yellow>has applied the</yellow> <b><red>%effect%</red></b> <yellow>potion effect on you!</yellow>"
+  tnt:
+    cooldown: 500
+    mana: 130
+    material: TNT
+    msg: "<b><blue>%hunter%</blue></b> <yellow>has spawned <b><dark_red>T</dark_red><color:#c98600>N</color><dark_red>T</dark_red></b></yellow> <yellow>on you!</yellow>"
