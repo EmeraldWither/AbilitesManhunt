@@ -1,7 +1,6 @@
 package org.emeraldcraft.manhunt.abilites;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -39,13 +38,13 @@ public class RandomPotionAbility extends ManhuntAbility{
 		//Minimessage start parsing config
         String msgStr = getAPI().getConfig().getFileConfig().getString("ability.random-potion.msg");
         if (msgStr == null) return;
-        Component msg = MiniMessage.miniMessage().deserialize(
-                IManhuntUtils.parseBasicMessage(msgStr
-                                .replaceAll("%effect%", effect.getName()),
-                        this,
-                        speedrunner,
-                        hunter)
-        );
+		Component msg = IManhuntUtils.parseConfigMessage(msgStr,
+				this,
+				speedrunner,
+				hunter,
+				new String[]{"%effect%"},
+				new String[]{effect.getName()}
+		);
         speedrunner.getAsBukkitPlayer().sendMessage(msg);
 		
 	}

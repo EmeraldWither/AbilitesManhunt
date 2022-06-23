@@ -1,7 +1,6 @@
 package org.emeraldcraft.manhunt.abilites;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,13 +63,12 @@ public class ItemDeleterAbility extends ManhuntAbility {
         //Minimessage start parsing config
         String msgStr = getAPI().getConfig().getFileConfig().getString("ability.itemdeleter.msg");
         if (msgStr == null) return;
-        Component msg = MiniMessage.miniMessage().deserialize(
-                IManhuntUtils.parseBasicMessage(msgStr
-                                .replaceAll("%item-amount%", item.getAmount() + "")
-                                .replaceAll("%item-type%", item.getType().toString()),
-                        this,
-                        speedrunner,
-                        hunter)
+        Component msg = IManhuntUtils.parseConfigMessage(msgStr,
+                this,
+                speedrunner,
+                hunter,
+                new String[]{"%item%", "%item-amount%"},
+                new String[]{item.getType().toString(), item.getAmount() + " "}
         );
         player.sendMessage(msg);
     }

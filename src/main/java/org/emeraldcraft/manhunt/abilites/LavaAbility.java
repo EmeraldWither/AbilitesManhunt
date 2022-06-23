@@ -38,9 +38,9 @@ public class LavaAbility extends ManhuntAbility {
             String lavaMsg = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.msg");
             if (lavaMsg == null) return;
             //Parse into minimessage
-            Component msg = MiniMessage.miniMessage().deserialize(
+            Component msg = (MiniMessage.miniMessage().deserialize(
                     IManhuntUtils.parseBasicMessage(lavaMsg, this, speedrunner, hunter)
-            );
+            ));
             player.sendMessage(msg);
         }
     }

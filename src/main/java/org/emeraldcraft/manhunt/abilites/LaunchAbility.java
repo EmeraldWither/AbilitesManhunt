@@ -1,7 +1,6 @@
 package org.emeraldcraft.manhunt.abilites;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -35,11 +34,13 @@ public class LaunchAbility extends ManhuntAbility {
         //Minimessage start parsing config
         String launchMsgStr = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.launch.msg");
         if (launchMsgStr != null) {
-            launchMsgStr = IManhuntUtils.parseBasicMessage(launchMsgStr, this, speedrunner, hunter);
-            launchMsgStr = launchMsgStr.replaceAll("%velocity%", this.velocity + "");
-            //Parse into minimessage
-            Component launchMsg = MiniMessage.miniMessage().deserialize(launchMsgStr);
-            player.sendMessage(launchMsg);
+            Component msg = IManhuntUtils.parseConfigMessage(launchMsgStr,
+                    this,
+                    speedrunner,
+                    hunter,
+                    new String[]{"%velocity%"},
+                    new String[]{this.velocity + " "});
+            player.sendMessage(msg);
         }
     }
 }

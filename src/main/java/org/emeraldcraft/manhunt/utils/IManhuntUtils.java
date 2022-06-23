@@ -3,6 +3,7 @@ package org.emeraldcraft.manhunt.utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -84,5 +85,12 @@ public class IManhuntUtils {
                         Objects.requireNonNull(speedrunner.getAsBukkitPlayer()).getName())
                 .replaceAll("%ability-name%",
                         ability.name());
+    }
+    public static Component parseConfigMessage(String message, ManhuntAbility ability, @Nullable Speedrunner speedrunner, @Nullable Hunter hunter, String[] placeholders, String[] values){
+        String parsedMessage = parseBasicMessage(message, ability, speedrunner, hunter);
+        for(int i = 0; i < placeholders.length; i++){
+            parsedMessage = parsedMessage.replaceAll(placeholders[i], values[i]);
+        }
+        return MiniMessage.miniMessage().deserialize(parsedMessage);
     }
 }

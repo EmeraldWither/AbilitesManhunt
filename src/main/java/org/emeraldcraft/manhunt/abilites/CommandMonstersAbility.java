@@ -1,7 +1,6 @@
 package org.emeraldcraft.manhunt.abilites;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -37,10 +36,12 @@ public class CommandMonstersAbility extends ManhuntAbility {
             if (mobsMsgStr == null) return;
 
             //Parse into minimessage
-            Component msg = MiniMessage.miniMessage().deserialize(
-                    IManhuntUtils.parseBasicMessage(mobsMsgStr, this, speedrunner, hunter)
-                            .replaceAll("%mobs%", entities.size() + "")
-            );
+            Component msg = IManhuntUtils.parseConfigMessage(mobsMsgStr,
+                    this,
+                    speedrunner,
+                    hunter,
+                    new String[]{"%mobs%"},
+                    new String[]{entities.size() + " "});
             player.sendMessage(msg);
         }
     }
