@@ -58,6 +58,9 @@ public class ManhuntAPI {
         return null;
     }
     public void registerPlayer(Player player, ManhuntTeam team){
+        for (ManhuntPlayer p : this.players) {
+            if(p.getUUID().toString().equals(player.getUniqueId().toString())) throw new IllegalArgumentException("Player is already registered!");
+        }
         ManhuntPlayer manhuntPlayer;
         switch (team){
             case HUNTER -> manhuntPlayer = new ManhuntHunter(player);
