@@ -2,7 +2,6 @@ package org.emeraldcraft.manhunt.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -67,11 +66,12 @@ public class IManhuntUtils {
     }
     public static void createItemLore(ManhuntAbility manhuntAbility, ItemStack ability, String name, String description){
         ItemMeta itemMeta = ability.getItemMeta();
-        itemMeta.displayName(Component.text(name + " (" + manhuntAbility.getMana() + " mana)").color(TextColor.color(0, 4, 255)).decorate(TextDecoration.ITALIC));
+        String displayText = "<aqua>%s mes<dark_aqua><u>(%s Mana)</u></dark_aqua> </aqua>".formatted(name, manhuntAbility.getMana() + "");
+        itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayText));
         List<Component> components = new ArrayList<>();
         Component descriptionComponent = Component.text(description).color(TextColor.fromCSSHexString("#00eeff"));
         Component manaComponent = Component.text("Mana: " + manhuntAbility.getMana()).color(TextColor.fromCSSHexString("#ff0026"));
-        Component cooldownComponent = Component.text("Cooldown:  " + manhuntAbility.getCooldown() + " seconds").color(TextColor.fromHexString("#00ff0d"));
+        Component cooldownComponent = Component.text("Cooldown: " + manhuntAbility.getCooldown() + " seconds").color(TextColor.fromHexString("#00ff0d"));
         components.add(descriptionComponent);
         components.add(manaComponent);
         components.add(cooldownComponent);
