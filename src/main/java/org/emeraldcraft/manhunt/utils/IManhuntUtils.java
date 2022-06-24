@@ -88,6 +88,7 @@ public class IManhuntUtils {
     }
     public static Component parseConfigMessage(String message, ManhuntAbility ability, @Nullable Speedrunner speedrunner, @Nullable Hunter hunter, String[] placeholders, String[] values){
         String parsedMessage = parseBasicMessage(message, ability, speedrunner, hunter);
+        if(placeholders == null || values == null) return MiniMessage.miniMessage().deserialize(parsedMessage);
         for(int i = 0; i < placeholders.length; i++){
             parsedMessage = parsedMessage.replaceAll(placeholders[i], values[i]);
         }

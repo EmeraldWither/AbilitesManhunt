@@ -26,11 +26,13 @@ public class TNTAbility extends ManhuntAbility {
         assert player != null;
         player.getWorld().spawnEntity(player.getLocation(), EntityType.PRIMED_TNT);
         player.sendMessage(
-                IManhuntUtils.parseBasicMessage(
+                IManhuntUtils.parseConfigMessage(
                         getAPI().getConfig().getFileConfig().getString("ability.tnt.msg"),
                         this,
                         speedrunner,
-                        hunter
+                        hunter,
+                        null,
+                        null
                 )
         );
     }
