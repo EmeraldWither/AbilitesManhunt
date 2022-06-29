@@ -66,7 +66,7 @@ public class IManhuntUtils {
     }
     public static void createItemLore(ManhuntAbility manhuntAbility, ItemStack ability, String name, String description){
         ItemMeta itemMeta = ability.getItemMeta();
-        String displayText = "<aqua>%s mes<dark_aqua><u>(%s Mana)</u></dark_aqua> </aqua>".formatted(name, manhuntAbility.getMana() + "");
+        String displayText = "<aqua>%s <dark_aqua><u>(%s Mana)</u></dark_aqua> </aqua>".formatted(name, manhuntAbility.getMana() + "");
         itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayText));
         List<Component> components = new ArrayList<>();
         Component descriptionComponent = Component.text(description).color(TextColor.fromCSSHexString("#00eeff"));
