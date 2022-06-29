@@ -20,7 +20,7 @@ ability:
     #The upwards velocity to launch the player
     velocity: 10
     #Placeholder: "%velocity%" - the velocity of the launch
-    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow> <red><b>%velocity%</b></red><yellow>!</yellow>"
+    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow><red><b>%velocity%</b></red><yellow>!</yellow>"
   cry:
     cooldown: 400
     mana: 80
