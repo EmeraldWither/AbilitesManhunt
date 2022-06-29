@@ -2,13 +2,18 @@ package org.emeraldcraft.manhunt;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.ManhuntBackgroundTask;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
+import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntSpeedrunner;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
@@ -17,10 +22,12 @@ import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import static org.bukkit.GameMode.ADVENTURE;
+import static org.bukkit.GameMode.SURVIVAL;
 import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
 
 /**
@@ -71,9 +78,12 @@ public class ManhuntAPI {
     }
     public void start(){
         List<Hunter> hunters = this.players.stream().filter(player -> player.getTeam() == ManhuntTeam.HUNTER).map(player -> (Hunter) player).toList();
+        List<Speedrunner> speedrunners = this.players.stream().filter(player -> player.getTeam() == ManhuntTeam.SPEEDRUNNER).map(player -> (Speedrunner) player).toList();
 
         for(Hunter hunter : hunters){
+            //Apply hunter effects
             constructInventory(hunter);
+            //TODO REMOVE THIS  | FOR TESTING ONLY!!!
             hunter.setMana(100);
             debug("Constructed inventory ");
             Player player = hunter.getAsBukkitPlayer();
@@ -85,6 +95,32 @@ public class ManhuntAPI {
             player.setHealth(20);
             player.setFoodLevel(20);
             player.setSaturation(1000);
+            player.setInvulnerable(true);
+        }
+        for(Speedrunner speedrunner : speedrunners){
+            Player player = speedrunner.getAsBukkitPlayer();
+            assert player != null;
+            player.setGameMode(SURVIVAL);
+            player.setHealth(20);
+            player.setFoodLevel(20);
+            player.setSaturation(2000);
+            //Give cool items
+            player.getInventory().clear();
+            player.getInventory().addItem(
+                    new ItemStack(Material.WATER_BUCKET, 1),
+                    new ItemStack(Material.WATER_BUCKET, 1),
+                    new ItemStack(Material.GOLDEN_APPLE, 5),
+                    new ItemStack(Material.ENCHANTED_GOLDEN_APPLE),
+                    new ItemStack(Material.COOKED_BEEF, 64));
+            //Add cool potion effects
+            player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+            final Collection<PotionEffect> effects = new ArrayList<>();
+            effects.add(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+            effects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
+            effects.add(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0));
+            effects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 0));
+            player.addPotionEffects(effects);
+
         }
         gameTasks.forEach(task -> {
             BukkitRunnable runnable = new BukkitRunnable() {
@@ -110,10 +146,11 @@ public class ManhuntAPI {
 
     public void end(){
         final Component gameEnd = Component.text("The game has ended!").color(TextColor.color(255, 0, 0));
-        for(ManhuntPlayer player : this.getTeam(ManhuntTeam.HUNTER)){
-            ManhuntHunter hunter = (ManhuntHunter) player;
-            if(hunter.getAsBukkitPlayer() == null) continue;
-            Player bukkitPlayer = hunter.getAsBukkitPlayer();
+        for(ManhuntPlayer player : this.players){
+            Player bukkitPlayer = player.getAsBukkitPlayer();
+            if(bukkitPlayer == null) continue;
+            bukkitPlayer.getActivePotionEffects().forEach(potionEffect -> bukkitPlayer.removePotionEffect(potionEffect.getType()));
+
             bukkitPlayer.getInventory().clear();
             bukkitPlayer.sendMessage(gameEnd);
             bukkitPlayer.setAllowFlight(false);
