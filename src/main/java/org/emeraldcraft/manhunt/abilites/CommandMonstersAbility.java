@@ -20,8 +20,9 @@ public class CommandMonstersAbility extends ManhuntAbility {
                 "Commands all mobs nearby",
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.commandmonsters.cooldown"),
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.commandmonsters.mana"),
-                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.commandmonsters.material")));
-        range = Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.commandmonsters.range");
+                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.commandmonsters.material")),
+                "commandmonsters");
+        range = getAttributes().getInt("range");
     }
 
     @Override

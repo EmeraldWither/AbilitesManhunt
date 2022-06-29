@@ -18,8 +18,9 @@ public class LaunchAbility extends ManhuntAbility {
                 "Launches the speedrunner into the air",
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.launch.cooldown"),
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.launch.mana"),
-                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.launch.material")));
-        this.velocity = Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.launch.velocity");
+                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.launch.material")),
+                "launch");
+        this.velocity = getAttributes().getInt("velocity");
     }
     @Override
     protected void onExecute(Hunter hunter, Speedrunner speedrunner) {
@@ -32,7 +33,7 @@ public class LaunchAbility extends ManhuntAbility {
         player.getLocation().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, player.getLocation(),10);
 
         //Minimessage start parsing config
-        String launchMsgStr = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.launch.msg");
+        String launchMsgStr = getAttributes().getString("msg");
         if (launchMsgStr != null) {
             Component msg = IManhuntUtils.parseConfigMessage(launchMsgStr,
                     this,

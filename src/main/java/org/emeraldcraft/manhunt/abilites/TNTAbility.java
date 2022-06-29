@@ -16,7 +16,8 @@ public class TNTAbility extends ManhuntAbility {
                 "Spawns TNT on the speedrunner",
                 getAPI().getConfig().getFileConfig().getInt("ability.tnt.cooldown"),
                 getAPI().getConfig().getFileConfig().getInt("ability.tnt.mana"),
-                Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.tnt.material"))
+                Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.tnt.material")),
+                "tnt"
         );
     }
 
@@ -27,7 +28,7 @@ public class TNTAbility extends ManhuntAbility {
         player.getWorld().spawnEntity(player.getLocation(), EntityType.PRIMED_TNT);
         player.sendMessage(
                 IManhuntUtils.parseConfigMessage(
-                        getAPI().getConfig().getFileConfig().getString("ability.tnt.msg"),
+                        getAttributes().getString(":q:qmsg"),
                         this,
                         speedrunner,
                         hunter,

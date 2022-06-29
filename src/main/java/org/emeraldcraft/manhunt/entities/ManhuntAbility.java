@@ -4,11 +4,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
@@ -28,18 +30,20 @@ public abstract class ManhuntAbility {
     private final Material material;
     private final NamespacedKey key;
     private final ItemStack itemStack;
+    private final String id;
 
     /**
      * @param cooldown The cooldown for the item (-1 for no cooldown)
      * @param mana     The amount of mana needed (-1 for no mana)
      * @param material The material to represent this item
      */
-    public ManhuntAbility(String name, String description, int cooldown, int mana, Material material) {
+    public ManhuntAbility(String name, String description, int cooldown, int mana, Material material, String id) {
         this.name = name;
         this.description = description;
         this.cooldown = cooldown;
         this.mana = mana;
         this.material = material;
+        this.id = id;
         this.uuid = UUID.randomUUID();
 
         //Create our itemstack
@@ -106,5 +110,8 @@ public abstract class ManhuntAbility {
 
     public UUID getUUID() {
         return uuid;
+    }
+    public ConfigurationSection getAttributes(){
+        return Manhunt.getAPI().getConfig().getFileConfig().getConfigurationSection("ability." + this.id);
     }
 }

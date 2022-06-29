@@ -20,8 +20,9 @@ public class CryAbility extends ManhuntAbility {
                 "Insults the player.",
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.cry.cooldown"),
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.cry.mana"),
-                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.cry.material")));
-        insults = Manhunt.getAPI().getConfig().getFileConfig().getStringList("ability.cry.insults");
+                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.cry.material")),
+                "cry");
+        insults = getAttributes().getStringList("insults");
 
     }
 

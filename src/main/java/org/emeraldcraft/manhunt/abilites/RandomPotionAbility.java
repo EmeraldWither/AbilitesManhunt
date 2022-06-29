@@ -21,9 +21,10 @@ public class RandomPotionAbility extends ManhuntAbility{
 				"Applies a random potion effect",
                 getAPI().getConfig().getFileConfig().getInt("ability.random-potion.cooldown"),
                 getAPI().getConfig().getFileConfig().getInt("ability.random-potion.mana"),
-                Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.random-potion.material")));
-				duration = getAPI().getConfig().getFileConfig().getInt("ability.random-potion.duration");
-				amplifer = getAPI().getConfig().getFileConfig().getInt("ability.random-potion.amplifier");
+                Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.random-potion.material")),
+				"random-potion");
+				duration = getAttributes().getInt("duration");
+				amplifer = getAttributes().getInt("amplifier");
 		}
 
 	@Override
@@ -36,7 +37,7 @@ public class RandomPotionAbility extends ManhuntAbility{
 		speedrunner.getAsBukkitPlayer().addPotionEffect(potionEffect);
 		
 		//Minimessage start parsing config
-        String msgStr = getAPI().getConfig().getFileConfig().getString("ability.random-potion.msg");
+        String msgStr = getAttributes().getString("msg");
         if (msgStr == null) return;
 		Component msg = IManhuntUtils.parseConfigMessage(msgStr,
 				this,

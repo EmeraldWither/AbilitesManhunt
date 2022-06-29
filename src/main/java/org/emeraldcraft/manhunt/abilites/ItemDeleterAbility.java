@@ -23,8 +23,9 @@ public class ItemDeleterAbility extends ManhuntAbility {
                 "Deletes 1 random item.",
                 getAPI().getConfig().getFileConfig().getInt("ability.itemdeleter.cooldown"),
                 getAPI().getConfig().getFileConfig().getInt("ability.itemdeleter.mana"),
-                Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.itemdeleter.material")));
-        includesAir = getAPI().getConfig().getFileConfig().getBoolean("ability.itemdeleter.include-air");
+                Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.itemdeleter.material")),
+                "itemdeleter");
+        includesAir = getAttributes().getBoolean("include-air");
     }
 
     @Override
@@ -61,7 +62,7 @@ public class ItemDeleterAbility extends ManhuntAbility {
         player.getInventory().setItem(itemSlot, new ItemStack(AIR));
         if(item == null) item = new ItemStack(AIR);
         //Minimessage start parsing config
-        String msgStr = getAPI().getConfig().getFileConfig().getString("ability.itemdeleter.msg");
+        String msgStr = getAttributes().getString("msg");
         if (msgStr == null) return;
         Component msg = IManhuntUtils.parseConfigMessage(msgStr,
                 this,

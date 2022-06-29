@@ -17,15 +17,16 @@ import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 public class LavaAbility extends ManhuntAbility {
 
     private final ManhuntMain main;
-    private static int lavaStayAmount = 0;
+    private static int lavaStayAmount;
 
     public LavaAbility(ManhuntMain main) {
         super("Lava",
                 "Sets the player on fire and puts lava on them.",
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.cooldown"),
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.mana"),
-                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.material")));
-        lavaStayAmount = Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.duration");
+                Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.material")),
+                "lava");
+        lavaStayAmount = getAttributes().getInt("duration");
         this.main = main;
     }
 
@@ -35,7 +36,7 @@ public class LavaAbility extends ManhuntAbility {
             Player player = speedrunner.getAsBukkitPlayer();
             new LavaScheduler(player).runTaskTimer(main, 0, 1);
             //Minimessage start parsing config
-            String lavaMsg = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.msg");
+            String lavaMsg = getAttributes().getString("msg");
             if (lavaMsg == null) return;
             //Parse into minimessage
             Component msg = (MiniMessage.miniMessage().deserialize(
