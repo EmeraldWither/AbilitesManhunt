@@ -23,7 +23,7 @@ public class RandomPotionAbility extends ManhuntAbility{
                 getAPI().getConfig().getFileConfig().getInt("ability.random-potion.mana"),
                 Material.getMaterial(getAPI().getConfig().getFileConfig().getString("ability.random-potion.material")));
 				duration = getAPI().getConfig().getFileConfig().getInt("ability.random-potion.duration");
-				amplifer = getAPI().getConfig().getFileConfig().getInt("ability.random-potion.amplifer");
+				amplifer = getAPI().getConfig().getFileConfig().getInt("ability.random-potion.amplifier");
 		}
 
 	@Override

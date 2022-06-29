@@ -62,7 +62,7 @@ ability:
     #Duration - how long the potion effect will last for 
     duration: 15
     #Amplifer - How much the potion effect is amplifed
-    amplifer: 2
+    amplifier: 2
     #Placeholder: "%effect%" - the name of the potion effect 
     msg: "<b><blue>%hunter%</blue></b> <yellow>has applied the</yellow> <b><red>%effect%</red></b> <yellow>potion effect on you!</yellow>"
   tnt:
