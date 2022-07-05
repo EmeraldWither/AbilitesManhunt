@@ -13,6 +13,10 @@ debug: true
 #  - %speedrunner% - the name of the speedrunner
 #  - %ability-name% - the name of the ability
 ability:
+  player-tp:
+    material: ENDER_PEARL
+    msg: "<b><blue>%hunter%</blue></b> <yellow>has teleported to you!</yellow>"
+    no-success: "<b><aqua>[MANHUNT]</aqua></b> <red><i>Unable to find a suitable place to teleport</i></red>"
   launch:
     cooldown: 200
     mana: 70

@@ -38,6 +38,7 @@ public class ManhuntMain extends JavaPlugin {
         Manhunt.getAPI().registerAbility(new ItemDeleterAbility());
         Manhunt.getAPI().registerAbility(new RandomPotionAbility());
         Manhunt.getAPI().registerAbility(new TNTAbility());
+        Manhunt.getAPI().registerAbility(new PlayerTPAbility());
     }
     private void registerListeners(){
         Bukkit.getPluginManager().registerEvents(new AbilityOpenGUIListener(), this);
