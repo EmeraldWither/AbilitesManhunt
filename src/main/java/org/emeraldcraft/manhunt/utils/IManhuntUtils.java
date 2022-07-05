@@ -16,6 +16,7 @@ import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,11 +33,13 @@ public class IManhuntUtils {
     @Nullable
     public static Inventory constructInventory(Hunter hunter, List<ManhuntAbility> abilities){
         if(hunter.getAsBukkitPlayer() == null) return null;
+
         Inventory inventory = hunter.getAsBukkitPlayer().getInventory();
+        abilities.sort(Comparator.comparingInt(ManhuntAbility::getMana));
         for(int i = 0; i < abilities.size(); i++){
             if(abilities.get(i) == null) continue;
             ManhuntAbility ability = abilities.get(i);
-            inventory.setItem(i + 1, ability.getAsItemStack());
+            inventory.setItem(i, ability.getAsItemStack());
             debug("Set itemstack for ability " + ability.name() + " at slot " + i);
         }
         return inventory;
@@ -66,7 +69,7 @@ public class IManhuntUtils {
     }
     public static void createItemLore(ManhuntAbility manhuntAbility, ItemStack ability, String name, String description){
         ItemMeta itemMeta = ability.getItemMeta();
-        String displayText = "<aqua>%s <dark_aqua><u>(%s Mana)</u></dark_aqua> </aqua>".formatted(name, manhuntAbility.getMana() + "");
+        String displayText = "<aqua>%s <dark_aqua><u>(%s Mana)</u></dark_aqua></aqua>".formatted(name, manhuntAbility.getMana() + "");
         itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayText));
         List<Component> components = new ArrayList<>();
         Component descriptionComponent = Component.text(description).color(TextColor.fromCSSHexString("#00eeff"));
