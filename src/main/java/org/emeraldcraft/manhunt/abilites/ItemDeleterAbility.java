@@ -68,7 +68,7 @@ public class ItemDeleterAbility extends ManhuntAbility {
                 this,
                 speedrunner,
                 hunter,
-                new String[]{"%item%", "%item-amount%"},
+                new String[]{"%item-type%", "%item-amount%"},
                 new String[]{item.getType().toString(), item.getAmount() + " "}
         );
         player.sendMessage(msg);
