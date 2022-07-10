@@ -27,7 +27,7 @@ public class PlayerTPAbility extends ManhuntAbility {
         if (speedrunner.getAsBukkitPlayer() == null) return;
         Player player = speedrunner.getAsBukkitPlayer();
         //find the nearest air block to the player
-        int y = player.getLocation().getBlockY() + 5;
+        int y = player.getLocation().getBlockY() + 3;
         Location loc;
         while(true){
             loc = new Location(player.getWorld(), player.getLocation().getBlockX(), y, player.getLocation().getBlockZ());
@@ -35,14 +35,10 @@ public class PlayerTPAbility extends ManhuntAbility {
             && loc.getBlock().getRelative(BlockFace.UP).getType() == Material.AIR){
                 hunter.getAsBukkitPlayer().teleport(loc);
                 speedrunner.getAsBukkitPlayer().sendMessage(
-                        IManhuntUtils.parseConfigMessage(
-                                getAttributes().getString("msg"),
-                                this,
-                                speedrunner,
-                                hunter,
-                                null,
-                                null
-                        )
+                        IManhuntUtils.parseConfigMessage(getAttributes().getString("msg"), this, speedrunner, hunter, null, null)
+                );
+                hunter.getAsBukkitPlayer().sendMessage(
+                        IManhuntUtils.parseConfigMessage(getAttributes().getString("hunter-msg"), this, speedrunner, hunter, null, null)
                 );
                 break;
             }

@@ -9,9 +9,10 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import java.util.Collection;
+
+import static org.emeraldcraft.manhunt.utils.IManhuntUtils.parseConfigMessage;
 
 public class CommandMonstersAbility extends ManhuntAbility {
     private final int range;
@@ -33,17 +34,20 @@ public class CommandMonstersAbility extends ManhuntAbility {
             entities.removeIf(livingEntity -> !(livingEntity instanceof Monster));
             entities.forEach(livingEntity -> ((Monster) livingEntity).setTarget(player));
             //Minimessage start parsing config
-            String mobsMsgStr = Manhunt.getAPI().getConfig().getFileConfig().getString("ability.commandmonsters.msg");
-            if (mobsMsgStr == null) return;
-
-            //Parse into minimessage
-            Component msg = IManhuntUtils.parseConfigMessage(mobsMsgStr,
-                    this,
-                    speedrunner,
-                    hunter,
-                    new String[]{"%mobs%"},
-                    new String[]{entities.size() + " "});
+            String mobsMsgStr = getAttributes().getString("msg");
+            Component msg = parseConfigMessage(mobsMsgStr, this, speedrunner, hunter, new String[]{"%mobs%"}, new String[]{entities.size() + " "});
             player.sendMessage(msg);
+
+            hunter.getAsBukkitPlayer().sendMessage(
+                    parseConfigMessage(
+                            getAttributes().getString("hunter-msg"),
+                            this,
+                            speedrunner,
+                            hunter,
+                            new String[]{"%mobs%"},
+                            new String[]{entities.size() + " "}
+                    )
+            );
         }
     }
     public int getRange(){

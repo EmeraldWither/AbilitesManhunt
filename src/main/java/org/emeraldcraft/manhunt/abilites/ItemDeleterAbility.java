@@ -63,7 +63,6 @@ public class ItemDeleterAbility extends ManhuntAbility {
         if(item == null) item = new ItemStack(AIR);
         //Minimessage start parsing config
         String msgStr = getAttributes().getString("msg");
-        if (msgStr == null) return;
         Component msg = IManhuntUtils.parseConfigMessage(msgStr,
                 this,
                 speedrunner,
@@ -72,5 +71,16 @@ public class ItemDeleterAbility extends ManhuntAbility {
                 new String[]{item.getType().toString(), item.getAmount() + " "}
         );
         player.sendMessage(msg);
+
+        hunter.getAsBukkitPlayer().sendMessage(
+                IManhuntUtils.parseConfigMessage(
+                        getAttributes().getString("hunter-msg"),
+                        this,
+                        speedrunner,
+                        hunter,
+                        new String[]{"%item-type%", "%item-amount%"},
+                        new String[]{item.getType().toString(), item.getAmount() + " "}
+                )
+        );
     }
 }

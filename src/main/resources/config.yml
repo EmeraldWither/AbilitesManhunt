@@ -5,8 +5,9 @@ debug: true
 # Allow you to be able to customize the abilities to your liking
 
 #Cooldowns are in seconds
-#Material is the item that will represent the ability
-#Message is the message to send. It will be parsed using the MiniMessage format
+#material - the item that will represent the ability
+#msg - the message to send to the speedrunner. in minimessage format
+#hunter-msg - the message to send to the hunter. in minimessage format
 
 # Message Placeholders:
 #  - %hunter% - the name of the hunter
@@ -16,7 +17,8 @@ ability:
   player-tp:
     material: ENDER_PEARL
     msg: "<b><blue>%hunter%</blue></b> <yellow>has teleported to you!</yellow>"
-    no-success: "<b><aqua>[MANHUNT]</aqua></b> <red><i>Unable to find a suitable place to teleport</i></red>"
+    hunter-msg: "<green>You have teleported to <b><aqua>%speedrunner%</aqua></b>!</green>"
+    no-success: "<red><i>Unable to find a suitable place to teleport</i></red>"
   launch:
     cooldown: 200
     mana: 70
@@ -25,16 +27,26 @@ ability:
     velocity: 10
     #Placeholder: "%velocity%" - the velocity of the launch
     msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow><red><b>%velocity%</b></red><yellow>!</yellow>"
+    hunter-msg: "<green>You have launched <b><aqua>%speedrunner%</aqua></b> into the sky with a velocity of <b><gold>%velocity%</gold></b>!</green>"
   cry:
     cooldown: 400
     mana: 80
     material: WATER_BUCKET
+    hunter-msg: "<green>You have insulted <b><aqua>%speedrunner%</aqua></b> by saying <b><gold>%insult%</gold></b>!</green>"
     insults:
       - "Someday you'll go far, and I hope that you will stay there"
       - "I love what you have done with your hair! How did you get it come out of your nostrils like that?"
       - "You're the reason that God created the middle finger"
       - "You're the gray sprinkle on the rainbow cupcake"
       - "You bring everyone so much joy when you leave the room!"
+      - "Your face makes onions cry"
+      - "Keep rolling your eyes, you might eventually find a brain"
+      - "I believed in evolution until I met you"
+      - "I’m jealous of all the people who haven’t met you"
+      - "You’re impossible to underestimate"
+      - "You’re the reason why the sun is not shining"
+      - "You look like a before picture"
+      - "Don’t try to think too hard. You’re so stupid it might sprain your brain"
   commandmonsters:
     cooldown: 500
     mana: 120
@@ -43,6 +55,7 @@ ability:
     range: 100
     #Placeholder: "%mobs%" - the amount of mobs that will attack
     msg: "<b><blue>%hunter%</blue></b> <yellow>has commanded</yellow> <b><red>%mobs%</red></b> <yellow>mobs to attack you!</yellow>"
+    hunter-msg: "<green>You have commanded <b><gold>%mobs%</gold></b>mobs to attack <b><aqua>%speedrunner%</aqua></b>!</green>"
   lava:
     cooldown: 200
     mana: 130
@@ -50,6 +63,7 @@ ability:
     #How long the lava will stay in seconds
     duration: 10
     msg: "<yellow>You have been set on <color:#ffdd00><b>f</b></color><color:#ff9900><b>i</b></color><color:#ff6f00><b>r</b></color><red><b>e</b></red> by </yellow><blue><b>%hunter%</b></blue>"
+    hunter-msg: "<green>You have put <b><gold>lava </gold></b>on <b><aqua>%speedrunner%</aqua></b>!</green>"
   itemdeleter:
     cooldown: 500
     mana: 100
@@ -59,6 +73,7 @@ ability:
     #Placeholder: "%item-amount%" - the amount of items that will be deleted
     #             "%item-name%" - the name of the item
     msg: "<b><blue>%hunter%</blue></b> <yellow>has removed</yellow> <b><aqua>%item-amount%</aqua></b> <b><color:#ff1100>%item-type%</color></b> <yellow>from your inventory!</yellow>"
+    hunter-msg: "<green>You have removed <b><gold>%item-amount%%item-type%</gold></b> from <b><aqua>%speedrunner%'s</aqua></b> inventory!</green>"
   random-potion:
     cooldown: 300
     mana: 70
@@ -69,8 +84,11 @@ ability:
     amplifier: 2
     #Placeholder: "%effect%" - the name of the potion effect 
     msg: "<b><blue>%hunter%</blue></b> <yellow>has applied the</yellow> <b><red>%effect%</red></b> <yellow>potion effect on you!</yellow>"
+    hunter-msg: "<green>You have applied the <gold><b>%effect% </b></gold>potion effect on <b><aqua>%speedrunner%</aqua></b>!</green>"
   tnt:
     cooldown: 500
     mana: 130
     material: TNT
     msg: "<b><blue>%hunter%</blue></b> <yellow>has spawned <b><dark_red>T</dark_red><color:#c98600>N</color><dark_red>T</dark_red></b></yellow> <yellow>on you!</yellow>"
+    hunter-msg: "<green>You have spawned <b><dark_red>T</dark_red><color:#c98600>N</color><dark_red>T</dark_red></b> on <b><aqua>%speedrunner%</aqua></b>!</green>"
+

@@ -47,6 +47,16 @@ public class RandomPotionAbility extends ManhuntAbility{
 				new String[]{effect.getName()}
 		);
         speedrunner.getAsBukkitPlayer().sendMessage(msg);
+		hunter.getAsBukkitPlayer().sendMessage(
+				IManhuntUtils.parseConfigMessage(
+						getAttributes().getString("hunter-msg"),
+						this,
+						speedrunner,
+						hunter,
+						new String[]{"%effect%"},
+						new String[]{effect.getName()}
+				)
+		);
 		
 	}
 	

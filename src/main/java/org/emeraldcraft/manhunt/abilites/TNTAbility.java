@@ -28,7 +28,17 @@ public class TNTAbility extends ManhuntAbility {
         player.getWorld().spawnEntity(player.getLocation(), EntityType.PRIMED_TNT);
         player.sendMessage(
                 IManhuntUtils.parseConfigMessage(
-                        getAttributes().getString(":q:qmsg"),
+                        getAttributes().getString("msg"),
+                        this,
+                        speedrunner,
+                        hunter,
+                        null,
+                        null
+                )
+        );
+        hunter.getAsBukkitPlayer().sendMessage(
+                IManhuntUtils.parseConfigMessage(
+                        getAttributes().getString("hunter-msg"),
                         this,
                         speedrunner,
                         hunter,

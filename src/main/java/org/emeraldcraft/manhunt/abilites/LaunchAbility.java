@@ -34,14 +34,23 @@ public class LaunchAbility extends ManhuntAbility {
 
         //Minimessage start parsing config
         String launchMsgStr = getAttributes().getString("msg");
-        if (launchMsgStr != null) {
-            Component msg = IManhuntUtils.parseConfigMessage(launchMsgStr,
-                    this,
-                    speedrunner,
-                    hunter,
-                    new String[]{"%velocity%"},
-                    new String[]{this.velocity + " "});
-            player.sendMessage(msg);
-        }
+        Component msg = IManhuntUtils.parseConfigMessage(launchMsgStr,
+                this,
+                speedrunner,
+                hunter,
+                new String[]{"%velocity%"},
+                new String[]{this.velocity + " "});
+        player.sendMessage(msg);
+
+        hunter.getAsBukkitPlayer().sendMessage(
+                IManhuntUtils.parseConfigMessage(
+                        getAttributes().getString("hunter-msg"),
+                        this,
+                        speedrunner,
+                        hunter,
+                        new String[]{"%velocity%"},
+                        new String[]{this.velocity + " "}
+                )
+        );
     }
 }

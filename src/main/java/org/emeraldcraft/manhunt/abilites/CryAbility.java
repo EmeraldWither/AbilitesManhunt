@@ -8,6 +8,7 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -39,8 +40,18 @@ public class CryAbility extends ManhuntAbility {
             Component cryMessage = Component.text("You are now crying in your own tears").color(TextColor.color(0, 0, 255));
             player.sendMessage(cryMessage);
             player.setRemainingAir(5);
-
             player.setHealth(player.getHealth() / 2);
+
+            hunter.getAsBukkitPlayer().sendMessage(
+                    IManhuntUtils.parseConfigMessage(
+                            getAttributes().getString("hunter-msg"),
+                            this,
+                            speedrunner,
+                            hunter,
+                            new String[]{"%insult%"},
+                            new String[]{randomInsult}
+                    )
+            );
         }
     }
 

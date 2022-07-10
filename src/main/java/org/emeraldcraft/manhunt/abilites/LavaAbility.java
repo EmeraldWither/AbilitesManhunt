@@ -43,6 +43,14 @@ public class LavaAbility extends ManhuntAbility {
                     IManhuntUtils.parseBasicMessage(lavaMsg, this, speedrunner, hunter)
             ));
             player.sendMessage(msg);
+            hunter.getAsBukkitPlayer().sendMessage(
+                    IManhuntUtils.parseBasicMessage(
+                            getAttributes().getString("hunter-msg"),
+                            this,
+                            speedrunner,
+                            hunter
+                    )
+            );
         }
     }
     static class LavaScheduler extends BukkitRunnable{
