@@ -44,7 +44,7 @@ public class ManhuntCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("end")){
-            Manhunt.getAPI().end();
+            Manhunt.getAPI().end(null);
             commandSender.sendMessage("Ended.");
             return true;
         }

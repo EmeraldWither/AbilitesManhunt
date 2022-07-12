@@ -2,7 +2,9 @@ package org.emeraldcraft.manhunt;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +19,10 @@ import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.entities.players.internal.ManhuntSpeedrunner;
 import org.emeraldcraft.manhunt.enums.ManhuntTeam;
+import org.emeraldcraft.manhunt.events.ManhuntGameEndEvent;
 import org.emeraldcraft.manhunt.gui.ManhuntGUIManager;
+import org.emeraldcraft.manhunt.shop.Shop;
+import org.emeraldcraft.manhunt.shop.ShopItem;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import javax.annotation.Nullable;
@@ -44,10 +49,14 @@ public class ManhuntAPI {
     private final ArrayList<ManhuntBackgroundTask> gameTasks = new ArrayList<>();
     private final ArrayList<BukkitRunnable> tasks = new ArrayList<>();
     private boolean isRunning = false;
+    private final NamespacedKey namespacedKey;
+    private final Shop speedrunnerShop;
 
     public ManhuntAPI(ManhuntMain main){
         this.main = main;
+        namespacedKey = new NamespacedKey(main, "manhunt");
         configValues = new ManhuntConfigValues(main.getConfig());
+        speedrunnerShop = new Shop("Speedrunner Shop");
     }
 
     /**
@@ -55,6 +64,12 @@ public class ManhuntAPI {
      */
     public ManhuntConfigValues getConfig(){
         return this.configValues;
+    }
+    public void addShopItem(ShopItem item){
+        speedrunnerShop.addItem(item);
+    }
+    public Shop getSpeedrunnerShop(){
+        return speedrunnerShop;
     }
 
     @Nullable
@@ -120,6 +135,8 @@ public class ManhuntAPI {
             effects.add(new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0));
             effects.add(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 0));
             player.addPotionEffects(effects);
+            //TODO <REMOVE THIS | FOR TESTING ONLY!!!>
+            speedrunner.setCoins(1000);
 
         }
         gameTasks.forEach(task -> {
@@ -144,8 +161,14 @@ public class ManhuntAPI {
         return this.guiManager;
     }
 
-    public void end(){
-        final Component gameEnd = Component.text("The game has ended!").color(TextColor.color(255, 0, 0));
+    public void end(@Nullable ManhuntTeam winners){
+        final Component gameEnd;
+        if (winners != null) {
+            gameEnd = Component.text("The game has ended! The winners are " + winners.toString()).color(TextColor.color(255, 0, 0));
+        }
+        else{
+            gameEnd = Component.text("The game has ended!").color(TextColor.color(255, 0, 0));
+        }
         for(ManhuntPlayer player : this.players){
             Player bukkitPlayer = player.getAsBukkitPlayer();
             if(bukkitPlayer == null) continue;
@@ -162,6 +185,7 @@ public class ManhuntAPI {
         this.players.clear();
         this.guiManager.getGUIs().forEach(guiManager::processManhuntGUI);
         isRunning = false;
+        Bukkit.getPluginManager().callEvent(new ManhuntGameEndEvent(winners));
         debug("Ended the game");
     }
     public void registerAbility(ManhuntAbility ability){
@@ -198,6 +222,17 @@ public class ManhuntAPI {
             if(ability.name().equalsIgnoreCase(name)) return ability;
         }
         return null;
+    }
+    public NamespacedKey getNamespacedKey() {
+        return namespacedKey;
+    }
+    public void openShop(ManhuntPlayer player){
+        if(player instanceof Speedrunner){
+            if (player.getAsBukkitPlayer() != null) {
+                player.getAsBukkitPlayer().openInventory(this.speedrunnerShop.getShopInventory().getInventory());
+            }
+        }
+        else throw new IllegalArgumentException("Player is not a speedrunner. Hunter support coming soon");
     }
 
 

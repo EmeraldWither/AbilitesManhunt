@@ -1,7 +1,10 @@
 main: org.emeraldcraft.manhunt.ManhuntMain
-name: ManhuntAbilites
-description: Minecraft Manhunt, but the Hunter has Special Abilites!
+name: ManhuntAbilities
+description: Minecraft Manhunt, but the Hunter has Special Abilities!
 version: ${version}
 api-version: 1.18
 commands:
   manhunt:
+
+  shop:
+

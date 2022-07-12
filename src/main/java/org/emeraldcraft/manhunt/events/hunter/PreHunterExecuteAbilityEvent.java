@@ -8,14 +8,17 @@ import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.jetbrains.annotations.NotNull;
 
-public class HunterExecuteAbilityEvent extends Event implements Cancellable {
+/**
+ * Called before a hunter executes an ability.
+ */
+public class PreHunterExecuteAbilityEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
     private final ManhuntAbility ability;
     private final Hunter hunter;
     private final Speedrunner target;
     private boolean cancelled;
 
-    public HunterExecuteAbilityEvent(ManhuntAbility ability, Hunter hunter, Speedrunner target) {
+    public PreHunterExecuteAbilityEvent(ManhuntAbility ability, Hunter hunter, Speedrunner target) {
         this.ability = ability;
         this.hunter = hunter;
         this.target = target;

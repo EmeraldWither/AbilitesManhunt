@@ -15,7 +15,7 @@ debug: true
 #  - %ability-name% - the name of the ability
 ability:
   player-tp:
-    material: ENDER_PEARL
+    material: ENDER_EYE
     msg: "<b><blue>%hunter%</blue></b> <yellow>has teleported to you!</yellow>"
     hunter-msg: "<green>You have teleported to <b><aqua>%speedrunner%</aqua></b>!</green>"
     no-success: "<red><i>Unable to find a suitable place to teleport</i></red>"
@@ -26,7 +26,7 @@ ability:
     #The upwards velocity to launch the player
     velocity: 10
     #Placeholder: "%velocity%" - the velocity of the launch
-    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of</yellow><red><b>%velocity%</b></red><yellow>!</yellow>"
+    msg: "<yellow>You have been launched by</yellow> <b><blue>%hunter%</blue></b> <yellow>with a velocity of </yellow><red><b>%velocity%</b></red><yellow>!</yellow>"
     hunter-msg: "<green>You have launched <b><aqua>%speedrunner%</aqua></b> into the sky with a velocity of <b><gold>%velocity%</gold></b>!</green>"
   cry:
     cooldown: 400

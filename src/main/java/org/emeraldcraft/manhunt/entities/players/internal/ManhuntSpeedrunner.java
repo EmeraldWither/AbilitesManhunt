@@ -19,6 +19,7 @@ import static org.bukkit.GameMode.SPECTATOR;
 
 public class ManhuntSpeedrunner implements Speedrunner {
     private final UUID uuid;
+    private int coins = 0;
     private final List<Waypoint> waypoints = new ArrayList<>();
     private boolean eliminated;
 
@@ -64,6 +65,25 @@ public class ManhuntSpeedrunner implements Speedrunner {
     @Override
     public boolean isEliminated() {
         return eliminated;
+    }
+
+    @Override
+    public int getCoins() {
+        return coins;
+    }
+
+    @Override
+    public void setCoins(int amount) {
+        coins = amount;
+    }
+
+    @Override
+    public void addCoins(int amount) {
+        coins += amount;
+    }
+    @Override
+    public void removeCoins(int amount) {
+        coins -= amount;
     }
 
     @Override

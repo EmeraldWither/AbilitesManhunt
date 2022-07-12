@@ -1,10 +1,9 @@
 package org.emeraldcraft.manhunt.entities.players;
 
-import java.util.List;
+import org.emeraldcraft.manhunt.entities.Waypoint;
 
 import javax.annotation.Nullable;
-
-import org.emeraldcraft.manhunt.entities.Waypoint;
+import java.util.List;
 
 public interface Speedrunner extends ManhuntPlayer{
     @Nullable
@@ -21,11 +20,15 @@ public interface Speedrunner extends ManhuntPlayer{
      */
     void addWaypoint(Waypoint waypoint);
     /**
-     * It will elimate the player from the game. 
+     * It will eliminate the player from the game.
      * The method DOES NOT kill the player, it simply marks them as eliminated
      * If you wish for them to be killed, do that yourself
      */
     void eliminate();
     boolean isEliminated();
+    int getCoins();
+    void setCoins(int amount);
+    void addCoins(int amount);
+    void removeCoins(int amount);
 
 }

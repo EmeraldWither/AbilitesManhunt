@@ -2,6 +2,7 @@ package org.emeraldcraft.manhunt.entities;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,11 +10,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.emeraldcraft.manhunt.Manhunt;
-import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.events.hunter.PreHunterExecuteAbilityEvent;
 import org.emeraldcraft.manhunt.utils.IManhuntUtils;
 
 import java.util.UUID;
@@ -28,7 +28,6 @@ public abstract class ManhuntAbility {
     private final int cooldown;
     private final int mana;
     private final Material material;
-    private final NamespacedKey key;
     private final ItemStack itemStack;
     private final String id;
 
@@ -49,7 +48,7 @@ public abstract class ManhuntAbility {
         //Create our itemstack
         ItemStack itemStack = new ItemStack(this.material, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        key = new NamespacedKey(JavaPlugin.getProvidingPlugin(ManhuntMain.class), this.uuid.toString());
+        NamespacedKey key = Manhunt.getAPI().getNamespacedKey();
         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, this.uuid.toString());
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
@@ -80,10 +79,17 @@ public abstract class ManhuntAbility {
             return;
         }
         if(hunter.getAsBukkitPlayer() == null || speedrunner.getAsBukkitPlayer() == null) return;
+
+        PreHunterExecuteAbilityEvent event = new PreHunterExecuteAbilityEvent(this, hunter, speedrunner);
+        Bukkit.getPluginManager().callEvent(event);
+        if(event.isCancelled()) return;
+
         hunter.setCooldown(this, System.currentTimeMillis() + (this.cooldown * 1000L));
         hunter.setMana(hunter.getMana() - this.mana);
+        speedrunner.addCoins(this.mana);
         onExecute(hunter, speedrunner);
     }
+
     public ItemStack getAsItemStack(){
         return itemStack;
     }

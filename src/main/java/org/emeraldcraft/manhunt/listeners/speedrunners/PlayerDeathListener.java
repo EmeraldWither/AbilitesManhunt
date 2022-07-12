@@ -7,6 +7,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.players.ManhuntPlayer;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
+import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.events.speedrunner.SpeedrunnerDeathEvent;
 
 import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
@@ -41,7 +42,7 @@ public class PlayerDeathListener implements Listener {
                 }
             }
             debug("Detected game end because of all speed runner deaths. ");
-            if(hasEnded) Manhunt.getAPI().end();
+            if(hasEnded) Manhunt.getAPI().end(ManhuntTeam.HUNTER);
         }
     }
 

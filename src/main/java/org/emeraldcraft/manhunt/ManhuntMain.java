@@ -6,6 +6,7 @@ import org.emeraldcraft.manhunt.abilites.*;
 import org.emeraldcraft.manhunt.background.ManaDisplayTask;
 import org.emeraldcraft.manhunt.background.ManaUpdaterTask;
 import org.emeraldcraft.manhunt.commands.ManhuntCommand;
+import org.emeraldcraft.manhunt.commands.ShopCommand;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityExecuteListener;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityOpenGUIListener;
 import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventAttackListener;
@@ -13,6 +14,8 @@ import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventInventoryMoveLi
 import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemInteractionListener;
 import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemPlacementListener;
 import org.emeraldcraft.manhunt.listeners.speedrunners.PlayerDeathListener;
+import org.emeraldcraft.manhunt.shop.ShopListener;
+import org.emeraldcraft.manhunt.shop.items.hunterdebuff.HunterDebuff;
 
 public class ManhuntMain extends JavaPlugin {
     @Override
@@ -21,14 +24,16 @@ public class ManhuntMain extends JavaPlugin {
         ManhuntAPI api = new ManhuntAPI(this);
         Manhunt.setAPI(api);
         this.getCommand("manhunt").setExecutor(new ManhuntCommand());
+        this.getCommand("shop").setExecutor(new ShopCommand());
         registerListeners();
         registerDefaultAbilities();
+        addDefaultShopItems(api);
         Manhunt.getAPI().registerBackgroundTask(new ManaUpdaterTask(this));
         Manhunt.getAPI().registerBackgroundTask(new ManaDisplayTask(this));
     }
     @Override
     public void onDisable(){
-        if(Manhunt.getAPI().isRunning()) Manhunt.getAPI().end();
+        if(Manhunt.getAPI().isRunning()) Manhunt.getAPI().end(null);
     }
     private void registerDefaultAbilities(){
         Manhunt.getAPI().registerAbility(new LaunchAbility());
@@ -40,7 +45,13 @@ public class ManhuntMain extends JavaPlugin {
         Manhunt.getAPI().registerAbility(new TNTAbility());
         Manhunt.getAPI().registerAbility(new PlayerTPAbility());
     }
+    private void addDefaultShopItems(ManhuntAPI api){
+        api.addShopItem(new HunterDebuff());
+    }
     private void registerListeners(){
+        //Shop stuff
+        Bukkit.getPluginManager().registerEvents(new ShopListener(), this);
+
         Bukkit.getPluginManager().registerEvents(new AbilityOpenGUIListener(), this);
         Bukkit.getPluginManager().registerEvents(new AbilityExecuteListener(), this);
         //Speedrunner section
