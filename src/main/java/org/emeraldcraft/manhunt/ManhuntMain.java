@@ -15,7 +15,9 @@ import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemInteraction
 import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemPlacementListener;
 import org.emeraldcraft.manhunt.listeners.speedrunners.PlayerDeathListener;
 import org.emeraldcraft.manhunt.shop.ShopListener;
-import org.emeraldcraft.manhunt.shop.items.hunterdebuff.HunterDebuff;
+import org.emeraldcraft.manhunt.shop.speedrunneritems.GappleShopItem;
+import org.emeraldcraft.manhunt.shop.speedrunneritems.UndyingShopItem;
+import org.emeraldcraft.manhunt.shop.speedrunneritems.hunterdebuff.HunterDebuffShop;
 
 public class ManhuntMain extends JavaPlugin {
     @Override
@@ -46,7 +48,9 @@ public class ManhuntMain extends JavaPlugin {
         Manhunt.getAPI().registerAbility(new PlayerTPAbility());
     }
     private void addDefaultShopItems(ManhuntAPI api){
-        api.addShopItem(new HunterDebuff());
+        api.addShopItem(new HunterDebuffShop());
+        api.addShopItem(new UndyingShopItem());
+        api.addShopItem(new GappleShopItem());
     }
     private void registerListeners(){
         //Shop stuff

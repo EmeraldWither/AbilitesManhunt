@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.shop.items.hunterdebuff;
+package org.emeraldcraft.manhunt.shop.speedrunneritems.hunterdebuff;
 
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 

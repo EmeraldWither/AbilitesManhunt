@@ -115,6 +115,7 @@ public class ManhuntAPI {
         for(Speedrunner speedrunner : speedrunners){
             Player player = speedrunner.getAsBukkitPlayer();
             assert player != null;
+            player.setInvulnerable(false);
             player.setGameMode(SURVIVAL);
             player.setHealth(20);
             player.setFoodLevel(20);
@@ -179,6 +180,7 @@ public class ManhuntAPI {
             bukkitPlayer.setAllowFlight(false);
             bukkitPlayer.setFlying(false);
             bukkitPlayer.setGlowing(false);
+            bukkitPlayer.setInvulnerable(false);
         }
         tasks.forEach(BukkitRunnable::cancel);
         tasks.clear();

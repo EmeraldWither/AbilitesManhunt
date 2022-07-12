@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.shop.items.hunterdebuff;
+package org.emeraldcraft.manhunt.shop.speedrunneritems.hunterdebuff;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class HunterDebuff extends ShopItem {
+public class HunterDebuffShop extends ShopItem {
     private final HunterDebuffs debuffs = new HunterDebuffs();
 
-    public HunterDebuff() {
+    public HunterDebuffShop() {
         super("Remove Hunter Ability","Prevents hunter from using their abilities for 2m 30s" ,500, Material.BARRIER);
         Bukkit.getPluginManager().registerEvents(new HunterDebuffListener(debuffs), JavaPlugin.getProvidingPlugin(ManhuntMain.class));
     }

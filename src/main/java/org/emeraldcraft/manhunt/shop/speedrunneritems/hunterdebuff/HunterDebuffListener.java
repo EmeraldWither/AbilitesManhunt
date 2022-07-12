@@ -1,4 +1,4 @@
-package org.emeraldcraft.manhunt.shop.items.hunterdebuff;
+package org.emeraldcraft.manhunt.shop.speedrunneritems.hunterdebuff;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -96,5 +97,15 @@ public class IManhuntUtils {
             parsedMessage = parsedMessage.replaceAll(placeholders[i], values[i]);
         }
         return MiniMessage.miniMessage().deserialize(parsedMessage);
+    }
+    public static void addOrDropItem(Player player, ItemStack... itemStack){
+        for(ItemStack item : itemStack){
+            if(player.getInventory().firstEmpty() == -1) {
+                player.getWorld().dropItem(player.getLocation(), item);
+                player.sendMessage("Your inventory is full! Dropped item on the ground!");
+                continue;
+            }
+            player.getInventory().addItem(item);
+        }
     }
 }
