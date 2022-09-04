@@ -4,7 +4,7 @@ import org.bukkit.inventory.Inventory;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 public class ManhuntPlayerSelector {
     private final ManhuntAbility ability;
@@ -19,7 +19,7 @@ public class ManhuntPlayerSelector {
     public ManhuntPlayerSelector(ManhuntAbility ability, Hunter hunter) {
         this.ability = ability;
         this.hunter = hunter;
-        this.inventory = IManhuntUtils.createPlayerSelector();
+        this.inventory = ManhuntUtils.createPlayerSelector();
     }
     public ManhuntAbility getAbility() {
         return ability;
@@ -36,7 +36,7 @@ public class ManhuntPlayerSelector {
      * Creates a new player selector for this GUI 
      */
     public void createPlayerSelector(){
-        inventory = IManhuntUtils.createPlayerSelector();
+        inventory = ManhuntUtils.createPlayerSelector();
     }
     /**
      * @return The speedrunner that was selected

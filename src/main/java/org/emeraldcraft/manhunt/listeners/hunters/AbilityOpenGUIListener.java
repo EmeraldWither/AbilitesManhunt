@@ -13,7 +13,7 @@ import org.emeraldcraft.manhunt.entities.players.internal.ManhuntHunter;
 import org.emeraldcraft.manhunt.events.hunter.HunterClickAbilityEvent;
 import org.emeraldcraft.manhunt.gui.ManhuntPlayerSelector;
 
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.debug;
 
 public class AbilityOpenGUIListener implements Listener {
     @EventHandler

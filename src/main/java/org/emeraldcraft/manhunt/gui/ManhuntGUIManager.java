@@ -2,7 +2,7 @@ package org.emeraldcraft.manhunt.gui;
 
 import java.util.ArrayList;
 
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.debug;
 
 public class ManhuntGUIManager {
     private final ArrayList<ManhuntPlayerSelector> guis = new ArrayList<>();

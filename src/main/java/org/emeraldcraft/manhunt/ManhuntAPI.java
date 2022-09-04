@@ -23,7 +23,7 @@ import org.emeraldcraft.manhunt.events.ManhuntGameEndEvent;
 import org.emeraldcraft.manhunt.gui.ManhuntGUIManager;
 import org.emeraldcraft.manhunt.shop.Shop;
 import org.emeraldcraft.manhunt.shop.ShopItem;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.UUID;
 
 import static org.bukkit.GameMode.ADVENTURE;
 import static org.bukkit.GameMode.SURVIVAL;
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.debug;
 
 /**
  * The API class which provides the control of the plugin.
@@ -165,7 +165,7 @@ public class ManhuntAPI {
     public void end(@Nullable ManhuntTeam winners){
         final Component gameEnd;
         if (winners != null) {
-            gameEnd = Component.text("The game has ended! The winners are " + winners.toString()).color(TextColor.color(255, 0, 0));
+            gameEnd = Component.text("The game has ended! The winners are " + winners).color(TextColor.color(255, 0, 0));
         }
         else{
             gameEnd = Component.text("The game has ended!").color(TextColor.color(255, 0, 0));
@@ -202,7 +202,7 @@ public class ManhuntAPI {
 
     private void constructInventory(Hunter hunter){
         if (hunter.getAsBukkitPlayer() != null) {
-            Inventory inventory = IManhuntUtils.constructInventory(hunter, this.abilities);
+            Inventory inventory = ManhuntUtils.constructInventory(hunter, this.abilities);
             debug("Created inventory for " + hunter.getUUID());
             if (inventory != null) {
                 hunter.getAsBukkitPlayer().getInventory().setContents(inventory.getContents());
@@ -219,9 +219,9 @@ public class ManhuntAPI {
     }
 
     @Nullable
-    public ManhuntAbility getAbility(String name) {
+    public ManhuntAbility getAbility(String id) {
         for (ManhuntAbility ability:this.abilities) {
-            if(ability.name().equalsIgnoreCase(name)) return ability;
+            if(ability.getId().equalsIgnoreCase(id)) return ability;
         }
         return null;
     }

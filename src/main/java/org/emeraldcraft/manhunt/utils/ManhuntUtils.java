@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +28,7 @@ import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
 /**
  * Internal class using for certain utility functions for the plugin.
  */
-public class IManhuntUtils {
+public class ManhuntUtils {
     public static void debug(String msg){
         if(Manhunt.getAPI().getConfig().isDebugging()) Bukkit.getLogger().log(INFO, "[Manhunt DEBUG] " + msg);
     }
@@ -107,5 +108,13 @@ public class IManhuntUtils {
             }
             player.getInventory().addItem(item);
         }
+    }
+    public static boolean isHunter(Entity entity){
+        if(entity instanceof Player player){
+            if(!Manhunt.getAPI().isRunning()) return false;
+            if(Manhunt.getAPI().getPlayer(player.getUniqueId()) == null) return false;
+            return Manhunt.getAPI().getPlayer(player.getUniqueId()) instanceof Hunter;
+        }
+        return false;
     }
 }

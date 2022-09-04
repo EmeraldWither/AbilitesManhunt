@@ -7,13 +7,13 @@ import org.bukkit.inventory.ItemStack;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import java.util.Random;
 
 import static org.bukkit.Material.AIR;
 import static org.emeraldcraft.manhunt.Manhunt.getAPI;
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.debug;
 
 public class ItemDeleterAbility extends ManhuntAbility {
     private final boolean includesAir;
@@ -42,7 +42,7 @@ public class ItemDeleterAbility extends ManhuntAbility {
             }
         }
         if(!hasItem) {
-            hunter.getAsBukkitPlayer().sendMessage(IManhuntUtils.parseBasicMessage("You don't have any items to delete.", this, speedrunner, hunter));
+            hunter.getAsBukkitPlayer().sendMessage(ManhuntUtils.parseBasicMessage("You don't have any items to delete.", this, speedrunner, hunter));
             hunter.setMana(hunter.getMana() + getMana());
             hunter.setCooldown(this, 0);
             return;
@@ -63,7 +63,7 @@ public class ItemDeleterAbility extends ManhuntAbility {
         if(item == null) item = new ItemStack(AIR);
         //Minimessage start parsing config
         String msgStr = getAttributes().getString("msg");
-        Component msg = IManhuntUtils.parseConfigMessage(msgStr,
+        Component msg = ManhuntUtils.parseConfigMessage(msgStr,
                 this,
                 speedrunner,
                 hunter,
@@ -73,7 +73,7 @@ public class ItemDeleterAbility extends ManhuntAbility {
         player.sendMessage(msg);
 
         hunter.getAsBukkitPlayer().sendMessage(
-                IManhuntUtils.parseConfigMessage(
+                ManhuntUtils.parseConfigMessage(
                         getAttributes().getString("hunter-msg"),
                         this,
                         speedrunner,

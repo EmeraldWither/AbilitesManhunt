@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import static org.emeraldcraft.manhunt.Manhunt.getAPI;
 
@@ -27,7 +27,7 @@ public class TNTAbility extends ManhuntAbility {
         assert player != null;
         player.getWorld().spawnEntity(player.getLocation(), EntityType.PRIMED_TNT);
         player.sendMessage(
-                IManhuntUtils.parseConfigMessage(
+                ManhuntUtils.parseConfigMessage(
                         getAttributes().getString("msg"),
                         this,
                         speedrunner,
@@ -37,7 +37,7 @@ public class TNTAbility extends ManhuntAbility {
                 )
         );
         hunter.getAsBukkitPlayer().sendMessage(
-                IManhuntUtils.parseConfigMessage(
+                ManhuntUtils.parseConfigMessage(
                         getAttributes().getString("hunter-msg"),
                         this,
                         speedrunner,

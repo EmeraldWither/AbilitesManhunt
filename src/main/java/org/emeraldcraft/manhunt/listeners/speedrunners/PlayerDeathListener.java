@@ -11,7 +11,7 @@ import org.emeraldcraft.manhunt.enums.ManhuntTeam;
 import org.emeraldcraft.manhunt.events.speedrunner.SpeedrunnerDeathEvent;
 
 import static org.emeraldcraft.manhunt.enums.ManhuntTeam.SPEEDRUNNER;
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.debug;
 
 public class PlayerDeathListener implements Listener {
     @EventHandler

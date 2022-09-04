@@ -12,12 +12,12 @@ import org.emeraldcraft.manhunt.ManhuntMain;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 public class LavaAbility extends ManhuntAbility {
 
     private final ManhuntMain main;
-    private static int lavaStayAmount;
+    private static int duration;
 
     public LavaAbility(ManhuntMain main) {
         super("Lava",
@@ -26,7 +26,7 @@ public class LavaAbility extends ManhuntAbility {
                 Manhunt.getAPI().getConfig().getFileConfig().getInt("ability.lava.mana"),
                 Material.getMaterial(Manhunt.getAPI().getConfig().getFileConfig().getString("ability.lava.material")),
                 "lava");
-        lavaStayAmount = getAttributes().getInt("duration");
+        duration = getAttributes().getInt("duration");
         this.main = main;
     }
 
@@ -40,11 +40,11 @@ public class LavaAbility extends ManhuntAbility {
             if (lavaMsg == null) return;
             //Parse into minimessage
             Component msg = (MiniMessage.miniMessage().deserialize(
-                    IManhuntUtils.parseBasicMessage(lavaMsg, this, speedrunner, hunter)
+                    ManhuntUtils.parseBasicMessage(lavaMsg, this, speedrunner, hunter)
             ));
             player.sendMessage(msg);
             hunter.getAsBukkitPlayer().sendMessage(
-                    IManhuntUtils.parseBasicMessage(
+                    ManhuntUtils.parseBasicMessage(
                             getAttributes().getString("hunter-msg"),
                             this,
                             speedrunner,
@@ -55,7 +55,7 @@ public class LavaAbility extends ManhuntAbility {
     }
     static class LavaScheduler extends BukkitRunnable{
         private final Player player;
-        private int amount = 0;
+        private int timePassed = 0;
         private Block block;
         private BlockData blockData;
         private Material blockType;
@@ -66,19 +66,19 @@ public class LavaAbility extends ManhuntAbility {
         public void run() {
             //If it is the first tick that the scheduler is running (the ability was just called)
             //then set the lava block to the player's location
-            if(amount == 0){
+            if(timePassed == 0){
                 block = player.getLocation().getBlock();
                 blockData = player.getLocation().getBlock().getBlockData();
                 blockType = player.getLocation().getBlock().getType();
                 player.getLocation().getBlock().setType(Material.LAVA);
-                amount++;
+                timePassed++;
                 return;
             }
             //Wait for X (config) seconds
-            if(amount < 20 * lavaStayAmount){
+            if(timePassed < 20 * duration){
                 player.setFireTicks(80);
                 player.setVisualFire(false);
-                amount++;
+                timePassed++;
                 return;
             }
             //The ability period has ended, so lets set the original block back to where it was

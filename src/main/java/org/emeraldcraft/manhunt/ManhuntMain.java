@@ -9,15 +9,12 @@ import org.emeraldcraft.manhunt.commands.ManhuntCommand;
 import org.emeraldcraft.manhunt.commands.ShopCommand;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityExecuteListener;
 import org.emeraldcraft.manhunt.listeners.hunters.AbilityOpenGUIListener;
-import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventAttackListener;
-import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventInventoryMoveListener;
-import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemInteractionListener;
-import org.emeraldcraft.manhunt.listeners.hunters.prevent.PreventItemPlacementListener;
+import org.emeraldcraft.manhunt.listeners.hunters.prevent.*;
 import org.emeraldcraft.manhunt.listeners.speedrunners.PlayerDeathListener;
 import org.emeraldcraft.manhunt.shop.ShopListener;
 import org.emeraldcraft.manhunt.shop.speedrunneritems.GappleShopItem;
 import org.emeraldcraft.manhunt.shop.speedrunneritems.UndyingShopItem;
-import org.emeraldcraft.manhunt.shop.speedrunneritems.hunterdebuff.HunterDebuffShop;
+import org.emeraldcraft.manhunt.shop.speedrunneritems.hunterdebuff.DisableHunterShopItem;
 
 public class ManhuntMain extends JavaPlugin {
     @Override
@@ -30,8 +27,8 @@ public class ManhuntMain extends JavaPlugin {
         registerListeners();
         registerDefaultAbilities();
         addDefaultShopItems(api);
-        Manhunt.getAPI().registerBackgroundTask(new ManaUpdaterTask(this));
-        Manhunt.getAPI().registerBackgroundTask(new ManaDisplayTask(this));
+        Manhunt.getAPI().registerBackgroundTask(new ManaUpdaterTask());
+        Manhunt.getAPI().registerBackgroundTask(new ManaDisplayTask());
     }
     @Override
     public void onDisable(){
@@ -48,7 +45,7 @@ public class ManhuntMain extends JavaPlugin {
         Manhunt.getAPI().registerAbility(new PlayerTPAbility());
     }
     private void addDefaultShopItems(ManhuntAPI api){
-        api.addShopItem(new HunterDebuffShop());
+        api.addShopItem(new DisableHunterShopItem());
         api.addShopItem(new UndyingShopItem());
         api.addShopItem(new GappleShopItem());
     }
@@ -65,6 +62,7 @@ public class ManhuntMain extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PreventAttackListener(), this);
         Bukkit.getPluginManager().registerEvents(new PreventInventoryMoveListener(), this);
         Bukkit.getPluginManager().registerEvents(new PreventItemPlacementListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SocialDistanceListener(), this);
     }
 }
 

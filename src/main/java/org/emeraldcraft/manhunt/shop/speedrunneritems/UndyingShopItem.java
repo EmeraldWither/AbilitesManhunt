@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.shop.ShopItem;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class UndyingShopItem extends ShopItem {
@@ -17,6 +17,6 @@ public class UndyingShopItem extends ShopItem {
     public void onPurchase(@NotNull Speedrunner speedrunner) {
         Player player = speedrunner.getAsBukkitPlayer();
         if(player == null) return;
-        IManhuntUtils.addOrDropItem(player, new ItemStack(Material.TOTEM_OF_UNDYING));
+        ManhuntUtils.addOrDropItem(player, new ItemStack(Material.TOTEM_OF_UNDYING));
     }
 }

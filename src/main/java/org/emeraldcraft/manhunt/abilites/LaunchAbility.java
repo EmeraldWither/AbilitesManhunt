@@ -9,7 +9,7 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 public class LaunchAbility extends ManhuntAbility {
     private final int velocity;
@@ -34,7 +34,7 @@ public class LaunchAbility extends ManhuntAbility {
 
         //Minimessage start parsing config
         String launchMsgStr = getAttributes().getString("msg");
-        Component msg = IManhuntUtils.parseConfigMessage(launchMsgStr,
+        Component msg = ManhuntUtils.parseConfigMessage(launchMsgStr,
                 this,
                 speedrunner,
                 hunter,
@@ -43,7 +43,7 @@ public class LaunchAbility extends ManhuntAbility {
         player.sendMessage(msg);
 
         hunter.getAsBukkitPlayer().sendMessage(
-                IManhuntUtils.parseConfigMessage(
+                ManhuntUtils.parseConfigMessage(
                         getAttributes().getString("hunter-msg"),
                         this,
                         speedrunner,

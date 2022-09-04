@@ -13,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class HunterDebuffShop extends ShopItem {
+public class DisableHunterShopItem extends ShopItem {
     private final HunterDebuffs debuffs = new HunterDebuffs();
 
-    public HunterDebuffShop() {
+    public DisableHunterShopItem() {
         super("Remove Hunter Ability","Prevents hunter from using their abilities for 2m 30s" ,500, Material.BARRIER);
         Bukkit.getPluginManager().registerEvents(new HunterDebuffListener(debuffs), JavaPlugin.getProvidingPlugin(ManhuntMain.class));
     }

@@ -7,7 +7,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import java.util.Random;
 
@@ -39,7 +39,7 @@ public class RandomPotionAbility extends ManhuntAbility{
 		//Minimessage start parsing config
         String msgStr = getAttributes().getString("msg");
         if (msgStr == null) return;
-		Component msg = IManhuntUtils.parseConfigMessage(msgStr,
+		Component msg = ManhuntUtils.parseConfigMessage(msgStr,
 				this,
 				speedrunner,
 				hunter,
@@ -48,7 +48,7 @@ public class RandomPotionAbility extends ManhuntAbility{
 		);
         speedrunner.getAsBukkitPlayer().sendMessage(msg);
 		hunter.getAsBukkitPlayer().sendMessage(
-				IManhuntUtils.parseConfigMessage(
+				ManhuntUtils.parseConfigMessage(
 						getAttributes().getString("hunter-msg"),
 						this,
 						speedrunner,

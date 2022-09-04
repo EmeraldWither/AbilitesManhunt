@@ -12,7 +12,7 @@ import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 
 import java.util.Collection;
 
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.parseConfigMessage;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.parseConfigMessage;
 
 public class CommandMonstersAbility extends ManhuntAbility {
     private final int range;

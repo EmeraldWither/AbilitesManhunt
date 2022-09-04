@@ -14,7 +14,7 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.events.hunter.PreHunterExecuteAbilityEvent;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import java.util.UUID;
 
@@ -52,7 +52,7 @@ public abstract class ManhuntAbility {
         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, this.uuid.toString());
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
-        IManhuntUtils.createItemLore(this, itemStack, this.name, this.description);
+        ManhuntUtils.createItemLore(this, itemStack, this.name, this.description);
         this.itemStack = itemStack;
     }
 
@@ -67,7 +67,7 @@ public abstract class ManhuntAbility {
     public void execute(Hunter hunter, Speedrunner speedrunner) {
         if (hunter.getMana() < this.mana) {
             if (hunter.getAsBukkitPlayer() == null) return;
-            IManhuntUtils.debug("Hunters mana: " + hunter.getMana() + ", Ability Mana: " + this.mana);
+            ManhuntUtils.debug("Hunters mana: " + hunter.getMana() + ", Ability Mana: " + this.mana);
             Component message = Component.text("You do not have enough mana!").color(TextColor.color(255, 0, 0));
             hunter.getAsBukkitPlayer().sendMessage(message);
             return;
@@ -116,6 +116,10 @@ public abstract class ManhuntAbility {
 
     public UUID getUUID() {
         return uuid;
+    }
+
+    public String getId() {
+        return id;
     }
     public ConfigurationSection getAttributes(){
         return Manhunt.getAPI().getConfig().getFileConfig().getConfigurationSection("ability." + this.id);

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 import static org.bukkit.Material.AIR;
 import static org.emeraldcraft.manhunt.enums.ManhuntTeam.HUNTER;
-import static org.emeraldcraft.manhunt.utils.IManhuntUtils.debug;
+import static org.emeraldcraft.manhunt.utils.ManhuntUtils.debug;
 
 public class AbilityExecuteListener implements Listener {
     @EventHandler

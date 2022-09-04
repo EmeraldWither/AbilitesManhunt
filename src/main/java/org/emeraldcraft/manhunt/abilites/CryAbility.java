@@ -8,7 +8,7 @@ import org.emeraldcraft.manhunt.Manhunt;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class CryAbility extends ManhuntAbility {
             player.setHealth(player.getHealth() / 2);
 
             hunter.getAsBukkitPlayer().sendMessage(
-                    IManhuntUtils.parseConfigMessage(
+                    ManhuntUtils.parseConfigMessage(
                             getAttributes().getString("hunter-msg"),
                             this,
                             speedrunner,

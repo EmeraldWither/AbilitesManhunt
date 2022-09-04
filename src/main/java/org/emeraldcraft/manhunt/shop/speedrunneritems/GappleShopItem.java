@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
 import org.emeraldcraft.manhunt.shop.ShopItem;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class GappleShopItem extends ShopItem {
@@ -13,6 +13,6 @@ public class GappleShopItem extends ShopItem {
     }
     @Override
     public void onPurchase(@NotNull Speedrunner speedrunner) {
-        IManhuntUtils.addOrDropItem(speedrunner.getAsBukkitPlayer(), new ItemStack(Material.GOLDEN_APPLE, 5));
+        ManhuntUtils.addOrDropItem(speedrunner.getAsBukkitPlayer(), new ItemStack(Material.GOLDEN_APPLE, 5));
     }
 }

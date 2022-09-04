@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.emeraldcraft.manhunt.entities.ManhuntAbility;
 import org.emeraldcraft.manhunt.entities.players.Hunter;
 import org.emeraldcraft.manhunt.entities.players.Speedrunner;
-import org.emeraldcraft.manhunt.utils.IManhuntUtils;
+import org.emeraldcraft.manhunt.utils.ManhuntUtils;
 
 import static org.emeraldcraft.manhunt.Manhunt.getAPI;
 
@@ -35,10 +35,10 @@ public class PlayerTPAbility extends ManhuntAbility {
             && loc.getBlock().getRelative(BlockFace.UP).getType() == Material.AIR){
                 hunter.getAsBukkitPlayer().teleport(loc);
                 speedrunner.getAsBukkitPlayer().sendMessage(
-                        IManhuntUtils.parseConfigMessage(getAttributes().getString("msg"), this, speedrunner, hunter, null, null)
+                        ManhuntUtils.parseConfigMessage(getAttributes().getString("msg"), this, speedrunner, hunter, null, null)
                 );
                 hunter.getAsBukkitPlayer().sendMessage(
-                        IManhuntUtils.parseConfigMessage(getAttributes().getString("hunter-msg"), this, speedrunner, hunter, null, null)
+                        ManhuntUtils.parseConfigMessage(getAttributes().getString("hunter-msg"), this, speedrunner, hunter, null, null)
                 );
                 break;
             }

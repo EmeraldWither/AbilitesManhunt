@@ -1,6 +1,11 @@
 # I would suggest leaving this off, as it causes a lot of log spam
 debug: true
 
+hunters:
+  #How close the hunter has to be to the player before they get pushed away
+  social-distance: 4
+  distance-msg: "<b><red>You are too close to the speedrunner!</red></b>"
+
 
 # Allow you to be able to customize the abilities to your liking
 
@@ -68,7 +73,7 @@ ability:
     cooldown: 500
     mana: 100
     material: CACTUS
-    #Whether or not to include AIR as an item.
+    #Whether to include AIR as an item.
     include-air: false
     #Placeholder: "%item-amount%" - the amount of items that will be deleted
     #             "%item-name%" - the name of the item
@@ -80,7 +85,7 @@ ability:
     material: POTION
     #Duration - how long the potion effect will last for 
     duration: 15
-    #Amplifer - How much the potion effect is amplifed
+    #Amplifer - How much the potion effect is amplified
     amplifier: 2
     #Placeholder: "%effect%" - the name of the potion effect 
     msg: "<b><blue>%hunter%</blue></b> <yellow>has applied the</yellow> <b><red>%effect%</red></b> <yellow>potion effect on you!</yellow>"
